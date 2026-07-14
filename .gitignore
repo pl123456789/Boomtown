@@ -1,0 +1,48 @@
+# ==========================
+# Unity
+# ==========================
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+Recordings/
+
+# Addressables
+ServerData/
+
+# Visual Studio / Rider
+.vs/
+.vscode/
+.idea/
+
+# Generated project files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity generated
+sysinfo.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Crash reports
+crashlytics-build.properties
