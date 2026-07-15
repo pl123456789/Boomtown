@@ -1,0 +1,134 @@
+{
+    "name": "BoomtownControls",
+    "maps": [
+        {
+            "name": "Camera",
+            "id": "a434f9d5-9917-40ed-8933-c22aa0258bf4",
+            "actions": [
+                {
+                    "name": "MouseDelta",
+                    "type": "Value",
+                    "id": "ce2b3f5f-3c6c-4db7-871a-607a5be59a31",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PanModifier",
+                    "type": "Button",
+                    "id": "ee39e5b5-c21f-4451-8485-b825cbbfb5f5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateModifier",
+                    "type": "Button",
+                    "id": "b8a204fd-46ac-4f11-bcc0-cb736e124730",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "c8f0ea5e-c8d8-4e30-a5df-a85fd1f73811",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Center",
+                    "type": "Button",
+                    "id": "0025f3fe-dc72-401c-bf61-0f48dde6345a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Follow",
+                    "type": "Button",
+                    "id": "cf71a25a-76a7-4a8c-9b97-95bcd495bec5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a5943b5e-c74f-4a74-ab7f-3f61ab99da32",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4e389c31-2e57-4752-be4c-053a652ede7a",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanModifier",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06b07440-975c-45ab-8d70-33dabeeddde2",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateModifier",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca27eef6-792a-42af-b22e-01189d77901c",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5194fb8c-1fa2-4db9-9987-82db299d5669",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Center",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1a39aca1-482e-4486-9ca4-998878082149",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Follow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
