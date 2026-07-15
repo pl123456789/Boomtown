@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Selects Ted, commands Bill or Ted, and switches camera focus.
+/// Selects employees, commands Bill or selected employees, switches camera focus,
+/// and cycles through Bill and all employees with Tab or Shift+Tab.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class EmployeeSelectionManager : MonoBehaviour
 {
     [Header("References")]
+
     [SerializeField]
     private Camera _worldCamera;
 
@@ -20,20 +23,26 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
     private QuickPlayerController _billController;
 
     [Header("Raycasts")]
+
     [SerializeField]
     private LayerMask _employeeLayerMask = ~0;
 
     [SerializeField]
     private LayerMask _groundLayerMask = ~0;
 
-    [SerializeField, Min(0f)]
+    [SerializeField]
+    [Min(0f)]
     private float _maximumRaycastDistance = 1000f;
 
+    private readonly List<Employee> _employees = new();
+
     private Employee _selectedEmployee;
+    private int _cycleIndex;
 
     private void Awake()
     {
         ResolveReferences();
+        RefreshEmployeeList();
 
         if (_worldCamera == null ||
             _cameraFollow == null ||
@@ -47,12 +56,24 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
             return;
         }
 
-        _cameraFollow.SetTarget(
-            _billController.transform);
+        SelectBill(false);
     }
 
     private void Update()
     {
+        Keyboard keyboard = Keyboard.current;
+
+        if (keyboard != null &&
+            keyboard.tabKey.wasPressedThisFrame)
+        {
+            bool cycleBackward =
+                keyboard.leftShiftKey.isPressed ||
+                keyboard.rightShiftKey.isPressed;
+
+            CycleCharacter(cycleBackward);
+            return;
+        }
+
         Mouse mouse = Mouse.current;
 
         if (mouse == null ||
@@ -72,13 +93,35 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         if (mouse.rightButton.wasPressedThisFrame)
         {
             bool queueWaypoint =
-                Keyboard.current != null &&
-                (Keyboard.current.leftShiftKey.isPressed ||
-                 Keyboard.current.rightShiftKey.isPressed);
+                keyboard != null &&
+                (keyboard.leftShiftKey.isPressed ||
+                 keyboard.rightShiftKey.isPressed);
 
             CommandAt(
                 pointer,
                 queueWaypoint);
+        }
+    }
+
+    /// <summary>
+    /// Rebuilds the list used for Tab cycling.
+    /// Call this after employees are hired or removed.
+    /// </summary>
+    public void RefreshEmployeeList()
+    {
+        _employees.Clear();
+
+        Employee[] employees =
+            FindObjectsByType<Employee>(
+                FindObjectsSortMode.InstanceID);
+
+        _employees.AddRange(employees);
+
+        int maximumIndex = _employees.Count;
+
+        if (_cycleIndex > maximumIndex)
+        {
+            _cycleIndex = 0;
         }
     }
 
@@ -102,18 +145,59 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         }
     }
 
+    private void CycleCharacter(bool cycleBackward)
+    {
+        RefreshEmployeeList();
+
+        int characterCount =
+            _employees.Count + 1;
+
+        if (characterCount <= 0)
+        {
+            return;
+        }
+
+        int direction =
+            cycleBackward ? -1 : 1;
+
+        _cycleIndex =
+            (_cycleIndex + direction + characterCount) %
+            characterCount;
+
+        if (_cycleIndex == 0)
+        {
+            SelectBill(true);
+            return;
+        }
+
+        Employee employee =
+            _employees[_cycleIndex - 1];
+
+        SelectEmployee(
+            employee,
+            true);
+    }
+
     private void SelectAt(Vector2 screenPosition)
     {
         Ray ray =
             _worldCamera.ScreenPointToRay(
                 screenPosition);
 
-        if (Physics.Raycast(
-            ray,
-            out RaycastHit hit,
-            _maximumRaycastDistance,
-            _employeeLayerMask,
-            QueryTriggerInteraction.Ignore))
+        RaycastHit[] hits =
+            Physics.RaycastAll(
+                ray,
+                _maximumRaycastDistance,
+                _employeeLayerMask,
+                QueryTriggerInteraction.Ignore);
+
+        Array.Sort(
+            hits,
+            (left, right) =>
+                left.distance.CompareTo(
+                    right.distance));
+
+        foreach (RaycastHit hit in hits)
         {
             Employee employee =
                 hit.collider
@@ -121,12 +205,25 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
 
             if (employee != null)
             {
-                SelectEmployee(employee);
+                SelectEmployee(
+                    employee,
+                    false);
+
+                return;
+            }
+
+            QuickPlayerController bill =
+                hit.collider
+                    .GetComponentInParent<QuickPlayerController>();
+
+            if (bill != null)
+            {
+                SelectBill(false);
                 return;
             }
         }
 
-        DeselectEmployee();
+        SelectBill(false);
     }
 
     private void CommandAt(
@@ -197,31 +294,57 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         return false;
     }
 
-    private void SelectEmployee(Employee employee)
+    private void SelectEmployee(
+        Employee employee,
+        bool followImmediately)
     {
-        if (_selectedEmployee != null &&
-            _selectedEmployee != employee)
-        {
-            _selectedEmployee.SetSelected(false);
-        }
+        ClearEmployeeSelection();
 
         _selectedEmployee = employee;
         _selectedEmployee.SetSelected(true);
 
-        _cameraFollow.SetTarget(
-            _selectedEmployee.transform);
+        _cycleIndex =
+            _employees.IndexOf(employee) + 1;
+
+        if (followImmediately)
+        {
+            _cameraFollow.FocusAndFollow(
+                _selectedEmployee.transform);
+        }
+        else
+        {
+            _cameraFollow.FocusTarget(
+                _selectedEmployee.transform);
+        }
     }
 
-    private void DeselectEmployee()
+    private void SelectBill(bool followImmediately)
     {
-        if (_selectedEmployee != null)
+        ClearEmployeeSelection();
+
+        _cycleIndex = 0;
+
+        if (followImmediately)
         {
-            _selectedEmployee.SetSelected(false);
-            _selectedEmployee = null;
+            _cameraFollow.FocusAndFollow(
+                _billController.transform);
+        }
+        else
+        {
+            _cameraFollow.FocusTarget(
+                _billController.transform);
+        }
+    }
+
+    private void ClearEmployeeSelection()
+    {
+        if (_selectedEmployee == null)
+        {
+            return;
         }
 
-        _cameraFollow.SetTarget(
-            _billController.transform);
+        _selectedEmployee.SetSelected(false);
+        _selectedEmployee = null;
     }
 
     private static bool IsPointerOverUi()

@@ -11,36 +11,21 @@ using UnityEngine.InputSystem;
 public sealed class QuickPlayerController : MonoBehaviour
 {
     [Header("Identity")]
-    [SerializeField]
-    private string _characterName =
-        "William Parsons";
+    [SerializeField] private string _characterName = "William Parsons";
 
     [Header("References")]
-    [SerializeField]
-    private Transform _cameraYawTransform;
+    [SerializeField] private Transform _cameraYawTransform;
 
     [Header("Movement")]
-    [SerializeField, Min(0f)]
-    private float _movementSpeed = 5f;
-
-    [SerializeField, Min(1f)]
-    private float _runMultiplier = 1.75f;
-
-    [SerializeField, Min(0f)]
-    private float _acceleration = 30f;
-
-    [SerializeField, Min(0f)]
-    private float _deceleration = 40f;
-
-    [SerializeField, Min(0f)]
-    private float _rotationSpeed = 12f;
-
-    [SerializeField, Min(0f)]
-    private float _waypointStoppingDistance = 0.15f;
+    [SerializeField, Min(0f)] private float _movementSpeed = 5f;
+    [SerializeField, Min(1f)] private float _runMultiplier = 1.75f;
+    [SerializeField, Min(0f)] private float _acceleration = 30f;
+    [SerializeField, Min(0f)] private float _deceleration = 40f;
+    [SerializeField, Min(0f)] private float _rotationSpeed = 12f;
+    [SerializeField, Min(0f)] private float _waypointStoppingDistance = 0.15f;
 
     [Header("Gravity")]
-    [SerializeField]
-    private float _gravity = -20f;
+    [SerializeField] private float _gravity = -20f;
 
     private CharacterController _characterController;
     private WaypointPath _waypointPath;
@@ -51,30 +36,22 @@ public sealed class QuickPlayerController : MonoBehaviour
 
     private void Awake()
     {
-        _characterController =
-            GetComponent<CharacterController>();
-
-        _waypointPath =
-            GetComponent<WaypointPath>();
+        _characterController = GetComponent<CharacterController>();
+        _waypointPath = GetComponent<WaypointPath>();
 
         if (_cameraYawTransform == null)
         {
-            GameObject yawObject =
-                GameObject.Find("Yaw");
+            GameObject yawObject = GameObject.Find("Yaw");
 
             if (yawObject != null)
             {
-                _cameraYawTransform =
-                    yawObject.transform;
+                _cameraYawTransform = yawObject.transform;
             }
         }
 
         if (_cameraYawTransform == null)
         {
-            Debug.LogError(
-                "Bill needs CameraRig/Yaw assigned.",
-                this);
-
+            Debug.LogError("Bill needs CameraRig/Yaw assigned.", this);
             enabled = false;
         }
     }
@@ -88,23 +65,17 @@ public sealed class QuickPlayerController : MonoBehaviour
             return;
         }
 
-        Vector2 directInput =
-            ReadMovementInput(keyboard);
-
+        Vector2 directInput = ReadMovementInput(keyboard);
         Vector3 movementDirection;
 
         if (directInput.sqrMagnitude > 0f)
         {
             _waypointPath.Clear();
-
-            movementDirection =
-                CalculateCameraRelativeDirection(
-                    directInput);
+            movementDirection = CalculateCameraRelativeDirection(directInput);
         }
         else
         {
-            movementDirection =
-                CalculateWaypointDirection();
+            movementDirection = CalculateWaypointDirection();
         }
 
         float speed =
@@ -113,9 +84,7 @@ public sealed class QuickPlayerController : MonoBehaviour
                 ? _movementSpeed * _runMultiplier
                 : _movementSpeed;
 
-        UpdateHorizontalVelocity(
-            movementDirection,
-            speed);
+        UpdateHorizontalVelocity(movementDirection, speed);
 
         if (movementDirection.sqrMagnitude > 0f)
         {
@@ -128,13 +97,10 @@ public sealed class QuickPlayerController : MonoBehaviour
             _horizontalVelocity +
             (Vector3.up * _verticalVelocity);
 
-        _characterController.Move(
-            velocity * Time.deltaTime);
+        _characterController.Move(velocity * Time.deltaTime);
     }
 
-    public void SetDestination(
-        Vector3 destination,
-        bool queueWaypoint)
+    public void SetDestination(Vector3 destination, bool queueWaypoint)
     {
         Vector3 groundedDestination =
             new Vector3(
@@ -144,32 +110,25 @@ public sealed class QuickPlayerController : MonoBehaviour
 
         if (queueWaypoint)
         {
-            _waypointPath.AddWaypoint(
-                groundedDestination);
+            _waypointPath.AddWaypoint(groundedDestination);
         }
         else
         {
-            _waypointPath.SetWaypoint(
-                groundedDestination);
+            _waypointPath.SetWaypoint(groundedDestination);
         }
     }
 
     private Vector3 CalculateWaypointDirection()
     {
-        if (!_waypointPath.TryGetCurrent(
-            out Vector3 waypoint))
+        if (!_waypointPath.TryGetCurrent(out Vector3 waypoint))
         {
             return Vector3.zero;
         }
 
-        Vector3 offset =
-            waypoint -
-            transform.position;
-
+        Vector3 offset = waypoint - transform.position;
         offset.y = 0f;
 
-        if (offset.magnitude <=
-            _waypointStoppingDistance)
+        if (offset.magnitude <= _waypointStoppingDistance)
         {
             _waypointPath.CompleteCurrent();
             return Vector3.zero;
@@ -178,14 +137,10 @@ public sealed class QuickPlayerController : MonoBehaviour
         return offset.normalized;
     }
 
-    private Vector3 CalculateCameraRelativeDirection(
-        Vector2 input)
+    private Vector3 CalculateCameraRelativeDirection(Vector2 input)
     {
-        Vector3 forward =
-            _cameraYawTransform.forward;
-
-        Vector3 right =
-            _cameraYawTransform.right;
+        Vector3 forward = _cameraYawTransform.forward;
+        Vector3 right = _cameraYawTransform.right;
 
         forward.y = 0f;
         right.y = 0f;
@@ -203,8 +158,7 @@ public sealed class QuickPlayerController : MonoBehaviour
         Vector3 movementDirection,
         float speed)
     {
-        Vector3 targetVelocity =
-            movementDirection * speed;
+        Vector3 targetVelocity = movementDirection * speed;
 
         float movementRate =
             movementDirection.sqrMagnitude > 0f
@@ -215,42 +169,22 @@ public sealed class QuickPlayerController : MonoBehaviour
             Vector3.MoveTowards(
                 _horizontalVelocity,
                 targetVelocity,
-                movementRate *
-                Time.deltaTime);
+                movementRate * Time.deltaTime);
     }
 
-    private static Vector2 ReadMovementInput(
-        Keyboard keyboard)
+    private static Vector2 ReadMovementInput(Keyboard keyboard)
     {
         Vector2 input = Vector2.zero;
 
-        if (keyboard.aKey.isPressed)
-        {
-            input.x -= 1f;
-        }
+        if (keyboard.aKey.isPressed) input.x -= 1f;
+        if (keyboard.dKey.isPressed) input.x += 1f;
+        if (keyboard.sKey.isPressed) input.y -= 1f;
+        if (keyboard.wKey.isPressed) input.y += 1f;
 
-        if (keyboard.dKey.isPressed)
-        {
-            input.x += 1f;
-        }
-
-        if (keyboard.sKey.isPressed)
-        {
-            input.y -= 1f;
-        }
-
-        if (keyboard.wKey.isPressed)
-        {
-            input.y += 1f;
-        }
-
-        return Vector2.ClampMagnitude(
-            input,
-            1f);
+        return Vector2.ClampMagnitude(input, 1f);
     }
 
-    private void RotateToward(
-        Vector3 movementDirection)
+    private void RotateToward(Vector3 movementDirection)
     {
         Quaternion targetRotation =
             Quaternion.LookRotation(
@@ -259,8 +193,7 @@ public sealed class QuickPlayerController : MonoBehaviour
 
         float factor =
             1f - Mathf.Exp(
-                -_rotationSpeed *
-                Time.deltaTime);
+                -_rotationSpeed * Time.deltaTime);
 
         transform.rotation =
             Quaternion.Slerp(
@@ -277,8 +210,6 @@ public sealed class QuickPlayerController : MonoBehaviour
             _verticalVelocity = 0f;
         }
 
-        _verticalVelocity +=
-            _gravity *
-            Time.deltaTime;
+        _verticalVelocity += _gravity * Time.deltaTime;
     }
 }

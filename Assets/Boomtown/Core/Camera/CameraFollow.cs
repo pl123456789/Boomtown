@@ -1,27 +1,33 @@
 using UnityEngine;
 
 /// <summary>
-/// C centers once. F centers and continuously follows the active target.
-/// Press F again to release.
+/// Controls camera centering and continuous follow for the active character.
+/// C centers once, F toggles follow, and character cycling can request
+/// an immediate center-and-follow operation.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class CameraFollow : MonoBehaviour
 {
     [Header("Active Target")]
+
     [SerializeField]
     private Transform _target;
 
     [Header("Focus")]
-    [SerializeField, Min(0f)]
+
+    [SerializeField]
+    [Min(0f)]
     private float _focusSmoothing = 10f;
 
-    [SerializeField, Min(0f)]
+    [SerializeField]
+    [Min(0f)]
     private float _completionDistance = 0.05f;
 
     private Transform _rigTransform;
     private bool _isCentering;
 
     public Transform Target => _target;
+
     public bool IsFollowing { get; private set; }
 
     public void Initialize(Transform rigTransform)
@@ -33,7 +39,7 @@ public sealed class CameraFollow : MonoBehaviour
     {
         if (controls.Camera.Center.WasPressedThisFrame())
         {
-            BeginCenter();
+            CenterOnTarget();
         }
 
         if (controls.Camera.Follow.WasPressedThisFrame())
@@ -54,6 +60,9 @@ public sealed class CameraFollow : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Changes the active target without changing follow state.
+    /// </summary>
     public void SetTarget(Transform target)
     {
         _target = target;
@@ -65,15 +74,51 @@ public sealed class CameraFollow : MonoBehaviour
         }
     }
 
-    private void BeginCenter()
+    /// <summary>
+    /// Changes the active target and smoothly centers the camera once.
+    /// Existing continuous follow remains active.
+    /// </summary>
+    public void FocusTarget(Transform target)
+    {
+        SetTarget(target);
+
+        if (_target != null)
+        {
+            _isCentering = true;
+        }
+    }
+
+    /// <summary>
+    /// Changes the target, centers the camera, and enables continuous follow.
+    /// Used by Tab and Shift+Tab character cycling.
+    /// </summary>
+    public void FocusAndFollow(Transform target)
+    {
+        SetTarget(target);
+
+        if (_target == null)
+        {
+            return;
+        }
+
+        IsFollowing = true;
+        _isCentering = true;
+    }
+
+    /// <summary>
+    /// Smoothly centers once on the current target.
+    /// </summary>
+    public void CenterOnTarget()
     {
         if (_target == null)
         {
             return;
         }
 
-        IsFollowing = false;
-        _isCentering = true;
+        if (!IsFollowing)
+        {
+            _isCentering = true;
+        }
     }
 
     private void ToggleFollow()
@@ -91,7 +136,7 @@ public sealed class CameraFollow : MonoBehaviour
         }
 
         IsFollowing = true;
-        _isCentering = false;
+        _isCentering = true;
     }
 
     private void MoveTowardTarget()
@@ -112,11 +157,6 @@ public sealed class CameraFollow : MonoBehaviour
                 targetPosition,
                 factor);
 
-        if (IsFollowing)
-        {
-            return;
-        }
-
         Vector2 difference =
             new Vector2(
                 _rigTransform.position.x -
@@ -124,14 +164,13 @@ public sealed class CameraFollow : MonoBehaviour
                 _rigTransform.position.z -
                 _target.position.z);
 
-        if (difference.sqrMagnitude <=
-            _completionDistance *
-            _completionDistance)
+        if (difference.sqrMagnitude >
+            _completionDistance * _completionDistance)
         {
-            _rigTransform.position =
-                targetPosition;
-
-            _isCentering = false;
+            return;
         }
+
+        _rigTransform.position = targetPosition;
+        _isCentering = false;
     }
 }
