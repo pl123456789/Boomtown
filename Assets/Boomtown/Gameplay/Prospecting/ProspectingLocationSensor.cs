@@ -71,6 +71,31 @@ namespace Boomtown.Gameplay.Prospecting
             RefreshRiver();
         }
 
+        public bool CanPanAt(Vector3 worldPosition)
+        {
+            Vector3 groundPoint =
+                WaypointPath.GroundPoint(worldPosition);
+
+            if (riverData == null ||
+                !RiverLandscapeQuery.TryGetNearest(
+                    riverData,
+                    groundPoint,
+                    out RiverLandscapeQueryResult result))
+            {
+                return false;
+            }
+
+            bool nearWater =
+                result.distanceFromWaterEdge <=
+                maximumWaterDistance;
+
+            bool allowedChannel =
+                allowInsideActiveChannel ||
+                !result.isInsideActiveChannel;
+
+            return nearWater && allowedChannel;
+        }
+
         private void RefreshGround()
         {
             Vector3 origin =

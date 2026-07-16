@@ -1,14 +1,15 @@
+using Boomtown.Gameplay.Prospecting;
 using UnityEngine;
 
 /// <summary>
-/// Moves an employee through a queue of RTS waypoints while keeping the
-/// employee aligned with the active Unity terrain.
+/// Moves an employee through terrain-grounded move and activity commands.
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(WaypointPath))]
 public sealed class EmployeeMovement : MonoBehaviour
 {
     [Header("Movement")]
+
     [SerializeField, Min(0f)]
     private float _movementSpeed = 3.5f;
 
@@ -24,23 +25,30 @@ public sealed class EmployeeMovement : MonoBehaviour
     [SerializeField, Min(0f)]
     private float _stoppingDistance = 0.15f;
 
+    [SerializeField, Min(0.1f)]
+    private float _activityStoppingDistance = 0.75f;
+
     [Header("Grounding")]
-    [Tooltip("Height of the employee pivot above the terrain surface. " +
-             "A standard Unity capsule with height 2 uses 1.")]
+
     [SerializeField, Min(0f)]
     private float _groundOffset = 1f;
 
-    [Tooltip("How quickly the employee follows changes in terrain height.")]
     [SerializeField, Min(0f)]
     private float _groundFollowSpeed = 20f;
 
     private WaypointPath _waypointPath;
+    private GoldPanningController _goldPanningController;
+
     private float _currentSpeed;
+    private bool _waitingForActivity;
 
     private void Awake()
     {
         _waypointPath =
             GetComponent<WaypointPath>();
+
+        _goldPanningController =
+            GetComponent<GoldPanningController>();
     }
 
     private void Start()
@@ -50,22 +58,21 @@ public sealed class EmployeeMovement : MonoBehaviour
 
     private void Update()
     {
-        if (!_waypointPath.TryGetCurrent(
-                out Vector3 destination))
+        if (_waitingForActivity)
         {
-            _currentSpeed =
-                Mathf.MoveTowards(
-                    _currentSpeed,
-                    0f,
-                    _deceleration *
-                    Time.deltaTime);
+            StopAndFollowTerrain();
+            return;
+        }
 
-            FollowTerrain();
+        if (!_waypointPath.TryGetCurrentCommand(
+                out WaypointCommand command))
+        {
+            StopAndFollowTerrain();
             return;
         }
 
         Vector3 offset =
-            destination -
+            command.Position -
             transform.position;
 
         offset.y = 0f;
@@ -73,17 +80,125 @@ public sealed class EmployeeMovement : MonoBehaviour
         float distance =
             offset.magnitude;
 
-        if (distance <= _stoppingDistance)
+        float stoppingDistance =
+            command.IsActivity
+                ? _activityStoppingDistance
+                : _stoppingDistance;
+
+        if (distance <= stoppingDistance)
         {
-            _waypointPath.CompleteCurrent();
+            if (command.IsActivity)
+            {
+                StartCurrentActivity(command);
+            }
+            else
+            {
+                _waypointPath.CompleteCurrent();
+            }
+
             _currentSpeed = 0f;
             FollowTerrain();
             return;
         }
 
-        Vector3 direction =
-            offset / distance;
+        MoveToward(
+            offset / distance,
+            distance);
+    }
 
+    public void SetDestination(
+        Vector3 destination,
+        bool queueWaypoint)
+    {
+        Vector3 grounded =
+            WaypointPath.GroundPoint(
+                destination);
+
+        if (queueWaypoint)
+        {
+            _waypointPath.AddWaypoint(
+                grounded);
+        }
+        else
+        {
+            _waitingForActivity = false;
+            _waypointPath.SetWaypoint(
+                grounded);
+        }
+    }
+
+    public bool MarkLastWaypointAsPanning()
+    {
+        if (!_waypointPath.TryGetLastCommand(
+                out WaypointCommand lastCommand))
+        {
+            Debug.Log(
+                $"[Boomtown] Queue a waypoint for {name} before " +
+                "pressing Shift + Space.",
+                this);
+
+            return false;
+        }
+
+        if (_goldPanningController == null ||
+            !_goldPanningController.CanPanAt(
+                lastCommand.Position))
+        {
+            Debug.Log(
+                $"[Boomtown] {name}'s final waypoint is not a valid " +
+                "gold-panning location.",
+                this);
+
+            return false;
+        }
+
+        return _waypointPath.MarkLastCommandAsActivity(
+            WaypointCommandType.PanForGold);
+    }
+
+    private void StartCurrentActivity(
+        WaypointCommand command)
+    {
+        if (_waitingForActivity)
+        {
+            return;
+        }
+
+        _waitingForActivity = true;
+        _currentSpeed = 0f;
+
+        bool started = false;
+
+        if (command.CommandType ==
+            WaypointCommandType.PanForGold &&
+            _goldPanningController != null)
+        {
+            started =
+                _goldPanningController.TryStartPanning(
+                    CompleteCurrentActivity);
+        }
+
+        if (!started)
+        {
+            Debug.LogWarning(
+                $"{name} could not perform queued activity " +
+                $"{command.CommandType}.",
+                this);
+
+            CompleteCurrentActivity();
+        }
+    }
+
+    private void CompleteCurrentActivity()
+    {
+        _waypointPath.CompleteCurrent();
+        _waitingForActivity = false;
+    }
+
+    private void MoveToward(
+        Vector3 direction,
+        float distance)
+    {
         _currentSpeed =
             Mathf.MoveTowards(
                 _currentSpeed,
@@ -97,7 +212,8 @@ public sealed class EmployeeMovement : MonoBehaviour
                 Vector3.up);
 
         float rotationFactor =
-            1f - Mathf.Exp(
+            1f -
+            Mathf.Exp(
                 -_rotationSpeed *
                 Time.deltaTime);
 
@@ -118,32 +234,23 @@ public sealed class EmployeeMovement : MonoBehaviour
             direction * step;
 
         nextPosition.y =
-            GetTerrainHeight(nextPosition);
+            GetCharacterHeight(
+                nextPosition);
 
         transform.position =
             nextPosition;
     }
 
-    public void SetDestination(
-        Vector3 destination,
-        bool queueWaypoint)
+    private void StopAndFollowTerrain()
     {
-        Vector3 groundedDestination =
-            new Vector3(
-                destination.x,
-                GetTerrainHeight(destination),
-                destination.z);
+        _currentSpeed =
+            Mathf.MoveTowards(
+                _currentSpeed,
+                0f,
+                _deceleration *
+                Time.deltaTime);
 
-        if (queueWaypoint)
-        {
-            _waypointPath.AddWaypoint(
-                groundedDestination);
-        }
-        else
-        {
-            _waypointPath.SetWaypoint(
-                groundedDestination);
-        }
+        FollowTerrain();
     }
 
     private void FollowTerrain()
@@ -152,7 +259,7 @@ public sealed class EmployeeMovement : MonoBehaviour
             transform.position;
 
         float targetY =
-            GetTerrainHeight(position);
+            GetCharacterHeight(position);
 
         position.y =
             Mathf.MoveTowards(
@@ -171,30 +278,20 @@ public sealed class EmployeeMovement : MonoBehaviour
             transform.position;
 
         position.y =
-            GetTerrainHeight(position);
+            GetCharacterHeight(position);
 
         transform.position =
             position;
     }
 
-    private float GetTerrainHeight(
+    private float GetCharacterHeight(
         Vector3 worldPosition)
     {
-        Terrain terrain =
-            Terrain.activeTerrain;
+        Vector3 ground =
+            WaypointPath.GroundPoint(
+                worldPosition);
 
-        if (terrain == null ||
-            terrain.terrainData == null)
-        {
-            return transform.position.y;
-        }
-
-        float terrainY =
-            terrain.SampleHeight(
-                worldPosition) +
-            terrain.transform.position.y;
-
-        return terrainY +
+        return ground.y +
                _groundOffset;
     }
 }

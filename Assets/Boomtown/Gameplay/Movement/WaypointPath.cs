@@ -1,13 +1,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum WaypointCommandType
+{
+    Move,
+    PanForGold
+}
+
+public sealed class WaypointCommand
+{
+    public WaypointCommand(
+        Vector3 position,
+        WaypointCommandType commandType)
+    {
+        Position = position;
+        CommandType = commandType;
+    }
+
+    public Vector3 Position { get; set; }
+    public WaypointCommandType CommandType { get; set; }
+
+    public bool IsActivity =>
+        CommandType != WaypointCommandType.Move;
+}
+
 /// <summary>
-/// Stores and displays a queue of world-space movement waypoints.
+/// Stores a terrain-grounded route. Move commands use circular markers.
+/// A queued interaction uses an orange X marker.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class WaypointPath : MonoBehaviour
 {
     [Header("Route Display")]
+
     [SerializeField]
     private bool _showRoute = true;
 
@@ -15,32 +40,45 @@ public sealed class WaypointPath : MonoBehaviour
     private float _lineWidth = 0.045f;
 
     [SerializeField, Min(0f)]
-    private float _markerRadius = 0.18f;
+    private float _moveMarkerRadius = 0.18f;
 
     [SerializeField, Min(0f)]
-    private float _markerHeight = 0.025f;
+    private float _activityMarkerSize = 0.42f;
+
+    [SerializeField, Min(0f)]
+    private float _markerSurfaceOffset = 0.06f;
+
+    [SerializeField, Min(0.5f)]
+    private float _terrainLineSpacing = 3f;
 
     [SerializeField]
     private Color _routeColor =
         new Color(1f, 0.8f, 0.1f, 1f);
 
-    private readonly Queue<Vector3> _waypoints = new();
+    [SerializeField]
+    private Color _activityColor =
+        new Color(1f, 0.35f, 0.1f, 1f);
+
+    private readonly List<WaypointCommand> _commands = new();
     private readonly List<GameObject> _markers = new();
 
     private LineRenderer _lineRenderer;
     private Material _routeMaterial;
+    private Material _activityMaterial;
 
-    public bool HasWaypoints => _waypoints.Count > 0;
+    public bool HasWaypoints => _commands.Count > 0;
+    public int CommandCount => _commands.Count;
 
     private void Awake()
     {
+        CreateMaterials();
         CreateLineRenderer();
         RefreshVisuals();
     }
 
     private void LateUpdate()
     {
-        if (_showRoute && _waypoints.Count > 0)
+        if (_showRoute && _commands.Count > 0)
         {
             RefreshLinePositions();
         }
@@ -54,31 +92,105 @@ public sealed class WaypointPath : MonoBehaviour
 
     public void AddWaypoint(Vector3 waypoint)
     {
-        _waypoints.Enqueue(waypoint);
-        CreateMarker(waypoint);
+        AddCommand(
+            waypoint,
+            WaypointCommandType.Move);
+    }
+
+    public void SetCommand(
+        Vector3 waypoint,
+        WaypointCommandType commandType)
+    {
+        Clear();
+        AddCommand(waypoint, commandType);
+    }
+
+    public void AddCommand(
+        Vector3 waypoint,
+        WaypointCommandType commandType)
+    {
+        Vector3 grounded =
+            GroundPoint(waypoint);
+
+        _commands.Add(
+            new WaypointCommand(
+                grounded,
+                commandType));
+
+        RebuildMarkers();
         RefreshVisuals();
     }
 
-    public bool TryGetCurrent(out Vector3 waypoint)
+    public bool TryGetLastCommand(
+        out WaypointCommand command)
     {
-        if (_waypoints.Count == 0)
+        if (_commands.Count == 0)
+        {
+            command = null;
+            return false;
+        }
+
+        command = _commands[_commands.Count - 1];
+        return true;
+    }
+
+    /// <summary>
+    /// Changes the final queued move into an activity command.
+    /// Returns false when no waypoint is queued.
+    /// </summary>
+    public bool MarkLastCommandAsActivity(
+        WaypointCommandType activityType)
+    {
+        if (_commands.Count == 0 ||
+            activityType == WaypointCommandType.Move)
+        {
+            return false;
+        }
+
+        _commands[_commands.Count - 1].CommandType =
+            activityType;
+
+        RebuildMarkers();
+        RefreshVisuals();
+
+        return true;
+    }
+
+    public bool TryGetCurrent(
+        out Vector3 waypoint)
+    {
+        if (!TryGetCurrentCommand(
+                out WaypointCommand command))
         {
             waypoint = default;
             return false;
         }
 
-        waypoint = _waypoints.Peek();
+        waypoint = command.Position;
+        return true;
+    }
+
+    public bool TryGetCurrentCommand(
+        out WaypointCommand command)
+    {
+        if (_commands.Count == 0)
+        {
+            command = null;
+            return false;
+        }
+
+        command = _commands[0];
         return true;
     }
 
     public void CompleteCurrent()
     {
-        if (_waypoints.Count == 0)
+        if (_commands.Count == 0)
         {
             return;
         }
 
-        _waypoints.Dequeue();
+        _commands.RemoveAt(0);
 
         if (_markers.Count > 0)
         {
@@ -91,8 +203,40 @@ public sealed class WaypointPath : MonoBehaviour
 
     public void Clear()
     {
-        _waypoints.Clear();
+        _commands.Clear();
+        DestroyMarkers();
+        RefreshVisuals();
+    }
 
+    private void RebuildMarkers()
+    {
+        DestroyMarkers();
+
+        for (int index = 0;
+             index < _commands.Count;
+             index++)
+        {
+            WaypointCommand command =
+                _commands[index];
+
+            GameObject marker =
+                command.IsActivity
+                    ? CreateActivityMarker(
+                        command.Position)
+                    : CreateMoveMarker(
+                        command.Position);
+
+            marker.name =
+                command.IsActivity
+                    ? $"Activity X {index + 1}"
+                    : $"Move {index + 1}";
+
+            _markers.Add(marker);
+        }
+    }
+
+    private void DestroyMarkers()
+    {
         foreach (GameObject marker in _markers)
         {
             if (marker != null)
@@ -102,7 +246,29 @@ public sealed class WaypointPath : MonoBehaviour
         }
 
         _markers.Clear();
-        RefreshVisuals();
+    }
+
+    private void CreateMaterials()
+    {
+        Shader shader =
+            Shader.Find("Sprites/Default");
+
+        if (shader == null)
+        {
+            return;
+        }
+
+        _routeMaterial =
+            new Material(shader)
+            {
+                color = _routeColor
+            };
+
+        _activityMaterial =
+            new Material(shader)
+            {
+                color = _activityColor
+            };
     }
 
     private void CreateLineRenderer()
@@ -126,55 +292,119 @@ public sealed class WaypointPath : MonoBehaviour
             UnityEngine.Rendering.ShadowCastingMode.Off;
         _lineRenderer.receiveShadows = false;
 
-        Shader shader =
-            Shader.Find("Sprites/Default");
-
-        if (shader != null)
+        if (_routeMaterial != null)
         {
-            _routeMaterial = new Material(shader);
-            _routeMaterial.color = _routeColor;
-            _lineRenderer.material = _routeMaterial;
+            _lineRenderer.material =
+                _routeMaterial;
         }
     }
 
-    private void CreateMarker(Vector3 waypoint)
+    private GameObject CreateMoveMarker(
+        Vector3 position)
     {
         GameObject marker =
             GameObject.CreatePrimitive(
                 PrimitiveType.Cylinder);
 
-        marker.name =
-            $"Waypoint {_markers.Count + 1}";
-
         marker.transform.position =
-            waypoint +
-            (Vector3.up * _markerHeight);
+            GroundPoint(position) +
+            Vector3.up *
+            _markerSurfaceOffset;
 
         marker.transform.localScale =
             new Vector3(
-                _markerRadius * 2f,
-                _markerHeight,
-                _markerRadius * 2f);
+                _moveMarkerRadius * 2f,
+                0.025f,
+                _moveMarkerRadius * 2f);
 
-        Collider markerCollider =
-            marker.GetComponent<Collider>();
+        RemoveCollider(marker);
+        ApplyMaterial(
+            marker,
+            _routeMaterial);
 
-        if (markerCollider != null)
+        return marker;
+    }
+
+    private GameObject CreateActivityMarker(
+        Vector3 position)
+    {
+        GameObject root =
+            new GameObject("ActivityMarker");
+
+        root.transform.position =
+            GroundPoint(position) +
+            Vector3.up *
+            _markerSurfaceOffset;
+
+        CreateXBar(
+            root.transform,
+            45f);
+
+        CreateXBar(
+            root.transform,
+            -45f);
+
+        return root;
+    }
+
+    private void CreateXBar(
+        Transform parent,
+        float rotationY)
+    {
+        GameObject bar =
+            GameObject.CreatePrimitive(
+                PrimitiveType.Cube);
+
+        bar.transform.SetParent(
+            parent,
+            false);
+
+        bar.transform.localPosition =
+            Vector3.zero;
+
+        bar.transform.localRotation =
+            Quaternion.Euler(
+                0f,
+                rotationY,
+                0f);
+
+        bar.transform.localScale =
+            new Vector3(
+                _activityMarkerSize,
+                0.035f,
+                _activityMarkerSize * 0.18f);
+
+        RemoveCollider(bar);
+        ApplyMaterial(
+            bar,
+            _activityMaterial);
+    }
+
+    private static void RemoveCollider(
+        GameObject target)
+    {
+        Collider collider =
+            target.GetComponent<Collider>();
+
+        if (collider != null)
         {
-            Destroy(markerCollider);
+            Destroy(collider);
         }
+    }
 
-        Renderer markerRenderer =
-            marker.GetComponent<Renderer>();
+    private static void ApplyMaterial(
+        GameObject target,
+        Material material)
+    {
+        Renderer renderer =
+            target.GetComponent<Renderer>();
 
-        if (markerRenderer != null &&
-            _routeMaterial != null)
+        if (renderer != null &&
+            material != null)
         {
-            markerRenderer.material =
-                new Material(_routeMaterial);
+            renderer.material =
+                material;
         }
-
-        _markers.Add(marker);
     }
 
     private void RefreshVisuals()
@@ -186,7 +416,7 @@ public sealed class WaypointPath : MonoBehaviour
 
         _lineRenderer.enabled =
             _showRoute &&
-            _waypoints.Count > 0;
+            _commands.Count > 0;
 
         RefreshLinePositions();
     }
@@ -199,28 +429,140 @@ public sealed class WaypointPath : MonoBehaviour
             return;
         }
 
-        Vector3[] routePoints =
-            new Vector3[_waypoints.Count + 1];
+        List<Vector3> routePoints =
+            new List<Vector3>();
 
-        routePoints[0] =
-            transform.position +
-            (Vector3.up * _markerHeight);
+        Vector3 previous =
+            GroundPoint(
+                transform.position);
 
-        int index = 1;
+        routePoints.Add(
+            previous +
+            Vector3.up *
+            _markerSurfaceOffset);
 
-        foreach (Vector3 waypoint in _waypoints)
+        foreach (WaypointCommand command
+                 in _commands)
         {
-            routePoints[index] =
-                waypoint +
-                (Vector3.up * _markerHeight);
+            Vector3 destination =
+                GroundPoint(
+                    command.Position);
 
-            index++;
+            AppendGroundedSegment(
+                routePoints,
+                previous,
+                destination);
+
+            previous =
+                destination;
         }
 
         _lineRenderer.positionCount =
-            routePoints.Length;
+            routePoints.Count;
 
-        _lineRenderer.SetPositions(routePoints);
+        _lineRenderer.SetPositions(
+            routePoints.ToArray());
+    }
+
+    private void AppendGroundedSegment(
+        List<Vector3> points,
+        Vector3 start,
+        Vector3 end)
+    {
+        float horizontalDistance =
+            Vector2.Distance(
+                new Vector2(
+                    start.x,
+                    start.z),
+                new Vector2(
+                    end.x,
+                    end.z));
+
+        int steps =
+            Mathf.Max(
+                1,
+                Mathf.CeilToInt(
+                    horizontalDistance /
+                    _terrainLineSpacing));
+
+        for (int step = 1;
+             step <= steps;
+             step++)
+        {
+            float t =
+                step / (float)steps;
+
+            Vector3 point =
+                Vector3.Lerp(
+                    start,
+                    end,
+                    t);
+
+            point =
+                GroundPoint(point) +
+                Vector3.up *
+                _markerSurfaceOffset;
+
+            points.Add(point);
+        }
+    }
+
+    public static Vector3 GroundPoint(
+        Vector3 worldPosition)
+    {
+        Terrain terrain =
+            FindTerrain(worldPosition);
+
+        if (terrain == null ||
+            terrain.terrainData == null)
+        {
+            return worldPosition;
+        }
+
+        float y =
+            terrain.SampleHeight(
+                worldPosition) +
+            terrain.transform.position.y;
+
+        return new Vector3(
+            worldPosition.x,
+            y,
+            worldPosition.z);
+    }
+
+    private static Terrain FindTerrain(
+        Vector3 worldPosition)
+    {
+        Terrain[] terrains =
+            Terrain.activeTerrains;
+
+        foreach (Terrain terrain in terrains)
+        {
+            if (terrain == null ||
+                terrain.terrainData == null)
+            {
+                continue;
+            }
+
+            Vector3 origin =
+                terrain.transform.position;
+
+            Vector3 size =
+                terrain.terrainData.size;
+
+            bool inside =
+                worldPosition.x >= origin.x &&
+                worldPosition.x <= origin.x + size.x &&
+                worldPosition.z >= origin.z &&
+                worldPosition.z <= origin.z + size.z;
+
+            if (inside)
+            {
+                return terrain;
+            }
+        }
+
+        return Terrain.activeTerrain;
     }
 
     private void OnDestroy()
@@ -228,6 +570,11 @@ public sealed class WaypointPath : MonoBehaviour
         if (_routeMaterial != null)
         {
             Destroy(_routeMaterial);
+        }
+
+        if (_activityMaterial != null)
+        {
+            Destroy(_activityMaterial);
         }
     }
 }

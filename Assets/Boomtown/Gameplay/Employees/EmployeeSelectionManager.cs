@@ -5,8 +5,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Selects employees, commands Bill or selected employees, switches camera focus,
-/// and cycles through Bill and all employees with Tab or Shift+Tab.
+/// Selects Bill or employees and issues movement commands.
+///
+/// Right-click replaces the route.
+/// Shift + Right-click queues another move.
+/// Activities are declared separately with Space.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class EmployeeSelectionManager : MonoBehaviour
@@ -30,8 +33,7 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
     [SerializeField]
     private LayerMask _groundLayerMask = ~0;
 
-    [SerializeField]
-    [Min(0f)]
+    [SerializeField, Min(0f)]
     private float _maximumRaycastDistance = 1000f;
 
     private readonly List<Employee> _employees = new();
@@ -61,7 +63,8 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
 
     private void Update()
     {
-        Keyboard keyboard = Keyboard.current;
+        Keyboard keyboard =
+            Keyboard.current;
 
         if (keyboard != null &&
             keyboard.tabKey.wasPressedThisFrame)
@@ -70,11 +73,24 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
                 keyboard.leftShiftKey.isPressed ||
                 keyboard.rightShiftKey.isPressed;
 
-            CycleCharacter(cycleBackward);
+            CycleCharacter(
+                cycleBackward);
+
             return;
         }
 
-        Mouse mouse = Mouse.current;
+        if (keyboard != null &&
+            _selectedEmployee != null &&
+            keyboard.spaceKey.wasPressedThisFrame &&
+            (keyboard.leftShiftKey.isPressed ||
+             keyboard.rightShiftKey.isPressed))
+        {
+            _selectedEmployee.MarkLastWaypointAsPanning();
+            return;
+        }
+
+        Mouse mouse =
+            Mouse.current;
 
         if (mouse == null ||
             IsPointerOverUi())
@@ -103,10 +119,6 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Rebuilds the list used for Tab cycling.
-    /// Call this after employees are hired or removed.
-    /// </summary>
     public void RefreshEmployeeList()
     {
         _employees.Clear();
@@ -117,7 +129,8 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
 
         _employees.AddRange(employees);
 
-        int maximumIndex = _employees.Count;
+        int maximumIndex =
+            _employees.Count;
 
         if (_cycleIndex > maximumIndex)
         {
@@ -129,7 +142,8 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
     {
         if (_worldCamera == null)
         {
-            _worldCamera = Camera.main;
+            _worldCamera =
+                Camera.main;
         }
 
         if (_cameraFollow == null)
@@ -145,23 +159,46 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         }
     }
 
-    private void CycleCharacter(bool cycleBackward)
+    private void CommandAt(
+        Vector2 screenPosition,
+        bool queueWaypoint)
+    {
+        if (!TryGetGroundPoint(
+                screenPosition,
+                out Vector3 destination))
+        {
+            return;
+        }
+
+        if (_selectedEmployee != null)
+        {
+            _selectedEmployee.MoveTo(
+                destination,
+                queueWaypoint);
+
+            return;
+        }
+
+        _billController.SetDestination(
+            destination,
+            queueWaypoint);
+    }
+
+    private void CycleCharacter(
+        bool cycleBackward)
     {
         RefreshEmployeeList();
 
         int characterCount =
             _employees.Count + 1;
 
-        if (characterCount <= 0)
-        {
-            return;
-        }
-
         int direction =
             cycleBackward ? -1 : 1;
 
         _cycleIndex =
-            (_cycleIndex + direction + characterCount) %
+            (_cycleIndex +
+             direction +
+             characterCount) %
             characterCount;
 
         if (_cycleIndex == 0)
@@ -170,15 +207,13 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
             return;
         }
 
-        Employee employee =
-            _employees[_cycleIndex - 1];
-
         SelectEmployee(
-            employee,
+            _employees[_cycleIndex - 1],
             true);
     }
 
-    private void SelectAt(Vector2 screenPosition)
+    private void SelectAt(
+        Vector2 screenPosition)
     {
         Ray ray =
             _worldCamera.ScreenPointToRay(
@@ -226,31 +261,6 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         SelectBill(false);
     }
 
-    private void CommandAt(
-        Vector2 screenPosition,
-        bool queueWaypoint)
-    {
-        if (!TryGetGroundPoint(
-            screenPosition,
-            out Vector3 destination))
-        {
-            return;
-        }
-
-        if (_selectedEmployee != null)
-        {
-            _selectedEmployee.MoveTo(
-                destination,
-                queueWaypoint);
-
-            return;
-        }
-
-        _billController.SetDestination(
-            destination,
-            queueWaypoint);
-    }
-
     private bool TryGetGroundPoint(
         Vector2 screenPosition,
         out Vector3 destination)
@@ -275,18 +285,17 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         foreach (RaycastHit hit in hits)
         {
             if (hit.collider
-                .GetComponentInParent<Employee>() != null)
+                    .GetComponentInParent<Employee>() != null ||
+                hit.collider
+                    .GetComponentInParent<QuickPlayerController>() != null)
             {
                 continue;
             }
 
-            if (hit.collider
-                .GetComponentInParent<QuickPlayerController>() != null)
-            {
-                continue;
-            }
+            destination =
+                WaypointPath.GroundPoint(
+                    hit.point);
 
-            destination = hit.point;
             return true;
         }
 
@@ -318,10 +327,10 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         }
     }
 
-    private void SelectBill(bool followImmediately)
+    private void SelectBill(
+        bool followImmediately)
     {
         ClearEmployeeSelection();
-
         _cycleIndex = 0;
 
         if (followImmediately)

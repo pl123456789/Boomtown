@@ -10,11 +10,13 @@ using UnityEngine;
 public sealed class Employee : MonoBehaviour
 {
     [Header("Identity")]
+
     [SerializeField]
     private string _employeeName =
         "Theodore Parsons";
 
     [Header("Employment")]
+
     [SerializeField]
     private EmployeeProfession _profession =
         EmployeeProfession.Unskilled;
@@ -41,13 +43,15 @@ public sealed class Employee : MonoBehaviour
         SetSelected(false);
     }
 
-    public void SetSelected(bool isSelected)
+    public void SetSelected(
+        bool isSelected)
     {
         IsSelected = isSelected;
 
         if (_selectionRing != null)
         {
-            _selectionRing.SetVisible(isSelected);
+            _selectionRing.SetVisible(
+                isSelected);
         }
     }
 
@@ -58,6 +62,12 @@ public sealed class Employee : MonoBehaviour
         _movement.SetDestination(
             destination,
             queueWaypoint);
+    }
+
+    public bool MarkLastWaypointAsPanning()
+    {
+        return _movement != null &&
+               _movement.MarkLastWaypointAsPanning();
     }
 
     public void SetProfession(
@@ -72,11 +82,13 @@ public sealed class Employee : MonoBehaviour
         _professionExperience = 0;
     }
 
-    public void AddProfessionExperience(int amount)
+    public void AddProfessionExperience(
+        int amount)
     {
         _professionExperience =
             Mathf.Max(
                 0,
-                _professionExperience + amount);
+                _professionExperience +
+                amount);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Boomtown.WorldGeneration;
@@ -36,6 +37,9 @@ namespace Boomtown.Gameplay.Prospecting
         [Header("UI")]
 
         [SerializeField]
+        private bool showPlayerUI = true;
+
+        [SerializeField]
         private GoldPanningUI ui;
 
         private NavMeshAgent agent;
@@ -45,8 +49,15 @@ namespace Boomtown.Gameplay.Prospecting
         private readonly List<Behaviour> disabledMovementBehaviours = new();
 
         private bool isPanning;
+        private Action queuedCompletion;
 
         public bool IsPanning => isPanning;
+
+        public bool CanPanAt(Vector3 worldPosition)
+        {
+            return sensor != null &&
+                   sensor.CanPanAt(worldPosition);
+        }
 
         private void Awake()
         {
@@ -64,7 +75,8 @@ namespace Boomtown.Gameplay.Prospecting
                     this);
             }
 
-            if (ui == null)
+            if (showPlayerUI &&
+                ui == null)
             {
                 Debug.LogError(
                     "[Gold Panning] GoldPanningUI is not assigned.",
@@ -81,9 +93,18 @@ namespace Boomtown.Gameplay.Prospecting
 
             UpdatePrompt();
 
+            Keyboard keyboard =
+                Keyboard.current;
+
+            bool shiftPressed =
+                keyboard != null &&
+                (keyboard.leftShiftKey.isPressed ||
+                 keyboard.rightShiftKey.isPressed);
+
             if (sensor.CanPanHere &&
-                Keyboard.current != null &&
-                Keyboard.current[panKey].wasPressedThisFrame)
+                keyboard != null &&
+                !shiftPressed &&
+                keyboard[panKey].wasPressedThisFrame)
             {
                 TryStartPanning();
             }
@@ -91,14 +112,27 @@ namespace Boomtown.Gameplay.Prospecting
 
         public bool TryStartPanning()
         {
+            return TryStartPanning(null);
+        }
+
+        public bool TryStartPanning(
+            Action onCompleted)
+        {
+            if (sensor != null)
+            {
+                sensor.Refresh();
+            }
+
             if (isPanning ||
                 geologyData == null ||
-                ui == null ||
+                (showPlayerUI && ui == null) ||
+                sensor == null ||
                 !sensor.CanPanHere)
             {
                 return false;
             }
 
+            queuedCompletion = onCompleted;
             StartCoroutine(PanRoutine());
             return true;
         }
@@ -108,7 +142,10 @@ namespace Boomtown.Gameplay.Prospecting
             isPanning = true;
             StopAndLockMovement();
 
-            ui.BeginProgress();
+            if (showPlayerUI)
+            {
+                ui.BeginProgress();
+            }
 
             // Let Unity rebuild the newly enabled Slider before animation starts.
             yield return null;
@@ -123,12 +160,18 @@ namespace Boomtown.Gameplay.Prospecting
                     Mathf.Clamp01(
                         elapsed / panningDuration);
 
-                ui.ShowProgress(progress);
+                if (showPlayerUI)
+                {
+                    ui.ShowProgress(progress);
+                }
 
                 yield return null;
             }
 
-            ui.ShowProgress(1f);
+            if (showPlayerUI)
+            {
+                ui.ShowProgress(1f);
+            }
 
             float geologyGrade =
                 geologyData.SamplePlacer(
@@ -146,7 +189,10 @@ namespace Boomtown.Gameplay.Prospecting
                     outcome,
                     inventory.TotalGoldOunces);
 
-            ui.ShowResult(resultText);
+            if (showPlayerUI)
+            {
+                ui.ShowResult(resultText);
+            }
 
             Debug.Log(
                 $"[Gold Panning] {resultText} | " +
@@ -162,12 +208,21 @@ namespace Boomtown.Gameplay.Prospecting
             RestoreMovement();
 
             isPanning = false;
+
+            Action completion =
+                queuedCompletion;
+
+            queuedCompletion = null;
+
+            completion?.Invoke();
+
             UpdatePrompt();
         }
 
         private void UpdatePrompt()
         {
-            if (ui == null)
+            if (!showPlayerUI ||
+                ui == null)
             {
                 return;
             }
