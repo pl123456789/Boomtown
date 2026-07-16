@@ -1,0 +1,1104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71329ee8128063f49a9559bebe5fa536, type: 3}
+  m_Name: Hope_1858_RiverData
+  m_EditorClassIdentifier: Assembly-CSharp::Boomtown.WorldGeneration.RiverData
+  samples:
+  - position: {x: 11.371419, y: 13.968927, z: -1000}
+    tangent: {x: 0.37282616, y: 0, z: 0.9279012}
+    leftWidth: 43.077587
+    rightWidth: 43.077587
+    depth: 3
+    velocity: 1.321899
+    gravelProbability: 0.36687082
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 18.068012, y: 13.619808, z: -983.3333}
+    tangent: {x: 0.35923034, y: 0, z: 0.9332489}
+    leftWidth: 45.487408
+    rightWidth: 41.38094
+    depth: 3
+    velocity: 1.2927037
+    gravelProbability: 0.39777663
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 24.202227, y: 13.2936, z: -966.6667}
+    tangent: {x: 0.3442702, y: 0, z: 0.9388706}
+    leftWidth: 47.49098
+    rightWidth: 40.04839
+    depth: 3
+    velocity: 1.2673912
+    gravelProbability: 0.42284942
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 30.290854, y: 13.007814, z: -950}
+    tangent: {x: 0.3329883, y: 0, z: 0.94293094}
+    leftWidth: 49.06962
+    rightWidth: 39.065636
+    depth: 3
+    velocity: 1.2464947
+    gravelProbability: 0.44211853
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 35.973633, y: 12.77092, z: -933.3333}
+    tangent: {x: 0.3110799, y: 0, z: 0.9503838}
+    leftWidth: 50.40667
+    rightWidth: 38.2293
+    depth: 3
+    velocity: 1.2290773
+    gravelProbability: 0.45827538
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 41.201523, y: 12.581365, z: -916.6667}
+    tangent: {x: 0.28629443, y: 0, z: 0.95814174}
+    leftWidth: 51.53315
+    rightWidth: 37.498955
+    depth: 3
+    velocity: 1.2150146
+    gravelProbability: 0.47186285
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 45.933685, y: 12.428971, z: -900}
+    tangent: {x: 0.25895303, y: 0, z: 0.9658899}
+    leftWidth: 52.372772
+    rightWidth: 36.947723
+    depth: 3
+    velocity: 1.2047383
+    gravelProbability: 0.48194778
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 50.13813, y: 12.29776, z: -883.3333}
+    tangent: {x: 0.22946264, y: 0, z: 0.9733175}
+    leftWidth: 52.8918
+    rightWidth: 36.609146
+    depth: 3
+    velocity: 1.1983804
+    gravelProbability: 0.48814443
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 53.792118, y: 12.169205, z: -866.6667}
+    tangent: {x: 0.1983116, y: 0, z: 0.9801391}
+    leftWidth: 53.122963
+    rightWidth: 36.45198
+    depth: 3
+    velocity: 1.1956717
+    gravelProbability: 0.49092257
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 56.88246, y: 12.0250025, z: -850}
+    tangent: {x: 0.1660654, y: 0, z: 0.98611474}
+    leftWidth: 53.170975
+    rightWidth: 36.37429
+    depth: 3
+    velocity: 1.1959183
+    gravelProbability: 0.4916797
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 59.405582, y: 11.848744, z: -833.3333}
+    tangent: {x: 0.13806976, y: 0, z: 0.9904225}
+    leftWidth: 53.15224
+    rightWidth: 36.263683
+    depth: 3
+    velocity: 1.19835
+    gravelProbability: 0.4919509
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 61.52929, y: 11.626783, z: -816.6667}
+    tangent: {x: 0.10694237, y: 0, z: 0.99426526}
+    leftWidth: 53.04808
+    rightWidth: 36.144028
+    depth: 3
+    velocity: 1.202984
+    gravelProbability: 0.49146792
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 62.990887, y: 11.349502, z: -800}
+    tangent: {x: 0.07172366, y: 0, z: 0.99742454}
+    leftWidth: 52.711124
+    rightWidth: 36.168964
+    depth: 3
+    velocity: 1.2106061
+    gravelProbability: 0.48822948
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 63.926254, y: 11.013637, z: -783.3333}
+    tangent: {x: 0.041238375, y: 0, z: 0.99914926}
+    leftWidth: 52.05467
+    rightWidth: 36.432476
+    depth: 3
+    velocity: 1.2216564
+    gravelProbability: 0.4810081
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 64.36667, y: 10.62478, z: -766.6667}
+    tangent: {x: 0.012736477, y: 0, z: 0.9999189}
+    leftWidth: 51.113647
+    rightWidth: 36.907806
+    depth: 3
+    velocity: 1.2358454
+    gravelProbability: 0.470179
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 64.35084, y: 10.198409, z: -750}
+    tangent: {x: -0.013277165, y: 0, z: 0.9999119}
+    leftWidth: 49.931404
+    rightWidth: 37.560585
+    depth: 3
+    velocity: 1.2528255
+    gravelProbability: 0.45622143
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 63.924057, y: 9.758459, z: -733.3333}
+    tangent: {x: -0.03638849, y: 0, z: 0.99933773}
+    leftWidth: 48.58449
+    rightWidth: 38.32388
+    depth: 3
+    velocity: 1.2720202
+    gravelProbability: 0.44006893
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 63.137085, y: 9.333668, z: -716.6667}
+    tangent: {x: -0.0562788, y: 0, z: 0.9984151}
+    leftWidth: 47.316063
+    rightWidth: 38.9647
+    depth: 3
+    velocity: 1.2917278
+    gravelProbability: 0.424973
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 62.04512, y: 8.952802, z: -700}
+    tangent: {x: -0.061552115, y: 0, z: 0.99810386}
+    leftWidth: 46.360416
+    rightWidth: 39.259335
+    depth: 3
+    velocity: 1.3101801
+    gravelProbability: 0.41416058
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 61.081448, y: 8.639998, z: -683.3333}
+    tangent: {x: -0.0745401, y: 0, z: 0.997218}
+    leftWidth: 45.583447
+    rightWidth: 39.35272
+    depth: 3
+    velocity: 1.3279817
+    gravelProbability: 0.4058057
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 59.55352, y: 8.411138, z: -666.6667}
+    tangent: {x: -0.09522684, y: 0, z: 0.99545556}
+    leftWidth: 44.600704
+    rightWidth: 39.640278
+    depth: 3
+    velocity: 1.3475338
+    gravelProbability: 0.39449248
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 57.89273, y: 8.271772, z: -650}
+    tangent: {x: -0.101296514, y: 0, z: 0.9948563}
+    leftWidth: 43.28358
+    rightWidth: 40.261562
+    depth: 3
+    velocity: 1.3696333
+    gravelProbability: 0.3782735
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 56.159508, y: 8.216988, z: -633.3333}
+    tangent: {x: -0.10384438, y: 0, z: 0.99459356}
+    leftWidth: 41.854088
+    rightWidth: 41.005173
+    depth: 3
+    velocity: 1.3926241
+    gravelProbability: 0.36017907
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 54.412437, y: 8.233212, z: -616.6667}
+    tangent: {x: -0.10302098, y: 0, z: 0.99467915}
+    leftWidth: 40.527027
+    rightWidth: 41.666103
+    depth: 3
+    velocity: 1.4064126
+    gravelProbability: 0.35974485
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 52.707108, y: 8.301315, z: -600}
+    tangent: {x: -0.0990371, y: 0, z: 0.99508375}
+    leftWidth: 39.366135
+    rightWidth: 42.189445
+    depth: 3
+    velocity: 1.414305
+    gravelProbability: 0.36962777
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 51.094887, y: 8.399825, z: -583.3333}
+    tangent: {x: -0.0921624, y: 0, z: 0.99574393}
+    leftWidth: 38.43441
+    rightWidth: 42.52111
+    depth: 3
+    velocity: 1.4227507
+    gravelProbability: 0.37674114
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 49.6219, y: 8.50753, z: -566.6667}
+    tangent: {x: -0.07761048, y: 0, z: 0.99698377}
+    leftWidth: 37.790066
+    rightWidth: 42.61369
+    depth: 3
+    velocity: 1.432013
+    gravelProbability: 0.38026175
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 48.500046, y: 8.605549, z: -550}
+    tangent: {x: -0.067411, y: 0, z: 0.9977253}
+    leftWidth: 37.33185
+    rightWidth: 42.58088
+    depth: 3
+    velocity: 1.4410822
+    gravelProbability: 0.38174435
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 47.36974, y: 8.679313, z: -533.3333}
+    tangent: {x: -0.060665835, y: 0, z: 0.99815816}
+    leftWidth: 36.87177
+    rightWidth: 42.621517
+    depth: 3
+    velocity: 1.4482456
+    gravelProbability: 0.38407227
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 46.47412, y: 8.72043, z: -516.6667}
+    tangent: {x: -0.046109762, y: 0, z: 0.99893636}
+    leftWidth: 36.376488
+    rightWidth: 42.77539
+    depth: 3
+    velocity: 1.4530731
+    gravelProbability: 0.38781488
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 45.831112, y: 8.7276, z: -500}
+    tangent: {x: -0.030704996, y: 0, z: 0.99952847}
+    leftWidth: 35.987614
+    rightWidth: 42.903614
+    depth: 3
+    velocity: 1.4566375
+    gravelProbability: 0.39086396
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 45.450138, y: 8.705678, z: -483.33334}
+    tangent: {x: -0.014974727, y: 0, z: 0.9998879}
+    leftWidth: 35.840565
+    rightWidth: 42.87232
+    depth: 3
+    velocity: 1.4600228
+    gravelProbability: 0.39116544
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 45.331898, y: 8.663073, z: -466.66663}
+    tangent: {x: 0.0005484006, y: 0, z: 0.9999999}
+    leftWidth: 35.980503
+    rightWidth: 42.638012
+    depth: 3
+    velocity: 1.4635813
+    gravelProbability: 0.38802955
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 45.46842, y: 8.60903, z: -450}
+    tangent: {x: 0.015337536, y: 0, z: 0.99988234}
+    leftWidth: 36.3619
+    rightWidth: 42.24758
+    depth: 3
+    velocity: 1.4669136
+    gravelProbability: 0.38215593
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 45.84321, y: 8.552801, z: -433.33334}
+    tangent: {x: 0.028885206, y: 0, z: 0.9995827}
+    leftWidth: 36.82521
+    rightWidth: 41.860992
+    depth: 3
+    velocity: 1.4686933
+    gravelProbability: 0.375981
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 46.43166, y: 8.50518, z: -416.6667}
+    tangent: {x: 0.03287319, y: 0, z: 0.99945956}
+    leftWidth: 37.206654
+    rightWidth: 41.64107
+    depth: 3
+    velocity: 1.4675962
+    gravelProbability: 0.3719899
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 46.939575, y: 8.480793, z: -399.99997}
+    tangent: {x: 0.041517045, y: 0, z: 0.99913776}
+    leftWidth: 37.560886
+    rightWidth: 41.530483
+    depth: 3
+    velocity: 1.4641261
+    gravelProbability: 0.36933407
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 47.816757, y: 8.498779, z: -383.3333}
+    tangent: {x: 0.05563438, y: 0, z: 0.9984512}
+    leftWidth: 38.122635
+    rightWidth: 41.289406
+    depth: 3
+    velocity: 1.4602787
+    gravelProbability: 0.36444014
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 48.79693, y: 8.580675, z: -366.6667}
+    tangent: {x: 0.060300205, y: 0, z: 0.99818027}
+    leftWidth: 39.006317
+    rightWidth: 40.795128
+    depth: 3
+    velocity: 1.457114
+    gravelProbability: 0.3555573
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 49.830425, y: 8.746122, z: -350.00003}
+    tangent: {x: 0.061876066, y: 0, z: 0.99808383}
+    leftWidth: 40.12277
+    rightWidth: 40.12502
+    depth: 3
+    velocity: 1.4541453
+    gravelProbability: 0.34396333
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 50.863426, y: 9.008199, z: -333.3333}
+    tangent: {x: 0.060153328, y: 0, z: 0.99818915}
+    leftWidth: 41.375134
+    rightWidth: 39.36105
+    depth: 3
+    velocity: 1.4355048
+    gravelProbability: 0.360691
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 51.839176, y: 9.370101, z: -316.66666}
+    tangent: {x: 0.054988995, y: 0, z: 0.998487}
+    leftWidth: 42.690548
+    rightWidth: 38.55937
+    depth: 3
+    velocity: 1.416119
+    gravelProbability: 0.3781006
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 52.69917, y: 9.824181, z: -300}
+    tangent: {x: 0.04630886, y: 0, z: 0.9989271}
+    leftWidth: 43.86668
+    rightWidth: 37.905025
+    depth: 3
+    velocity: 1.3978516
+    gravelProbability: 0.3932568
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 53.38446, y: 10.353415, z: -283.33337}
+    tangent: {x: 0.023418594, y: 0, z: 0.99972576}
+    leftWidth: 44.697628
+    rightWidth: 37.58704
+    depth: 3
+    velocity: 1.3824694
+    gravelProbability: 0.40328813
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 53.480003, y: 10.934624, z: -266.66666}
+    tangent: {x: 0.008363268, y: 0, z: 0.999965}
+    leftWidth: 45.30885
+    rightWidth: 37.4639
+    depth: 3
+    velocity: 1.3692402
+    gravelProbability: 0.41015986
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 53.663246, y: 11.542318, z: -250}
+    tangent: {x: 0.000950432, y: 0, z: 0.9999995}
+    leftWidth: 46.06055
+    rightWidth: 37.16039
+    depth: 3
+    velocity: 1.3557914
+    gravelProbability: 0.4191427
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 53.511684, y: 12.151919, z: -233.33334}
+    tangent: {x: -0.020593721, y: 0, z: 0.99978787}
+    leftWidth: 47.067932
+    rightWidth: 36.54738
+    depth: 3
+    velocity: 1.3415881
+    gravelProbability: 0.43190804
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 52.976643, y: 12.741461, z: -216.66664}
+    tangent: {x: -0.0448519, y: 0, z: 0.9989936}
+    leftWidth: 48.09664
+    rightWidth: 35.846428
+    depth: 3
+    velocity: 1.328537
+    gravelProbability: 0.44515252
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 52.015114, y: 13.291686, z: -199.99998}
+    tangent: {x: -0.07140097, y: 0, z: 0.9974477}
+    leftWidth: 48.908607
+    rightWidth: 35.284065
+    depth: 3
+    velocity: 1.3184726
+    gravelProbability: 0.45558
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 50.590523, y: 13.785448, z: -183.33334}
+    tangent: {x: -0.09973975, y: 0, z: 0.9950135}
+    leftWidth: 49.440914
+    rightWidth: 34.913128
+    depth: 3
+    velocity: 1.3119498
+    gravelProbability: 0.4623956
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 48.673798, y: 14.207802, z: -166.66669}
+    tangent: {x: -0.12929992, y: 0, z: 0.9916055}
+    leftWidth: 49.69358
+    rightWidth: 34.725647
+    depth: 3
+    velocity: 1.3090628
+    gravelProbability: 0.46567288
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 46.244034, y: 14.54747, z: -149.99997}
+    tangent: {x: -0.16108403, y: 0, z: 0.9869407}
+    leftWidth: 49.67646
+    rightWidth: 34.706078
+    depth: 3
+    velocity: 1.3098222
+    gravelProbability: 0.46559364
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 43.233276, y: 14.79905, z: -133.33333}
+    tangent: {x: -0.18972819, y: 0, z: 0.9818366}
+    leftWidth: 49.45962
+    rightWidth: 34.779285
+    depth: 3
+    velocity: 1.3138341
+    gravelProbability: 0.46316686
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 39.802773, y: 14.964771, z: -116.66667}
+    tangent: {x: -0.21623579, y: 0, z: 0.97634125}
+    leftWidth: 49.12757
+    rightWidth: 34.85356
+    depth: 3
+    velocity: 1.3206536
+    gravelProbability: 0.45960498
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 35.85076, y: 15.055214, z: -100.00002}
+    tangent: {x: -0.2446505, y: 0, z: 0.9696113}
+    leftWidth: 48.677166
+    rightWidth: 34.922764
+    depth: 3
+    velocity: 1.3304847
+    gravelProbability: 0.45488736
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 31.392162, y: 15.0889635, z: -83.33331}
+    tangent: {x: -0.27139768, y: 0, z: 0.9624674}
+    leftWidth: 48.033886
+    rightWidth: 35.05421
+    depth: 3
+    velocity: 1.3440161
+    gravelProbability: 0.44795436
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 26.451382, y: 15.091175, z: -66.666664}
+    tangent: {x: -0.2960191, y: 0, z: 0.95518196}
+    leftWidth: 47.137535
+    rightWidth: 35.306824
+    depth: 3
+    velocity: 1.3617742
+    gravelProbability: 0.43788692
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 21.061886, y: 15.091024, z: -50.00001}
+    tangent: {x: -0.31813496, y: 0, z: 0.94804543}
+    leftWidth: 45.969604
+    rightWidth: 35.70294
+    depth: 3
+    velocity: 1.3839453
+    gravelProbability: 0.4243001
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 15.265748, y: 15.118328, z: -33.333363}
+    tangent: {x: -0.33743897, y: 0, z: 0.9413474}
+    leftWidth: 44.590446
+    rightWidth: 36.187675
+    depth: 3
+    velocity: 1.4101316
+    gravelProbability: 0.40792298
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 9.113083, y: 15.19977, z: -16.66665}
+    tangent: {x: -0.35369384, y: 0, z: 0.93536127}
+    leftWidth: 43.192955
+    rightWidth: 36.573463
+    depth: 3
+    velocity: 1.4388804
+    gravelProbability: 0.39147505
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: 2.6612005, y: 15.355183, z: 0}
+    tangent: {x: -0.35860357, y: 0, z: 0.93349}
+    leftWidth: 41.95884
+    rightWidth: 36.684074
+    depth: 3
+    velocity: 1.4686676
+    gravelProbability: 0.3776428
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -3.6920261, y: 15.594597, z: 16.66665}
+    tangent: {x: -0.36787114, y: 0, z: 0.92987674}
+    leftWidth: 40.806263
+    rightWidth: 36.60776
+    depth: 3
+    velocity: 1.4999595
+    gravelProbability: 0.36523232
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -10.525881, y: 15.917299, z: 33.3333}
+    tangent: {x: -0.38177592, y: 0, z: 0.9242549}
+    leftWidth: 39.470154
+    rightWidth: 36.617203
+    depth: 3
+    velocity: 1.5348657
+    gravelProbability: 0.35012057
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -17.460796, y: 16.313875, z: 49.999954}
+    tangent: {x: -0.3847716, y: 0, z: 0.92301184}
+    leftWidth: 37.852165
+    rightWidth: 36.81948
+    depth: 3
+    velocity: 1.5743136
+    gravelProbability: 0.33053985
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -24.421427, y: 16.770748, z: 66.666725}
+    tangent: {x: -0.38416815, y: 0, z: 0.9232632}
+    leftWidth: 36.085876
+    rightWidth: 37.090805
+    depth: 3
+    velocity: 1.6077173
+    gravelProbability: 0.32468086
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -31.330772, y: 17.274952, z: 83.333374}
+    tangent: {x: -0.3799119, y: 0, z: 0.92502266}
+    leftWidth: 34.298805
+    rightWidth: 37.31443
+    depth: 3
+    velocity: 1.6325989
+    gravelProbability: 0.33550486
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -38.111595, y: 17.816532, z: 100.00002}
+    tangent: {x: -0.3719568, y: 0, z: 0.9282501}
+    leftWidth: 32.549053
+    rightWidth: 37.44382
+    depth: 3
+    velocity: 1.65851
+    gravelProbability: 0.34577784
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -44.687675, y: 18.387598, z: 116.66667}
+    tangent: {x: -0.3602733, y: 0, z: 0.9328468}
+    leftWidth: 30.951471
+    rightWidth: 37.376427
+    depth: 3
+    velocity: 1.6863395
+    gravelProbability: 0.3536613
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -50.9852, y: 18.979263, z: 133.33333}
+    tangent: {x: -0.33735436, y: 0, z: 0.9413777}
+    leftWidth: 29.607878
+    rightWidth: 37.023315
+    depth: 3
+    velocity: 1.7170544
+    gravelProbability: 0.35735065
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -56.633076, y: 19.57867, z: 149.99997}
+    tangent: {x: -0.31893927, y: 0, z: 0.9477752}
+    leftWidth: 28.410103
+    rightWidth: 36.50598
+    depth: 3
+    velocity: 1.7493671
+    gravelProbability: 0.3586844
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -62.20231, y: 20.167849, z: 166.66663}
+    tangent: {x: -0.30487716, y: 0, z: 0.9523917}
+    leftWidth: 27.13516
+    rightWidth: 36.06103
+    depth: 3
+    velocity: 1.780341
+    gravelProbability: 0.3618481
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -67.30365, y: 20.724955, z: 183.33328}
+    tangent: {x: -0.27892756, y: 0, z: 0.9603122}
+    leftWidth: 25.739048
+    rightWidth: 35.746223
+    depth: 3
+    velocity: 1.8088443
+    gravelProbability: 0.36801624
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -71.88417, y: 21.227406, z: 200.00005}
+    tangent: {x: -0.24968433, y: 0, z: 0.9683272}
+    leftWidth: 24.383976
+    rightWidth: 35.413124
+    depth: 3
+    velocity: 1.8364363
+    gravelProbability: 0.37437317
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -75.89871, y: 21.655754, z: 216.6667}
+    tangent: {x: -0.21746592, y: 0, z: 0.9760679}
+    leftWidth: 23.216587
+    rightWidth: 34.92864
+    depth: 3
+    velocity: 1.8648634
+    gravelProbability: 0.37807286
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -79.31076, y: 21.996962, z: 233.33334}
+    tangent: {x: -0.18270157, y: 0, z: 0.9831685}
+    leftWidth: 22.257862
+    rightWidth: 34.284573
+    depth: 3
+    velocity: 1.8944023
+    gravelProbability: 0.3785643
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -82.09302, y: 22.246296, z: 250}
+    tangent: {x: -0.14593029, y: 0, z: 0.9892949}
+    leftWidth: 21.458006
+    rightWidth: 33.54171
+    depth: 3
+    velocity: 1.9243364
+    gravelProbability: 0.3767458
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -84.22774, y: 22.407475, z: 266.66666}
+    tangent: {x: -0.10974259, y: 0, z: 0.99396}
+    leftWidth: 20.765148
+    rightWidth: 32.76061
+    depth: 3
+    velocity: 1.9538461
+    gravelProbability: 0.3736458
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -85.77333, y: 22.490902, z: 283.3333}
+    tangent: {x: -0.072485775, y: 0, z: 0.9973694}
+    leftWidth: 20.16492
+    rightWidth: 31.964474
+    depth: 3
+    velocity: 1.9826044
+    gravelProbability: 0.36956334
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -86.6503, y: 22.510357, z: 299.99994}
+    tangent: {x: -0.033281274, y: 0, z: 0.9994461}
+    leftWidth: 19.685167
+    rightWidth: 31.138708
+    depth: 3
+    velocity: 2.0108645
+    gravelProbability: 0.36390564
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -86.88332, y: 22.479256, z: 316.66672}
+    tangent: {x: 0.0047297757, y: 0, z: 0.9999888}
+    leftWidth: 19.357029
+    rightWidth: 30.270061
+    depth: 3
+    velocity: 2.0388663
+    gravelProbability: 0.35601336
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -86.49264, y: 22.408081, z: 333.33337}
+    tangent: {x: 0.041238487, y: 0, z: 0.99914926}
+    leftWidth: 19.184393
+    rightWidth: 29.370955
+    depth: 3
+    velocity: 2.0664165
+    gravelProbability: 0.3458377
+    leftLandscape: 2
+    rightLandscape: 4
+  - position: {x: -85.50754, y: 22.303953, z: 350.00003}
+    tangent: {x: 0.0755927, y: 0, z: 0.99713886}
+    leftWidth: 19.16429
+    rightWidth: 28.45312
+    depth: 3
+    velocity: 2.0933626
+    gravelProbability: 0.33343568
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -83.96565, y: 22.172033, z: 366.6667}
+    tangent: {x: 0.10723828, y: 0, z: 0.99423337}
+    leftWidth: 19.307858
+    rightWidth: 27.507439
+    depth: 3
+    velocity: 2.119974
+    gravelProbability: 0.31846306
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -81.9122, y: 22.017267, z: 383.3333}
+    tangent: {x: 0.13573098, y: 0, z: 0.9907458}
+    leftWidth: 19.587639
+    rightWidth: 26.561424
+    depth: 3
+    velocity: 2.1457503
+    gravelProbability: 0.30157226
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -79.39903, y: 21.845203, z: 399.99997}
+    tangent: {x: 0.16074097, y: 0, z: 0.98699665}
+    leftWidth: 19.87905
+    rightWidth: 25.740313
+    depth: 3
+    velocity: 2.1680374
+    gravelProbability: 0.286045
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -76.48358, y: 21.661594, z: 416.66663}
+    tangent: {x: 0.17142934, y: 0, z: 0.9851965}
+    leftWidth: 20.064661
+    rightWidth: 25.162264
+    depth: 3
+    velocity: 2.184145
+    gravelProbability: 0.27513507
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -73.59886, y: 21.47135, z: 433.33328}
+    tangent: {x: 0.18890099, y: 0, z: 0.9819961}
+    leftWidth: 20.214775
+    rightWidth: 24.75666
+    depth: 3
+    velocity: 2.1953607
+    gravelProbability: 0.26716936
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -70.07142, y: 21.2774, z: 450.00006}
+    tangent: {x: 0.21311139, y: 0, z: 0.97702795}
+    leftWidth: 20.528597
+    rightWidth: 24.322508
+    depth: 3
+    velocity: 2.2058945
+    gravelProbability: 0.25693697
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -66.32811, y: 21.07986, z: 466.6667}
+    tangent: {x: 0.2232652, y: 0, z: 0.97475773}
+    leftWidth: 21.082024
+    rightWidth: 23.780571
+    depth: 3
+    velocity: 2.217405
+    gravelProbability: 0.24243535
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -62.436535, y: 20.876007, z: 483.33334}
+    tangent: {x: 0.22962736, y: 0, z: 0.97327864}
+    leftWidth: 21.774824
+    rightWidth: 23.226274
+    depth: 3
+    velocity: 2.2277546
+    gravelProbability: 0.22636709
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -58.463722, y: 20.66149, z: 500}
+    tangent: {x: 0.2323173, y: 0, z: 0.97264}
+    leftWidth: 22.505468
+    rightWidth: 22.75498
+    depth: 3
+    velocity: 2.2348096
+    gravelProbability: 0.21145628
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -54.474804, y: 20.432415, z: 516.6666}
+    tangent: {x: 0.23149423, y: 0, z: 0.97283626}
+    leftWidth: 23.24013
+    rightWidth: 22.393309
+    depth: 3
+    velocity: 2.2202382
+    gravelProbability: 0.22066814
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -50.53179, y: 20.187094, z: 533.3333}
+    tangent: {x: 0.22735777, y: 0, z: 0.9738113}
+    leftWidth: 23.93077
+    rightWidth: 22.181496
+    depth: 3
+    velocity: 2.200349
+    gravelProbability: 0.23406087
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -46.692406, y: 19.926514, z: 549.99994}
+    tangent: {x: 0.21419968, y: 0, z: 0.9767899}
+    leftWidth: 24.52795
+    rightWidth: 22.161106
+    depth: 3
+    velocity: 2.181511
+    gravelProbability: 0.24389361
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -43.222122, y: 19.653675, z: 566.66675}
+    tangent: {x: 0.20543328, y: 0, z: 0.97867113}
+    leftWidth: 25.088778
+    rightWidth: 22.267416
+    depth: 3
+    velocity: 2.1625676
+    gravelProbability: 0.25177038
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -39.69537, y: 19.372654, z: 583.3334}
+    tangent: {x: 0.20033392, y: 0, z: 0.9797277}
+    leftWidth: 25.739464
+    rightWidth: 22.366814
+    depth: 3
+    velocity: 2.1410837
+    gravelProbability: 0.26094952
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -36.406166, y: 19.08814, z: 600}
+    tangent: {x: 0.185966, y: 0, z: 0.9825562}
+    leftWidth: 26.507965
+    rightWidth: 22.423931
+    depth: 3
+    velocity: 2.1167092
+    gravelProbability: 0.27210304
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -33.386456, y: 18.805504, z: 616.6667}
+    tangent: {x: 0.1698823, y: 0, z: 0.98546433}
+    leftWidth: 27.288692
+    rightWidth: 22.536655
+    depth: 3
+    velocity: 2.0916147
+    gravelProbability: 0.2826596
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -30.6599, y: 18.530815, z: 633.3333}
+    tangent: {x: 0.15254244, y: 0, z: 0.9882969}
+    leftWidth: 27.969414
+    rightWidth: 22.809052
+    depth: 3
+    velocity: 2.0678806
+    gravelProbability: 0.29007915
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -28.241499, y: 18.270374, z: 650}
+    tangent: {x: 0.13444287, y: 0, z: 0.9909214}
+    leftWidth: 28.530525
+    rightWidth: 23.25211
+    depth: 3
+    velocity: 2.0457504
+    gravelProbability: 0.29415992
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -26.137417, y: 18.029634, z: 666.6666}
+    tangent: {x: 0.11610611, y: 0, z: 0.9932368}
+    leftWidth: 29.044296
+    rightWidth: 23.784584
+    depth: 3
+    velocity: 2.02389
+    gravelProbability: 0.2968076
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -24.344952, y: 17.811892, z: 683.33325}
+    tangent: {x: 0.10342321, y: 0, z: 0.99463737}
+    leftWidth: 29.593365
+    rightWidth: 24.315048
+    depth: 3
+    velocity: 2.0009592
+    gravelProbability: 0.3000155
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -22.67138, y: 17.617231, z: 700.00006}
+    tangent: {x: 0.08754182, y: 0, z: 0.9961609}
+    leftWidth: 30.160612
+    rightWidth: 24.853128
+    depth: 3
+    velocity: 1.9773539
+    gravelProbability: 0.30344942
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -21.415636, y: 17.442276, z: 716.6667}
+    tangent: {x: 0.06745903, y: 0, z: 0.99772197}
+    leftWidth: 30.63418
+    rightWidth: 25.505
+    depth: 3
+    velocity: 1.9548618
+    gravelProbability: 0.30477506
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -20.417612, y: 17.28093, z: 733.3334}
+    tangent: {x: 0.053084545, y: 0, z: 0.99859}
+    leftWidth: 30.942589
+    rightWidth: 26.335495
+    depth: 3
+    velocity: 1.9344742
+    gravelProbability: 0.30268776
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -19.643654, y: 17.125912, z: 750}
+    tangent: {x: 0.040880412, y: 0, z: 0.99916404}
+    leftWidth: 31.113312
+    rightWidth: 27.304752
+    depth: 3
+    velocity: 1.9157366
+    gravelProbability: 0.29804075
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -19.053795, y: 16.970425, z: 766.6666}
+    tangent: {x: 0.031213498, y: 0, z: 0.99951273}
+    leftWidth: 31.178617
+    rightWidth: 28.361982
+    depth: 3
+    velocity: 1.8983076
+    gravelProbability: 0.29174882
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -18.602697, y: 16.809418, z: 783.3333}
+    tangent: {x: 0.024383783, y: 0, z: 0.99970263}
+    leftWidth: 31.110474
+    rightWidth: 29.517319
+    depth: 3
+    velocity: 1.8827461
+    gravelProbability: 0.2834508
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -18.24076, y: 16.6403, z: 799.99994}
+    tangent: {x: 0.020622896, y: 0, z: 0.9997873}
+    leftWidth: 30.91971
+    rightWidth: 30.74927
+    depth: 3
+    velocity: 1.86899
+    gravelProbability: 0.27349487
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -17.91512, y: 16.4634, z: 816.66675}
+    tangent: {x: 0.020083243, y: 0, z: 0.9997983}
+    leftWidth: 30.770103
+    rightWidth: 31.889832
+    depth: 3
+    velocity: 1.8408358
+    gravelProbability: 0.28633213
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -17.571182, y: 16.282616, z: 833.3334}
+    tangent: {x: 0.033886537, y: 0, z: 0.9994257}
+    leftWidth: 30.835098
+    rightWidth: 32.76263
+    depth: 3
+    velocity: 1.8150514
+    gravelProbability: 0.29737508
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -16.784922, y: 16.106413, z: 850}
+    tangent: {x: 0.039538234, y: 0, z: 0.99921805}
+    leftWidth: 31.01845
+    rightWidth: 33.45947
+    depth: 3
+    velocity: 1.7925498
+    gravelProbability: 0.3052848
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -16.25221, y: 15.948545, z: 866.6667}
+    tangent: {x: 0.037161052, y: 0, z: 0.99930924}
+    leftWidth: 31.025078
+    rightWidth: 34.270065
+    depth: 3
+    velocity: 1.7698638
+    gravelProbability: 0.31550312
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -15.545364, y: 15.827293, z: 883.3333}
+    tangent: {x: 0.04907977, y: 0, z: 0.9987949}
+    leftWidth: 30.745174
+    rightWidth: 35.299168
+    depth: 3
+    velocity: 1.7459568
+    gravelProbability: 0.3298726
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -14.614245, y: 15.762344, z: 900}
+    tangent: {x: 0.06384099, y: 0, z: 0.99796015}
+    leftWidth: 30.34915
+    rightWidth: 36.372147
+    depth: 3
+    velocity: 1.7229991
+    gravelProbability: 0.34518853
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -13.412983, y: 15.769865, z: 916.6666}
+    tangent: {x: 0.08113042, y: 0, z: 0.99670345}
+    leftWidth: 30.021233
+    rightWidth: 37.30149
+    depth: 3
+    velocity: 1.7031189
+    gravelProbability: 0.35815856
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -11.90096, y: 15.85777, z: 933.33325}
+    tangent: {x: 0.10056296, y: 0, z: 0.9949307}
+    leftWidth: 29.85276
+    rightWidth: 37.993477
+    depth: 3
+    velocity: 1.6872731
+    gravelProbability: 0.36724252
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -10.043795, y: 16.023323, z: 950.00006}
+    tangent: {x: 0.12168586, y: 0, z: 0.99256873}
+    leftWidth: 30.013302
+    rightWidth: 38.27754
+    depth: 3
+    velocity: 1.6771963
+    gravelProbability: 0.36957943
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -7.8143835, y: 16.253971, z: 966.6667}
+    tangent: {x: 0.14698103, y: 0, z: 0.9891393}
+    leftWidth: 30.804943
+    rightWidth: 37.854305
+    depth: 3
+    velocity: 1.675898
+    gravelProbability: 0.3600903
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -5.0906353, y: 16.530481, z: 983.3334}
+    tangent: {x: 0.16843195, y: 0, z: 0.98571324}
+    leftWidth: 32.411045
+    rightWidth: 36.552372
+    depth: 3
+    velocity: 1.6848261
+    gravelProbability: 0.3359012
+    leftLandscape: 4
+    rightLandscape: 4
+  - position: {x: -2.1186142, y: 16.830404, z: 1000}
+    tangent: {x: 0.17555238, y: 0, z: 0.98447007}
+    leftWidth: 34.614803
+    rightWidth: 34.614803
+    depth: 3
+    velocity: 1.7008297
+    gravelProbability: 0.3011895
+    leftLandscape: 4
+    rightLandscape: 4

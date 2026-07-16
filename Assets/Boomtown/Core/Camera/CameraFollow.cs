@@ -9,25 +9,24 @@ using UnityEngine;
 public sealed class CameraFollow : MonoBehaviour
 {
     [Header("Active Target")]
-
     [SerializeField]
     private Transform _target;
 
     [Header("Focus")]
-
-    [SerializeField]
-    [Min(0f)]
+    [SerializeField, Min(0f)]
     private float _focusSmoothing = 10f;
 
-    [SerializeField]
-    [Min(0f)]
+    [SerializeField, Min(0f)]
     private float _completionDistance = 0.05f;
+
+    [Tooltip("Vertical offset applied to the camera rig pivot above the target.")]
+    [SerializeField]
+    private float _targetHeightOffset = 0f;
 
     private Transform _rigTransform;
     private bool _isCentering;
 
     public Transform Target => _target;
-
     public bool IsFollowing { get; private set; }
 
     public void Initialize(Transform rigTransform)
@@ -47,7 +46,7 @@ public sealed class CameraFollow : MonoBehaviour
             ToggleFollow();
         }
 
-        if (_target == null)
+        if (_target == null || _rigTransform == null)
         {
             IsFollowing = false;
             _isCentering = false;
@@ -60,9 +59,6 @@ public sealed class CameraFollow : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Changes the active target without changing follow state.
-    /// </summary>
     public void SetTarget(Transform target)
     {
         _target = target;
@@ -74,10 +70,6 @@ public sealed class CameraFollow : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Changes the active target and smoothly centers the camera once.
-    /// Existing continuous follow remains active.
-    /// </summary>
     public void FocusTarget(Transform target)
     {
         SetTarget(target);
@@ -88,10 +80,6 @@ public sealed class CameraFollow : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Changes the target, centers the camera, and enables continuous follow.
-    /// Used by Tab and Shift+Tab character cycling.
-    /// </summary>
     public void FocusAndFollow(Transform target)
     {
         SetTarget(target);
@@ -105,9 +93,6 @@ public sealed class CameraFollow : MonoBehaviour
         _isCentering = true;
     }
 
-    /// <summary>
-    /// Smoothly centers once on the current target.
-    /// </summary>
     public void CenterOnTarget()
     {
         if (_target == null)
@@ -115,10 +100,7 @@ public sealed class CameraFollow : MonoBehaviour
             return;
         }
 
-        if (!IsFollowing)
-        {
-            _isCentering = true;
-        }
+        _isCentering = true;
     }
 
     private void ToggleFollow()
@@ -142,14 +124,13 @@ public sealed class CameraFollow : MonoBehaviour
     private void MoveTowardTarget()
     {
         Vector3 targetPosition =
-            new Vector3(
-                _target.position.x,
-                _rigTransform.position.y,
-                _target.position.z);
+            _target.position +
+            Vector3.up * _targetHeightOffset;
 
         float factor =
             1f - Mathf.Exp(
-                -_focusSmoothing * Time.deltaTime);
+                -_focusSmoothing *
+                Time.deltaTime);
 
         _rigTransform.position =
             Vector3.Lerp(
@@ -157,14 +138,7 @@ public sealed class CameraFollow : MonoBehaviour
                 targetPosition,
                 factor);
 
-        Vector2 difference =
-            new Vector2(
-                _rigTransform.position.x -
-                _target.position.x,
-                _rigTransform.position.z -
-                _target.position.z);
-
-        if (difference.sqrMagnitude >
+        if ((_rigTransform.position - targetPosition).sqrMagnitude >
             _completionDistance * _completionDistance)
         {
             return;

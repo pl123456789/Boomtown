@@ -1,7 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Moves an employee through a queue of RTS waypoints.
+/// Moves an employee through a queue of RTS waypoints while keeping the
+/// employee aligned with the active Unity terrain.
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(WaypointPath))]
@@ -23,6 +24,16 @@ public sealed class EmployeeMovement : MonoBehaviour
     [SerializeField, Min(0f)]
     private float _stoppingDistance = 0.15f;
 
+    [Header("Grounding")]
+    [Tooltip("Height of the employee pivot above the terrain surface. " +
+             "A standard Unity capsule with height 2 uses 1.")]
+    [SerializeField, Min(0f)]
+    private float _groundOffset = 1f;
+
+    [Tooltip("How quickly the employee follows changes in terrain height.")]
+    [SerializeField, Min(0f)]
+    private float _groundFollowSpeed = 20f;
+
     private WaypointPath _waypointPath;
     private float _currentSpeed;
 
@@ -32,10 +43,15 @@ public sealed class EmployeeMovement : MonoBehaviour
             GetComponent<WaypointPath>();
     }
 
+    private void Start()
+    {
+        SnapToTerrain();
+    }
+
     private void Update()
     {
         if (!_waypointPath.TryGetCurrent(
-            out Vector3 destination))
+                out Vector3 destination))
         {
             _currentSpeed =
                 Mathf.MoveTowards(
@@ -44,6 +60,7 @@ public sealed class EmployeeMovement : MonoBehaviour
                     _deceleration *
                     Time.deltaTime);
 
+            FollowTerrain();
             return;
         }
 
@@ -60,6 +77,7 @@ public sealed class EmployeeMovement : MonoBehaviour
         {
             _waypointPath.CompleteCurrent();
             _currentSpeed = 0f;
+            FollowTerrain();
             return;
         }
 
@@ -78,7 +96,7 @@ public sealed class EmployeeMovement : MonoBehaviour
                 direction,
                 Vector3.up);
 
-        float factor =
+        float rotationFactor =
             1f - Mathf.Exp(
                 -_rotationSpeed *
                 Time.deltaTime);
@@ -87,7 +105,7 @@ public sealed class EmployeeMovement : MonoBehaviour
             Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
-                factor);
+                rotationFactor);
 
         float step =
             Mathf.Min(
@@ -95,8 +113,15 @@ public sealed class EmployeeMovement : MonoBehaviour
                 Time.deltaTime,
                 distance);
 
-        transform.position +=
+        Vector3 nextPosition =
+            transform.position +
             direction * step;
+
+        nextPosition.y =
+            GetTerrainHeight(nextPosition);
+
+        transform.position =
+            nextPosition;
     }
 
     public void SetDestination(
@@ -106,7 +131,7 @@ public sealed class EmployeeMovement : MonoBehaviour
         Vector3 groundedDestination =
             new Vector3(
                 destination.x,
-                transform.position.y,
+                GetTerrainHeight(destination),
                 destination.z);
 
         if (queueWaypoint)
@@ -119,5 +144,57 @@ public sealed class EmployeeMovement : MonoBehaviour
             _waypointPath.SetWaypoint(
                 groundedDestination);
         }
+    }
+
+    private void FollowTerrain()
+    {
+        Vector3 position =
+            transform.position;
+
+        float targetY =
+            GetTerrainHeight(position);
+
+        position.y =
+            Mathf.MoveTowards(
+                position.y,
+                targetY,
+                _groundFollowSpeed *
+                Time.deltaTime);
+
+        transform.position =
+            position;
+    }
+
+    private void SnapToTerrain()
+    {
+        Vector3 position =
+            transform.position;
+
+        position.y =
+            GetTerrainHeight(position);
+
+        transform.position =
+            position;
+    }
+
+    private float GetTerrainHeight(
+        Vector3 worldPosition)
+    {
+        Terrain terrain =
+            Terrain.activeTerrain;
+
+        if (terrain == null ||
+            terrain.terrainData == null)
+        {
+            return transform.position.y;
+        }
+
+        float terrainY =
+            terrain.SampleHeight(
+                worldPosition) +
+            terrain.transform.position.y;
+
+        return terrainY +
+               _groundOffset;
     }
 }
