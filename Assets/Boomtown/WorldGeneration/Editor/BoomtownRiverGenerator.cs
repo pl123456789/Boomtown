@@ -120,6 +120,10 @@ namespace Boomtown.WorldGeneration.Editor
             meshRenderer.sharedMaterial = riverMaterial;
             riverObject.transform.position = Vector3.zero;
 
+            riverObject.transform.SetParent(
+                BoomtownWorldHierarchy.GetRiversContainer(),
+                true);
+
             RiverData riverData =
                 RiverDataBuilder.Save(
                     mapDefinition,

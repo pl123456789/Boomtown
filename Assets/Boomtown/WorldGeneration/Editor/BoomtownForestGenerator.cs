@@ -64,6 +64,10 @@ namespace Boomtown.WorldGeneration.Editor
 
             GameObject forestRoot = new GameObject(forestName);
 
+            forestRoot.transform.SetParent(
+                BoomtownWorldHierarchy.GetForestContainer(),
+                false);
+
             int seed = StableHash(mapDefinition.worldSeed + "_FOREST");
             System.Random random = new System.Random(seed);
 
