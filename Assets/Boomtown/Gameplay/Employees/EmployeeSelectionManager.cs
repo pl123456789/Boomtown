@@ -1,43 +1,29 @@
 using System;
 using System.Collections.Generic;
+using Boomtown.Gameplay.Prospecting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 /// <summary>
 /// Selects Bill or employees and issues movement commands.
-///
-/// Right-click replaces the route.
-/// Shift + Right-click queues another move.
-/// Activities are declared separately with Space.
+/// Right-click replaces the route. Shift + Right-click queues another move.
+/// Shift + Space marks the final queued waypoint as a panning activity.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class EmployeeSelectionManager : MonoBehaviour
 {
     [Header("References")]
-
-    [SerializeField]
-    private Camera _worldCamera;
-
-    [SerializeField]
-    private CameraFollow _cameraFollow;
-
-    [SerializeField]
-    private QuickPlayerController _billController;
+    [SerializeField] private Camera _worldCamera;
+    [SerializeField] private CameraFollow _cameraFollow;
+    [SerializeField] private QuickPlayerController _billController;
 
     [Header("Raycasts")]
-
-    [SerializeField]
-    private LayerMask _employeeLayerMask = ~0;
-
-    [SerializeField]
-    private LayerMask _groundLayerMask = ~0;
-
-    [SerializeField, Min(0f)]
-    private float _maximumRaycastDistance = 1000f;
+    [SerializeField] private LayerMask _employeeLayerMask = ~0;
+    [SerializeField] private LayerMask _groundLayerMask = ~0;
+    [SerializeField, Min(0f)] private float _maximumRaycastDistance = 1000f;
 
     private readonly List<Employee> _employees = new();
-
     private Employee _selectedEmployee;
     private int _cycleIndex;
 
@@ -53,7 +39,6 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
             Debug.LogError(
                 "EmployeeSelectionManager is missing required references.",
                 this);
-
             enabled = false;
             return;
         }
@@ -63,43 +48,42 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
 
     private void Update()
     {
-        Keyboard keyboard =
-            Keyboard.current;
+        Keyboard keyboard = Keyboard.current;
 
-        if (keyboard != null &&
-            keyboard.tabKey.wasPressedThisFrame)
+        if (keyboard != null && keyboard.tabKey.wasPressedThisFrame)
         {
             bool cycleBackward =
                 keyboard.leftShiftKey.isPressed ||
                 keyboard.rightShiftKey.isPressed;
 
-            CycleCharacter(
-                cycleBackward);
-
+            CycleCharacter(cycleBackward);
             return;
         }
 
         if (keyboard != null &&
-            _selectedEmployee != null &&
             keyboard.spaceKey.wasPressedThisFrame &&
             (keyboard.leftShiftKey.isPressed ||
              keyboard.rightShiftKey.isPressed))
         {
-            _selectedEmployee.MarkLastWaypointAsPanning();
+            if (_selectedEmployee != null)
+            {
+                _selectedEmployee.MarkLastWaypointAsPanning();
+            }
+            else
+            {
+                _billController.MarkLastWaypointAsPanning();
+            }
+
             return;
         }
 
-        Mouse mouse =
-            Mouse.current;
-
-        if (mouse == null ||
-            IsPointerOverUi())
+        Mouse mouse = Mouse.current;
+        if (mouse == null || IsPointerOverUi())
         {
             return;
         }
 
-        Vector2 pointer =
-            mouse.position.ReadValue();
+        Vector2 pointer = mouse.position.ReadValue();
 
         if (mouse.leftButton.wasPressedThisFrame)
         {
@@ -113,25 +97,18 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
                 (keyboard.leftShiftKey.isPressed ||
                  keyboard.rightShiftKey.isPressed);
 
-            CommandAt(
-                pointer,
-                queueWaypoint);
+            CommandAt(pointer, queueWaypoint);
         }
     }
 
     public void RefreshEmployeeList()
     {
         _employees.Clear();
-
-        Employee[] employees =
-            FindObjectsByType<Employee>(
-                FindObjectsSortMode.InstanceID);
-
+        Employee[] employees = FindObjectsByType<Employee>(
+            FindObjectsSortMode.InstanceID);
         _employees.AddRange(employees);
 
-        int maximumIndex =
-            _employees.Count;
-
+        int maximumIndex = _employees.Count;
         if (_cycleIndex > maximumIndex)
         {
             _cycleIndex = 0;
@@ -142,64 +119,44 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
     {
         if (_worldCamera == null)
         {
-            _worldCamera =
-                Camera.main;
+            _worldCamera = Camera.main;
         }
 
         if (_cameraFollow == null)
         {
-            _cameraFollow =
-                FindFirstObjectByType<CameraFollow>();
+            _cameraFollow = FindFirstObjectByType<CameraFollow>();
         }
 
         if (_billController == null)
         {
-            _billController =
-                FindFirstObjectByType<QuickPlayerController>();
+            _billController = FindFirstObjectByType<QuickPlayerController>();
         }
     }
 
-    private void CommandAt(
-        Vector2 screenPosition,
-        bool queueWaypoint)
+    private void CommandAt(Vector2 screenPosition, bool queueWaypoint)
     {
-        if (!TryGetGroundPoint(
-                screenPosition,
-                out Vector3 destination))
+        if (!TryGetGroundPoint(screenPosition, out Vector3 destination))
         {
             return;
         }
 
         if (_selectedEmployee != null)
         {
-            _selectedEmployee.MoveTo(
-                destination,
-                queueWaypoint);
-
+            _selectedEmployee.MoveTo(destination, queueWaypoint);
             return;
         }
 
-        _billController.SetDestination(
-            destination,
-            queueWaypoint);
+        _billController.SetDestination(destination, queueWaypoint);
     }
 
-    private void CycleCharacter(
-        bool cycleBackward)
+    private void CycleCharacter(bool cycleBackward)
     {
         RefreshEmployeeList();
 
-        int characterCount =
-            _employees.Count + 1;
-
-        int direction =
-            cycleBackward ? -1 : 1;
-
+        int characterCount = _employees.Count + 1;
+        int direction = cycleBackward ? -1 : 1;
         _cycleIndex =
-            (_cycleIndex +
-             direction +
-             characterCount) %
-            characterCount;
+            (_cycleIndex + direction + characterCount) % characterCount;
 
         if (_cycleIndex == 0)
         {
@@ -207,49 +164,34 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
             return;
         }
 
-        SelectEmployee(
-            _employees[_cycleIndex - 1],
-            true);
+        SelectEmployee(_employees[_cycleIndex - 1], true);
     }
 
-    private void SelectAt(
-        Vector2 screenPosition)
+    private void SelectAt(Vector2 screenPosition)
     {
-        Ray ray =
-            _worldCamera.ScreenPointToRay(
-                screenPosition);
+        Ray ray = _worldCamera.ScreenPointToRay(screenPosition);
+        RaycastHit[] hits = Physics.RaycastAll(
+            ray,
+            _maximumRaycastDistance,
+            _employeeLayerMask,
+            QueryTriggerInteraction.Ignore);
 
-        RaycastHit[] hits =
-            Physics.RaycastAll(
-                ray,
-                _maximumRaycastDistance,
-                _employeeLayerMask,
-                QueryTriggerInteraction.Ignore);
-
-        Array.Sort(
-            hits,
-            (left, right) =>
-                left.distance.CompareTo(
-                    right.distance));
+        Array.Sort(hits, (left, right) =>
+            left.distance.CompareTo(right.distance));
 
         foreach (RaycastHit hit in hits)
         {
             Employee employee =
-                hit.collider
-                    .GetComponentInParent<Employee>();
+                hit.collider.GetComponentInParent<Employee>();
 
             if (employee != null)
             {
-                SelectEmployee(
-                    employee,
-                    false);
-
+                SelectEmployee(employee, false);
                 return;
             }
 
             QuickPlayerController bill =
-                hit.collider
-                    .GetComponentInParent<QuickPlayerController>();
+                hit.collider.GetComponentInParent<QuickPlayerController>();
 
             if (bill != null)
             {
@@ -265,37 +207,25 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         Vector2 screenPosition,
         out Vector3 destination)
     {
-        Ray ray =
-            _worldCamera.ScreenPointToRay(
-                screenPosition);
+        Ray ray = _worldCamera.ScreenPointToRay(screenPosition);
+        RaycastHit[] hits = Physics.RaycastAll(
+            ray,
+            _maximumRaycastDistance,
+            _groundLayerMask,
+            QueryTriggerInteraction.Ignore);
 
-        RaycastHit[] hits =
-            Physics.RaycastAll(
-                ray,
-                _maximumRaycastDistance,
-                _groundLayerMask,
-                QueryTriggerInteraction.Ignore);
-
-        Array.Sort(
-            hits,
-            (left, right) =>
-                left.distance.CompareTo(
-                    right.distance));
+        Array.Sort(hits, (left, right) =>
+            left.distance.CompareTo(right.distance));
 
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider
-                    .GetComponentInParent<Employee>() != null ||
-                hit.collider
-                    .GetComponentInParent<QuickPlayerController>() != null)
+            if (hit.collider.GetComponentInParent<Employee>() != null ||
+                hit.collider.GetComponentInParent<QuickPlayerController>() != null)
             {
                 continue;
             }
 
-            destination =
-                WaypointPath.GroundPoint(
-                    hit.point);
-
+            destination = WaypointPath.GroundPoint(hit.point);
             return true;
         }
 
@@ -303,45 +233,46 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         return false;
     }
 
-    private void SelectEmployee(
-        Employee employee,
-        bool followImmediately)
+    private void SelectEmployee(Employee employee, bool followImmediately)
     {
         ClearEmployeeSelection();
+        DeactivateAllPanningUI();
 
         _selectedEmployee = employee;
         _selectedEmployee.SetSelected(true);
+        _cycleIndex = _employees.IndexOf(employee) + 1;
 
-        _cycleIndex =
-            _employees.IndexOf(employee) + 1;
+        GoldPanningController panning =
+            _selectedEmployee.GetComponent<GoldPanningController>();
+        panning?.SetPlayerUIActive(true);
 
         if (followImmediately)
         {
-            _cameraFollow.FocusAndFollow(
-                _selectedEmployee.transform);
+            _cameraFollow.FocusAndFollow(_selectedEmployee.transform);
         }
         else
         {
-            _cameraFollow.FocusTarget(
-                _selectedEmployee.transform);
+            _cameraFollow.FocusTarget(_selectedEmployee.transform);
         }
     }
 
-    private void SelectBill(
-        bool followImmediately)
+    private void SelectBill(bool followImmediately)
     {
         ClearEmployeeSelection();
+        DeactivateAllPanningUI();
         _cycleIndex = 0;
+
+        GoldPanningController panning =
+            _billController.GetComponent<GoldPanningController>();
+        panning?.SetPlayerUIActive(true);
 
         if (followImmediately)
         {
-            _cameraFollow.FocusAndFollow(
-                _billController.transform);
+            _cameraFollow.FocusAndFollow(_billController.transform);
         }
         else
         {
-            _cameraFollow.FocusTarget(
-                _billController.transform);
+            _cameraFollow.FocusTarget(_billController.transform);
         }
     }
 
@@ -356,10 +287,21 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         _selectedEmployee = null;
     }
 
+    private static void DeactivateAllPanningUI()
+    {
+        GoldPanningController[] controllers =
+            FindObjectsByType<GoldPanningController>(
+                FindObjectsSortMode.None);
+
+        foreach (GoldPanningController controller in controllers)
+        {
+            controller.SetPlayerUIActive(false);
+        }
+    }
+
     private static bool IsPointerOverUi()
     {
         return EventSystem.current != null &&
-               EventSystem.current
-                   .IsPointerOverGameObject();
+               EventSystem.current.IsPointerOverGameObject();
     }
 }
