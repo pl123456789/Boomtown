@@ -4,106 +4,73 @@ using UnityEngine;
 
 namespace Boomtown.WorldGeneration.Editor
 {
-    public sealed class BoomtownGoldDebugVisualizerWindow :
-        EditorWindow
+    public sealed class BoomtownGoldDebugVisualizerWindow : EditorWindow
     {
-        private const string SourceRootName =
-            "BT_GoldSourceOverlay";
-
-        private const string FlowRootName =
-            "BT_GoldFlowOverlay";
-
-        private const string PlacerRootName =
-            "BT_GoldRevealOverlay";
+        private const string SourceRootName = "BT_GoldSourceOverlay";
+        private const string FlowRootName = "BT_GoldFlowOverlay";
+        private const string PlacerRootName = "BT_GoldRevealOverlay";
 
         private BoomtownGeologyData geologyData;
         private RiverData riverData;
         private Terrain targetTerrain;
 
-        private GoldRevealMode placerMode =
-            GoldRevealMode.Original;
-
+        private GoldRevealMode placerMode = GoldRevealMode.Original;
         private float placerOpacity = 0.82f;
         private float placerIntensity = 4f;
         private int placerSpread = 5;
         private float placerMinimumAlpha = 0.18f;
 
-        [MenuItem(
-            "Boomtown/Debug/Gold/Open Visualizer")]
+        [MenuItem("Boomtown/Debug/Gold/Open Visualizer")]
         public static void Open()
         {
             BoomtownGoldDebugVisualizerWindow window =
-                GetWindow<
-                    BoomtownGoldDebugVisualizerWindow>();
+                GetWindow<BoomtownGoldDebugVisualizerWindow>();
 
-            window.titleContent =
-                new GUIContent(
-                    "Gold Debug");
-
-            window.minSize =
-                new Vector2(
-                    460f,
-                    520f);
-
+            window.titleContent = new GUIContent("Gold Debug");
+            window.minSize = new Vector2(460f, 520f);
             window.AutoDetect();
         }
 
-        [MenuItem(
-            "Boomtown/Debug/Gold/Show Mountains && Veins")]
+        [MenuItem("Boomtown/Debug/Gold/Show Mountains && Veins")]
         public static void MenuShowSources()
         {
             BoomtownGoldDebugVisualizerWindow window =
-                GetWindow<
-                    BoomtownGoldDebugVisualizerWindow>();
+                GetWindow<BoomtownGoldDebugVisualizerWindow>();
 
             window.AutoDetect();
             window.ShowSources();
         }
 
-        [MenuItem(
-            "Boomtown/Debug/Gold/Show Placer Heatmap")]
+        [MenuItem("Boomtown/Debug/Gold/Show Placer Heatmap")]
         public static void MenuShowPlacer()
         {
             BoomtownGoldDebugVisualizerWindow window =
-                GetWindow<
-                    BoomtownGoldDebugVisualizerWindow>();
+                GetWindow<BoomtownGoldDebugVisualizerWindow>();
 
             window.AutoDetect();
             window.ShowPlacer();
         }
 
-        [MenuItem(
-            "Boomtown/Debug/Gold/Show Flow Paths")]
+        [MenuItem("Boomtown/Debug/Gold/Show Flow Paths")]
         public static void MenuShowFlow()
         {
             BoomtownGoldDebugVisualizerWindow window =
-                GetWindow<
-                    BoomtownGoldDebugVisualizerWindow>();
+                GetWindow<BoomtownGoldDebugVisualizerWindow>();
 
             window.AutoDetect();
             window.ShowFlowPaths();
         }
 
-        [MenuItem(
-            "Boomtown/Debug/Gold/Hide All Overlays")]
+        [MenuItem("Boomtown/Debug/Gold/Hide All Overlays")]
         public static void HideAllOverlays()
         {
-            DestroyByName(
-                SourceRootName);
-
-            DestroyByName(
-                FlowRootName);
-
-            DestroyByName(
-                PlacerRootName);
-
+            DestroyByName(SourceRootName);
+            DestroyByName(FlowRootName);
+            DestroyByName(PlacerRootName);
             SceneView.RepaintAll();
         }
 
-        private void OnEnable()
-        {
-            AutoDetect();
-        }
+        private void OnEnable() => AutoDetect();
 
         private void OnFocus()
         {
@@ -117,120 +84,89 @@ namespace Boomtown.WorldGeneration.Editor
 
         private void OnGUI()
         {
-            GUIStyle title =
-                new GUIStyle(
-                    EditorStyles.boldLabel)
-                {
-                    fontSize = 18,
-                    alignment =
-                        TextAnchor.MiddleCenter
-                };
+            GUIStyle title = new GUIStyle(EditorStyles.boldLabel)
+            {
+                fontSize = 18,
+                alignment = TextAnchor.MiddleCenter
+            };
 
-            EditorGUILayout.LabelField(
-                "Gold Debug Visualizer",
-                title);
-
+            EditorGUILayout.LabelField("Gold Debug Visualizer", title);
             EditorGUILayout.Space(8f);
-
             EditorGUILayout.HelpBox(
-                "Editor/debug only. These overlays reveal hidden geology and " +
-                "should be removed before normal gameplay.",
+                "Editor/debug only. Remove overlays before normal gameplay.",
                 MessageType.Info);
 
+            geologyData = (BoomtownGeologyData)EditorGUILayout.ObjectField(
+                "Geology Data",
+                geologyData,
+                typeof(BoomtownGeologyData),
+                false);
+
+            riverData = (RiverData)EditorGUILayout.ObjectField(
+                "River Data",
+                riverData,
+                typeof(RiverData),
+                false);
+
+            targetTerrain = (Terrain)EditorGUILayout.ObjectField(
+                "Terrain",
+                targetTerrain,
+                typeof(Terrain),
+                true);
+
             EditorGUILayout.Space(8f);
 
-            geologyData =
-                (BoomtownGeologyData)
-                EditorGUILayout.ObjectField(
-                    "Geology Data",
-                    geologyData,
-                    typeof(BoomtownGeologyData),
-                    false);
-
-            riverData =
-                (RiverData)
-                EditorGUILayout.ObjectField(
-                    "River Data",
-                    riverData,
-                    typeof(RiverData),
-                    false);
-
-            targetTerrain =
-                (Terrain)
-                EditorGUILayout.ObjectField(
-                    "Terrain",
-                    targetTerrain,
-                    typeof(Terrain),
-                    true);
-
-            EditorGUILayout.Space(10f);
-
-            if (GUILayout.Button(
-                    "Auto Detect Generated Data",
-                    GUILayout.Height(32f)))
+            if (GUILayout.Button("Auto Detect Generated Data", GUILayout.Height(30f)))
             {
                 AutoDetect();
             }
 
-            EditorGUILayout.Space(12f);
-
-            EditorGUILayout.LabelField(
-                "Hard-Rock Sources",
-                EditorStyles.boldLabel);
+            EditorGUILayout.Space(10f);
+            EditorGUILayout.LabelField("Hard-Rock Sources", EditorStyles.boldLabel);
 
             EditorGUI.BeginDisabledGroup(
-                geologyData == null);
+                geologyData == null ||
+                targetTerrain == null);
 
             if (GUILayout.Button(
-                    "Show Gold Mountains and Veins",
+                    "Show Mineralized Areas and Quartz Veins",
                     GUILayout.Height(38f)))
             {
                 ShowSources();
             }
 
             EditorGUILayout.Space(8f);
+            EditorGUILayout.LabelField("Placer Gold", EditorStyles.boldLabel);
 
-            EditorGUILayout.LabelField(
-                "Placer Gold",
-                EditorStyles.boldLabel);
+            placerMode = (GoldRevealMode)EditorGUILayout.EnumPopup(
+                "Heatmap Mode",
+                placerMode);
 
-            placerMode =
-                (GoldRevealMode)
-                EditorGUILayout.EnumPopup(
-                    "Heatmap Mode",
-                    placerMode);
+            placerOpacity = EditorGUILayout.Slider(
+                "Opacity",
+                placerOpacity,
+                0.05f,
+                1f);
 
-            placerOpacity =
-                EditorGUILayout.Slider(
-                    "Opacity",
-                    placerOpacity,
-                    0.05f,
-                    1f);
+            placerIntensity = EditorGUILayout.Slider(
+                "Intensity",
+                placerIntensity,
+                0.25f,
+                12f);
 
-            placerIntensity =
-                EditorGUILayout.Slider(
-                    "Intensity",
-                    placerIntensity,
-                    0.25f,
-                    12f);
+            placerSpread = EditorGUILayout.IntSlider(
+                "Visual Spread",
+                placerSpread,
+                0,
+                10);
 
-            placerSpread =
-                EditorGUILayout.IntSlider(
-                    "Visual Spread",
-                    placerSpread,
-                    0,
-                    10);
+            placerMinimumAlpha = EditorGUILayout.Slider(
+                "Minimum Alpha",
+                placerMinimumAlpha,
+                0f,
+                0.6f);
 
-            placerMinimumAlpha =
-                EditorGUILayout.Slider(
-                    "Minimum Alpha",
-                    placerMinimumAlpha,
-                    0f,
-                    0.6f);
-
-            if (GUILayout.Button(
-                    "Show Placer Heatmap",
-                    GUILayout.Height(38f)))
+            if (GUILayout.Button("Show Placer Heatmap", GUILayout.Height(38f)))
             {
                 ShowPlacer();
             }
@@ -238,35 +174,27 @@ namespace Boomtown.WorldGeneration.Editor
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space(8f);
-
-            EditorGUILayout.LabelField(
-                "Gold Movement",
-                EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Gold Movement", EditorStyles.boldLabel);
 
             EditorGUI.BeginDisabledGroup(
                 geologyData == null ||
                 riverData == null);
 
-            if (GUILayout.Button(
-                    "Show Approximate Gold Flow Paths",
-                    GUILayout.Height(38f)))
+            if (GUILayout.Button("Show Approximate Flow Paths", GUILayout.Height(38f)))
             {
                 ShowFlowPaths();
             }
 
             EditorGUI.EndDisabledGroup();
 
-            EditorGUILayout.Space(14f);
+            EditorGUILayout.Space(12f);
 
-            if (GUILayout.Button(
-                    "Hide All Gold Overlays",
-                    GUILayout.Height(40f)))
+            if (GUILayout.Button("Hide All Gold Overlays", GUILayout.Height(40f)))
             {
                 HideAllOverlays();
             }
 
             EditorGUILayout.Space(10f);
-
             DrawStatistics();
         }
 
@@ -274,146 +202,203 @@ namespace Boomtown.WorldGeneration.Editor
         {
             targetTerrain =
                 Terrain.activeTerrain ??
-                Object.FindFirstObjectByType<
-                    Terrain>();
+                Object.FindFirstObjectByType<Terrain>();
 
-            geologyData =
-                FindLatestAsset<
-                    BoomtownGeologyData>();
-
-            riverData =
-                FindLatestAsset<
-                    RiverData>();
-
+            geologyData = FindLatestAsset<BoomtownGeologyData>();
+            riverData = FindLatestAsset<RiverData>();
             Repaint();
         }
 
         private void ShowSources()
         {
-            if (geologyData == null)
+            if (geologyData == null ||
+                targetTerrain == null)
             {
                 Debug.LogError(
-                    "[Gold Debug] No generated geology data found.");
+                    "[Gold Debug] Generated geology data or terrain is missing.");
 
                 return;
             }
 
-            DestroyByName(
-                SourceRootName);
+            DestroyByName(SourceRootName);
+            GameObject root = new GameObject(SourceRootName);
 
-            GameObject root =
-                new GameObject(
-                    SourceRootName);
-
-            foreach (GoldMountainData mountain
-                     in geologyData.goldMountains)
+            foreach (GoldMountainData mountain in geologyData.goldMountains)
             {
-                GameObject marker =
-                    GameObject.CreatePrimitive(
-                        PrimitiveType.Sphere);
-
-                marker.name =
-                    mountain.displayName;
-
-                marker.transform.SetParent(
-                    root.transform);
-
-                marker.transform.position =
-                    mountain.centre +
-                    Vector3.up * 45f;
-
-                marker.transform.localScale =
-                    new Vector3(
-                        mountain.radius * 2f,
-                        90f,
-                        mountain.radius * 2f);
-
-                DestroyImmediate(
-                    marker.GetComponent<Collider>());
-
-                Renderer renderer =
-                    marker.GetComponent<Renderer>();
-
-                renderer.sharedMaterial =
-                    CreateTransparentMaterial(
-                        new Color(
-                            1f,
-                            0.45f,
-                            0f,
-                            0.17f));
+                CreateAlterationContours(root.transform, mountain);
             }
 
-            foreach (QuartzVeinData vein
-                     in geologyData.quartzVeins)
+            foreach (QuartzVeinData vein in geologyData.quartzVeins)
             {
-                GameObject lineObject =
-                    new GameObject(
-                        $"Quartz Vein {vein.id}");
-
-                lineObject.transform.SetParent(
-                    root.transform);
-
-                LineRenderer line =
-                    lineObject.AddComponent<
-                        LineRenderer>();
-
-                line.positionCount = 2;
-
-                line.SetPosition(
-                    0,
-                    vein.start +
-                    Vector3.up * 4f);
-
-                line.SetPosition(
-                    1,
-                    vein.end +
-                    Vector3.up * 4f);
-
-                line.startWidth =
-                    Mathf.Max(
-                        2f,
-                        vein.widthMetres * 4f);
-
-                line.endWidth =
-                    line.startWidth;
-
-                float grade =
-                    Mathf.InverseLerp(
-                        0.04f,
-                        0.95f,
-                        vein.gradeOuncesPerTon);
-
-                Color colour =
-                    Color.Lerp(
-                        Color.white,
-                        new Color(
-                            1f,
-                            0.68f,
-                            0.02f,
-                            1f),
-                        grade);
-
-                line.startColor =
-                    colour;
-
-                line.endColor =
-                    colour;
-
-                line.material =
-                    new Material(
-                        Shader.Find(
-                            "Sprites/Default"));
+                CreateQuartzVein(root.transform, vein);
             }
 
-            Selection.activeGameObject =
-                root;
-
+            Selection.activeGameObject = root;
             SceneView.RepaintAll();
 
             Debug.Log(
-                $"[Gold Debug] Showing " +
-                $"{geologyData.goldMountains.Count} mineralized mountain(s) " +
-                $"and {geologyData.quartzVeins.Count} quartz vein(s).");
+                $"[Gold Debug] Showing terrain-following alteration contours for " +
+                $"{geologyData.goldMountains.Count} mineralized mountain(s) and " +
+                $"{geologyData.quartzVeins.Count} irregular quartz vein(s).");
+        }
+
+        private void CreateAlterationContours(
+            Transform parent,
+            GoldMountainData mountain)
+        {
+            const int contourCount = 3;
+            const int pointCount = 48;
+
+            for (int contourIndex = 0;
+                 contourIndex < contourCount;
+                 contourIndex++)
+            {
+                float contourT =
+                    contourIndex /
+                    (float)(contourCount - 1);
+
+                float radiusScale = Mathf.Lerp(0.34f, 0.82f, contourT);
+
+                GameObject contourObject = new GameObject(
+                    $"{mountain.displayName} Alteration {contourIndex + 1}");
+
+                contourObject.transform.SetParent(parent);
+
+                LineRenderer line =
+                    contourObject.AddComponent<LineRenderer>();
+
+                line.loop = true;
+                line.useWorldSpace = true;
+                line.positionCount = pointCount;
+                line.startWidth = Mathf.Lerp(4.5f, 1.8f, contourT);
+                line.endWidth = line.startWidth;
+
+                Color colour = new Color(
+                    0.62f,
+                    0.24f,
+                    0.08f,
+                    Mathf.Lerp(0.42f, 0.16f, contourT));
+
+                line.startColor = colour;
+                line.endColor = colour;
+                line.sharedMaterial = CreateTransparentMaterial(Color.white);
+
+                for (int pointIndex = 0;
+                     pointIndex < pointCount;
+                     pointIndex++)
+                {
+                    float angle =
+                        pointIndex /
+                        (float)pointCount *
+                        Mathf.PI *
+                        2f;
+
+                    float irregularity =
+                        1f +
+                        Mathf.Sin(angle * 3f + mountain.id * 1.73f) * 0.11f +
+                        Mathf.Sin(angle * 7f + mountain.id * 0.91f) * 0.05f;
+
+                    float radius =
+                        mountain.radius *
+                        radiusScale *
+                        irregularity;
+
+                    Vector3 point =
+                        mountain.centre +
+                        new Vector3(
+                            Mathf.Cos(angle) * radius,
+                            0f,
+                            Mathf.Sin(angle) * radius);
+
+                    line.SetPosition(
+                        pointIndex,
+                        ConformToTerrain(
+                            point,
+                            2.5f + contourIndex * 0.4f));
+                }
+            }
+        }
+
+        private void CreateQuartzVein(
+            Transform parent,
+            QuartzVeinData vein)
+        {
+            const int pointCount = 11;
+
+            GameObject lineObject =
+                new GameObject($"Quartz Vein {vein.id}");
+
+            lineObject.transform.SetParent(parent);
+
+            LineRenderer line =
+                lineObject.AddComponent<LineRenderer>();
+
+            line.useWorldSpace = true;
+            line.positionCount = pointCount;
+
+            float grade = Mathf.InverseLerp(
+                0.04f,
+                0.95f,
+                vein.gradeOuncesPerTon);
+
+            line.startWidth =
+                Mathf.Max(1.4f, vein.widthMetres * 2.2f);
+
+            line.endWidth =
+                Mathf.Max(0.8f, line.startWidth * 0.58f);
+
+            Color quartzColour = Color.Lerp(
+                new Color(0.88f, 0.90f, 0.92f, 0.90f),
+                new Color(1f, 0.82f, 0.24f, 0.96f),
+                grade * 0.42f);
+
+            line.startColor = quartzColour;
+            line.endColor = quartzColour;
+            line.sharedMaterial = CreateTransparentMaterial(Color.white);
+
+            Vector3 direction = vein.end - vein.start;
+            Vector3 sideways =
+                Vector3.Cross(
+                    Vector3.up,
+                    direction.normalized);
+
+            float length = direction.magnitude;
+
+            for (int pointIndex = 0;
+                 pointIndex < pointCount;
+                 pointIndex++)
+            {
+                float t =
+                    pointIndex /
+                    (float)(pointCount - 1);
+
+                Vector3 point =
+                    Vector3.Lerp(
+                        vein.start,
+                        vein.end,
+                        t);
+
+                float wave =
+                    Mathf.Sin(
+                        t * Mathf.PI * 3.2f +
+                        vein.id * 1.37f) *
+                    Mathf.Lerp(
+                        4f,
+                        15f,
+                        Mathf.Clamp01(length / 620f));
+
+                float secondary =
+                    Mathf.Sin(
+                        t * Mathf.PI * 7.4f +
+                        vein.id * 0.63f) *
+                    2.5f;
+
+                point += sideways * (wave + secondary);
+
+                line.SetPosition(
+                    pointIndex,
+                    ConformToTerrain(point, 3.5f));
+            }
         }
 
         private void ShowPlacer()
@@ -428,14 +413,12 @@ namespace Boomtown.WorldGeneration.Editor
             }
 
             GameObject overlayObject =
-                GameObject.Find(
-                    PlacerRootName);
+                GameObject.Find(PlacerRootName);
 
             if (overlayObject == null)
             {
                 overlayObject =
-                    new GameObject(
-                        PlacerRootName);
+                    new GameObject(PlacerRootName);
 
                 Undo.RegisterCreatedObjectUndo(
                     overlayObject,
@@ -443,33 +426,26 @@ namespace Boomtown.WorldGeneration.Editor
             }
 
             BoomtownGoldRevealOverlay overlay =
-                overlayObject.GetComponent<
-                    BoomtownGoldRevealOverlay>();
+                overlayObject.GetComponent<BoomtownGoldRevealOverlay>();
 
             if (overlay == null)
             {
                 overlay =
-                    Undo.AddComponent<
-                        BoomtownGoldRevealOverlay>(
+                    Undo.AddComponent<BoomtownGoldRevealOverlay>(
                         overlayObject);
             }
-
-            Material material =
-                GetOrCreatePlacerMaterial();
 
             overlay.Configure(
                 geologyData,
                 targetTerrain,
-                material,
+                GetOrCreatePlacerMaterial(),
                 placerMode,
                 placerOpacity,
                 placerIntensity,
                 placerSpread,
                 placerMinimumAlpha);
 
-            Selection.activeGameObject =
-                overlayObject;
-
+            Selection.activeGameObject = overlayObject;
             SceneView.RepaintAll();
         }
 
@@ -486,15 +462,10 @@ namespace Boomtown.WorldGeneration.Editor
                 return;
             }
 
-            DestroyByName(
-                FlowRootName);
+            DestroyByName(FlowRootName);
+            GameObject root = new GameObject(FlowRootName);
 
-            GameObject root =
-                new GameObject(
-                    FlowRootName);
-
-            foreach (QuartzVeinData vein
-                     in geologyData.quartzVeins)
+            foreach (QuartzVeinData vein in geologyData.quartzVeins)
             {
                 Vector3 veinCentre =
                     Vector3.Lerp(
@@ -511,78 +482,49 @@ namespace Boomtown.WorldGeneration.Editor
                     new GameObject(
                         $"Gold Flow from Vein {vein.id}");
 
-                pathObject.transform.SetParent(
-                    root.transform);
+                pathObject.transform.SetParent(root.transform);
 
                 LineRenderer line =
-                    pathObject.AddComponent<
-                        LineRenderer>();
+                    pathObject.AddComponent<LineRenderer>();
 
-                line.positionCount =
-                    points.Count;
-
-                line.SetPositions(
-                    points.ToArray());
-
-                line.startWidth = 5f;
-                line.endWidth = 2f;
-
-                line.startColor =
-                    new Color(
-                        1f,
-                        0.78f,
-                        0.02f,
-                        0.95f);
-
-                line.endColor =
-                    new Color(
-                        1f,
-                        0.30f,
-                        0.02f,
-                        0.65f);
-
-                line.material =
-                    new Material(
-                        Shader.Find(
-                            "Sprites/Default"));
+                line.useWorldSpace = true;
+                line.positionCount = points.Count;
+                line.SetPositions(points.ToArray());
+                line.startWidth = 3f;
+                line.endWidth = 1.2f;
+                line.startColor = new Color(0.95f, 0.62f, 0.08f, 0.72f);
+                line.endColor = new Color(0.85f, 0.30f, 0.04f, 0.28f);
+                line.sharedMaterial = CreateTransparentMaterial(Color.white);
             }
 
-            Selection.activeGameObject =
-                root;
-
+            Selection.activeGameObject = root;
             SceneView.RepaintAll();
 
             Debug.Log(
                 $"[Gold Debug] Showing " +
-                $"{geologyData.quartzVeins.Count} approximate flow path(s). " +
-                "These are visual diagnostics until full watershed transport " +
-                "is implemented.");
+                $"{geologyData.quartzVeins.Count} approximate flow path(s).");
         }
 
         private List<Vector3> BuildFlowPath(
             QuartzVeinData vein,
             Vector3 veinCentre)
         {
-            List<Vector3> points =
-                new List<Vector3>();
+            List<Vector3> points = new List<Vector3>();
 
             Vector3 source =
                 ConformToTerrain(
                     veinCentre,
-                    8f);
+                    6f);
 
             Vector3 riverEntry =
                 vein.riverEntryPosition;
 
             if (riverEntry == Vector3.zero)
             {
-                int nearestIndex =
-                    FindNearestRiverSampleIndex(
-                        veinCentre);
-
                 riverEntry =
                     riverData.samples[
-                        nearestIndex].position;
+                        FindNearestRiverSampleIndex(
+                            veinCentre)].position;
             }
 
             const int approachPoints = 10;
@@ -593,8 +535,7 @@ namespace Boomtown.WorldGeneration.Editor
             {
                 float t =
                     index /
-                    (float)(
-                        approachPoints - 1);
+                    (float)(approachPoints - 1);
 
                 Vector3 point =
                     Vector3.Lerp(
@@ -603,8 +544,7 @@ namespace Boomtown.WorldGeneration.Editor
                         t);
 
                 Vector3 direction =
-                    riverEntry -
-                    source;
+                    riverEntry - source;
 
                 Vector3 right =
                     Vector3.Cross(
@@ -613,40 +553,32 @@ namespace Boomtown.WorldGeneration.Editor
 
                 point +=
                     right *
-                    Mathf.Sin(
-                        t *
-                        Mathf.PI *
-                        2.1f) *
-                    14f *
+                    Mathf.Sin(t * Mathf.PI * 2.1f) *
+                    12f *
                     (1f - t);
 
                 points.Add(
                     ConformToTerrain(
                         point,
-                        7f));
+                        5f));
             }
 
-            int entryIndex =
-                Mathf.Clamp(
-                    vein.riverEntrySampleIndex,
-                    0,
-                    riverData.samples.Count - 1);
+            int entryIndex = Mathf.Clamp(
+                vein.riverEntrySampleIndex,
+                0,
+                riverData.samples.Count - 1);
 
-            int downstreamEnd =
-                Mathf.Min(
-                    riverData.samples.Count - 1,
-                    entryIndex + 30);
+            int downstreamEnd = Mathf.Min(
+                riverData.samples.Count - 1,
+                entryIndex + 30);
 
-            for (int sampleIndex =
-                     entryIndex;
-                 sampleIndex <=
-                 downstreamEnd;
+            for (int sampleIndex = entryIndex;
+                 sampleIndex <= downstreamEnd;
                  sampleIndex += 2)
             {
                 points.Add(
-                    riverData.samples[
-                        sampleIndex].position +
-                    Vector3.up * 7f);
+                    riverData.samples[sampleIndex].position +
+                    Vector3.up * 5f);
             }
 
             return points;
@@ -656,23 +588,19 @@ namespace Boomtown.WorldGeneration.Editor
             Vector3 position)
         {
             int nearestIndex = 0;
-            float bestDistance =
-                float.MaxValue;
+            float bestDistance = float.MaxValue;
 
             for (int index = 0;
-                 index <
-                 riverData.samples.Count;
+                 index < riverData.samples.Count;
                  index++)
             {
                 Vector3 delta =
-                    riverData.samples[index]
-                        .position -
+                    riverData.samples[index].position -
                     position;
 
                 delta.y = 0f;
 
-                float distance =
-                    delta.sqrMagnitude;
+                float distance = delta.sqrMagnitude;
 
                 if (distance < bestDistance)
                 {
@@ -695,10 +623,8 @@ namespace Boomtown.WorldGeneration.Editor
             }
 
             point.y =
-                targetTerrain.SampleHeight(
-                    point) +
-                targetTerrain.transform
-                    .position.y +
+                targetTerrain.SampleHeight(point) +
+                targetTerrain.transform.position.y +
                 offset;
 
             return point;
@@ -717,15 +643,11 @@ namespace Boomtown.WorldGeneration.Editor
 
             EditorGUILayout.LabelField(
                 "Mineralized mountains",
-                geologyData.goldMountains?.Count
-                    .ToString() ??
-                "0");
+                geologyData.goldMountains?.Count.ToString() ?? "0");
 
             EditorGUILayout.LabelField(
                 "Quartz veins",
-                geologyData.quartzVeins?.Count
-                    .ToString() ??
-                "0");
+                geologyData.quartzVeins?.Count.ToString() ?? "0");
 
             EditorGUILayout.LabelField(
                 "Initial hard-rock gold",
@@ -749,14 +671,12 @@ namespace Boomtown.WorldGeneration.Editor
         private static T FindLatestAsset<T>()
             where T : Object
         {
-            string[] guids =
-                AssetDatabase.FindAssets(
-                    $"t:{typeof(T).Name}",
-                    new[]
-                    {
-                        "Assets/Boomtown/Scripts/" +
-                        "WorldGeneration/Generated"
-                    });
+            string[] guids = AssetDatabase.FindAssets(
+                $"t:{typeof(T).Name}",
+                new[]
+                {
+                    "Assets/Boomtown/Scripts/WorldGeneration/Generated"
+                });
 
             if (guids.Length == 0)
             {
@@ -764,22 +684,16 @@ namespace Boomtown.WorldGeneration.Editor
             }
 
             string newestPath = null;
-            long newestTicks =
-                long.MinValue;
+            long newestTicks = long.MinValue;
 
             foreach (string guid in guids)
             {
                 string path =
-                    AssetDatabase.GUIDToAssetPath(
-                        guid);
+                    AssetDatabase.GUIDToAssetPath(guid);
 
                 long ticks =
-                    System.IO.File.Exists(
-                        path)
-                        ? System.IO.File
-                            .GetLastWriteTimeUtc(
-                                path)
-                            .Ticks
+                    System.IO.File.Exists(path)
+                        ? System.IO.File.GetLastWriteTimeUtc(path).Ticks
                         : 0L;
 
                 if (ticks > newestTicks)
@@ -789,65 +703,48 @@ namespace Boomtown.WorldGeneration.Editor
                 }
             }
 
-            return string.IsNullOrEmpty(
-                    newestPath)
+            return string.IsNullOrEmpty(newestPath)
                 ? null
-                : AssetDatabase
-                    .LoadAssetAtPath<T>(
-                        newestPath);
+                : AssetDatabase.LoadAssetAtPath<T>(newestPath);
         }
 
-        private static Material
-            CreateTransparentMaterial(
-                Color colour)
+        private static Material CreateTransparentMaterial(
+            Color colour)
         {
             Shader shader =
-                Shader.Find(
-                    "Universal Render Pipeline/Unlit");
-
-            if (shader == null)
-            {
-                shader =
-                    Shader.Find(
-                        "Sprites/Default");
-            }
+                Shader.Find("Universal Render Pipeline/Unlit") ??
+                Shader.Find("Sprites/Default");
 
             Material material =
                 new Material(shader);
 
-            material.color =
-                colour;
+            material.color = colour;
 
-            if (material.HasProperty(
-                    "_Surface"))
+            if (material.HasProperty("_Surface"))
             {
-                material.SetFloat(
-                    "_Surface",
-                    1f);
+                material.SetFloat("_Surface", 1f);
             }
 
-            material.renderQueue =
-                3000;
+            if (material.HasProperty("_ZWrite"))
+            {
+                material.SetFloat("_ZWrite", 0f);
+            }
 
+            material.renderQueue = 3000;
             return material;
         }
 
-        private static Material
-            GetOrCreatePlacerMaterial()
+        private static Material GetOrCreatePlacerMaterial()
         {
             const string materialPath =
-                "Assets/Boomtown/Scripts/" +
-                "WorldGeneration/Generated/" +
+                "Assets/Boomtown/Scripts/WorldGeneration/Generated/" +
                 "BT_GoldRevealOverlay.mat";
 
             Material material =
-                AssetDatabase
-                    .LoadAssetAtPath<Material>(
-                        materialPath);
+                AssetDatabase.LoadAssetAtPath<Material>(materialPath);
 
             Shader shader =
-                Shader.Find(
-                    "Boomtown/Gold Reveal Overlay");
+                Shader.Find("Boomtown/Gold Reveal Overlay");
 
             if (shader == null)
             {
@@ -859,12 +756,10 @@ namespace Boomtown.WorldGeneration.Editor
 
             if (material == null)
             {
-                material =
-                    new Material(shader)
-                    {
-                        name =
-                            "BT_GoldRevealOverlay"
-                    };
+                material = new Material(shader)
+                {
+                    name = "BT_GoldRevealOverlay"
+                };
 
                 AssetDatabase.CreateAsset(
                     material,
@@ -875,11 +770,8 @@ namespace Boomtown.WorldGeneration.Editor
                 material.shader = shader;
             }
 
-            EditorUtility.SetDirty(
-                material);
-
+            EditorUtility.SetDirty(material);
             AssetDatabase.SaveAssets();
-
             return material;
         }
 
@@ -887,13 +779,11 @@ namespace Boomtown.WorldGeneration.Editor
             string objectName)
         {
             GameObject target =
-                GameObject.Find(
-                    objectName);
+                GameObject.Find(objectName);
 
             if (target != null)
             {
-                Undo.DestroyObjectImmediate(
-                    target);
+                Undo.DestroyObjectImmediate(target);
             }
         }
     }
