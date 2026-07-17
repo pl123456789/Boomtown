@@ -20,6 +20,9 @@ namespace Boomtown.WorldGeneration.Editor
         private const float MaximumVelocity = 4.5f;
         private const float StraightBendThreshold = 0.08f;
         private const float FullBendAngle = 8f;
+        private const float InitialGoldLoad = 1f;
+        private const float LocalGoldInputScale = 0.08f;
+        private const float MaximumDepositFraction = 0.55f;
 
         public static RiverData Save(
             BoomtownMapDefinition mapDefinition,
@@ -133,7 +136,49 @@ namespace Boomtown.WorldGeneration.Editor
                 networkSamples.Add(sample);
             }
 
+            ApplySimpleGoldTransport(networkSamples);
+
             return networkSamples;
+        }
+
+        private static void ApplySimpleGoldTransport(
+            List<RiverSample> samples)
+        {
+            float carriedGold = InitialGoldLoad;
+
+            for (int index = 0;
+                 index < samples.Count;
+                 index++)
+            {
+                RiverSample sample = samples[index];
+
+                float localInput =
+                    sample.gravelProbability *
+                    LocalGoldInputScale;
+
+                sample.incomingGoldLoad =
+                    carriedGold + localInput;
+
+                float depositFraction =
+                    Mathf.Clamp(
+                        sample.depositionPotential *
+                        (1f - sample.transportCapacity * 0.5f),
+                        0f,
+                        MaximumDepositFraction);
+
+                sample.depositedGold =
+                    sample.incomingGoldLoad *
+                    depositFraction;
+
+                sample.outgoingGoldLoad =
+                    Mathf.Max(
+                        0f,
+                        sample.incomingGoldLoad -
+                        sample.depositedGold);
+
+                carriedGold = sample.outgoingGoldLoad;
+                samples[index] = sample;
+            }
         }
 
         private static float CalculateDownhillSlope(
