@@ -28,6 +28,16 @@ namespace Boomtown.Gameplay.Prospecting
         [SerializeField, Min(0f)]
         private float resultDisplayDuration = 2.5f;
 
+        [SerializeField, Min(0f)]
+        private float completionHoldDuration = 0.12f;
+
+        [SerializeField, Min(0f)]
+        private float turnSmoothing = 9f;
+
+        [SerializeField]
+        private AnimationCurve progressCurve =
+            AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
         [SerializeField]
         private Key panKey = Key.Space;
 
@@ -56,8 +66,7 @@ namespace Boomtown.Gameplay.Prospecting
         public void AssignGeologyData(
             BoomtownGeologyData generatedGeology)
         {
-            geologyData =
-                generatedGeology;
+            geologyData = generatedGeology;
         }
 
         public bool CanPanAt(Vector3 worldPosition)
@@ -100,20 +109,38 @@ namespace Boomtown.Gameplay.Prospecting
 
             UpdatePrompt();
 
-            Keyboard keyboard =
-                Keyboard.current;
+            Keyboard keyboard = Keyboard.current;
 
             bool shiftPressed =
                 keyboard != null &&
                 (keyboard.leftShiftKey.isPressed ||
                  keyboard.rightShiftKey.isPressed);
 
-            if (sensor.CanPanHere &&
+            if (sensor != null &&
+                sensor.CanPanHere &&
                 keyboard != null &&
                 !shiftPressed &&
                 keyboard[panKey].wasPressedThisFrame)
             {
                 TryStartPanning();
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (!isPanning)
+            {
+                return;
+            }
+
+            RestoreMovement();
+            isPanning = false;
+            queuedCompletion = null;
+
+            if (showPlayerUI &&
+                ui != null)
+            {
+                ui.HideAll();
             }
         }
 
@@ -154,7 +181,6 @@ namespace Boomtown.Gameplay.Prospecting
                 ui.BeginProgress();
             }
 
-            // Let Unity rebuild the newly enabled Slider before animation starts.
             yield return null;
 
             float elapsed = 0f;
@@ -163,9 +189,17 @@ namespace Boomtown.Gameplay.Prospecting
             {
                 elapsed += Time.deltaTime;
 
-                float progress =
+                float normalized =
                     Mathf.Clamp01(
                         elapsed / panningDuration);
+
+                float progress =
+                    progressCurve != null
+                        ? Mathf.Clamp01(
+                            progressCurve.Evaluate(normalized))
+                        : normalized;
+
+                RotateTowardSamplePoint();
 
                 if (showPlayerUI)
                 {
@@ -178,6 +212,12 @@ namespace Boomtown.Gameplay.Prospecting
             if (showPlayerUI)
             {
                 ui.ShowProgress(1f);
+            }
+
+            if (completionHoldDuration > 0f)
+            {
+                yield return new WaitForSeconds(
+                    completionHoldDuration);
             }
 
             GoldExtractionResult extraction =
@@ -218,17 +258,49 @@ namespace Boomtown.Gameplay.Prospecting
             }
 
             RestoreMovement();
-
             isPanning = false;
 
-            Action completion =
-                queuedCompletion;
-
+            Action completion = queuedCompletion;
             queuedCompletion = null;
 
             completion?.Invoke();
-
             UpdatePrompt();
+        }
+
+        private void RotateTowardSamplePoint()
+        {
+            if (sensor == null ||
+                turnSmoothing <= 0f)
+            {
+                return;
+            }
+
+            Vector3 direction =
+                sensor.SamplePoint -
+                transform.position;
+
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude < 0.001f)
+            {
+                return;
+            }
+
+            Quaternion targetRotation =
+                Quaternion.LookRotation(
+                    direction.normalized,
+                    Vector3.up);
+
+            float smoothing =
+                1f - Mathf.Exp(
+                    -turnSmoothing *
+                    Time.deltaTime);
+
+            transform.rotation =
+                Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    smoothing);
         }
 
         private void UpdatePrompt()
@@ -240,6 +312,7 @@ namespace Boomtown.Gameplay.Prospecting
             }
 
             if (geologyData == null ||
+                sensor == null ||
                 !sensor.CanPanHere)
             {
                 ui.HideAll();
@@ -257,6 +330,7 @@ namespace Boomtown.Gameplay.Prospecting
                 agent.isOnNavMesh)
             {
                 agent.ResetPath();
+                agent.velocity = Vector3.zero;
                 agent.isStopped = true;
             }
 
@@ -311,6 +385,7 @@ namespace Boomtown.Gameplay.Prospecting
                 agent.enabled &&
                 agent.isOnNavMesh)
             {
+                agent.velocity = Vector3.zero;
                 agent.isStopped = false;
             }
         }
