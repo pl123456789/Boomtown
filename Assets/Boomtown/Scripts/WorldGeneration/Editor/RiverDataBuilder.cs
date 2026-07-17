@@ -7,8 +7,8 @@ namespace Boomtown.WorldGeneration.Editor
     /// <summary>
     /// Creates or replaces the generated RiverData asset for a map.
     ///
-    /// This class does not decide the river shape. It only saves the physical
-    /// RiverSample list produced by the river generator.
+    /// This class does not decide the river shape. It prepares river-network
+    /// metadata, then saves the RiverSample list produced by the river generator.
     /// </summary>
     public static class RiverDataBuilder
     {
@@ -53,11 +53,13 @@ namespace Boomtown.WorldGeneration.Editor
                 AssetDatabase.DeleteAsset(assetPath);
             }
 
+            List<RiverSample> networkSamples =
+                BuildNetworkSamples(samples);
+
             RiverData riverData =
                 ScriptableObject.CreateInstance<RiverData>();
 
-            riverData.samples =
-                new List<RiverSample>(samples);
+            riverData.samples = networkSamples;
 
             AssetDatabase.CreateAsset(
                 riverData,
@@ -67,10 +69,47 @@ namespace Boomtown.WorldGeneration.Editor
             AssetDatabase.SaveAssets();
 
             Debug.Log(
-                $"[River Data Builder] Saved {samples.Count} river samples " +
-                $"for {mapDefinition.mapName}, {mapDefinition.year}.");
+                $"[River Data Builder] Saved {networkSamples.Count} connected " +
+                $"river samples for {mapDefinition.mapName}, " +
+                $"{mapDefinition.year}. River length: " +
+                $"{networkSamples[networkSamples.Count - 1].distanceDownstream:F1} m.");
 
             return riverData;
+        }
+
+        private static List<RiverSample> BuildNetworkSamples(
+            IReadOnlyList<RiverSample> sourceSamples)
+        {
+            List<RiverSample> networkSamples =
+                new List<RiverSample>(sourceSamples.Count);
+
+            float distanceDownstream = 0f;
+
+            for (int index = 0;
+                 index < sourceSamples.Count;
+                 index++)
+            {
+                RiverSample sample = sourceSamples[index];
+
+                if (index > 0)
+                {
+                    distanceDownstream +=
+                        Vector3.Distance(
+                            sourceSamples[index - 1].position,
+                            sample.position);
+                }
+
+                sample.sampleIndex = index;
+                sample.previousSampleIndex =
+                    index > 0 ? index - 1 : -1;
+                sample.nextSampleIndex =
+                    index < sourceSamples.Count - 1 ? index + 1 : -1;
+                sample.distanceDownstream = distanceDownstream;
+
+                networkSamples.Add(sample);
+            }
+
+            return networkSamples;
         }
 
         private static string MakeSafeName(string value)
