@@ -8,7 +8,8 @@ namespace Boomtown.WorldGeneration.Editor
     /// Creates or replaces the generated RiverData asset for a map.
     ///
     /// This class does not decide the river shape. It prepares river-network
-    /// metadata, then saves the RiverSample list produced by the river generator.
+    /// metadata and Level 1 hydrology values, then saves the RiverSample list
+    /// produced by the river generator.
     /// </summary>
     public static class RiverDataBuilder
     {
@@ -105,11 +106,57 @@ namespace Boomtown.WorldGeneration.Editor
                 sample.nextSampleIndex =
                     index < sourceSamples.Count - 1 ? index + 1 : -1;
                 sample.distanceDownstream = distanceDownstream;
+                sample.slope =
+                    CalculateDownhillSlope(
+                        sourceSamples,
+                        index);
 
                 networkSamples.Add(sample);
             }
 
             return networkSamples;
+        }
+
+        private static float CalculateDownhillSlope(
+            IReadOnlyList<RiverSample> samples,
+            int index)
+        {
+            if (samples.Count < 2)
+            {
+                return 0f;
+            }
+
+            int upstreamIndex =
+                Mathf.Max(0, index - 1);
+            int downstreamIndex =
+                Mathf.Min(samples.Count - 1, index + 1);
+
+            Vector3 upstream =
+                samples[upstreamIndex].position;
+            Vector3 downstream =
+                samples[downstreamIndex].position;
+
+            Vector2 upstreamHorizontal =
+                new Vector2(upstream.x, upstream.z);
+            Vector2 downstreamHorizontal =
+                new Vector2(downstream.x, downstream.z);
+
+            float horizontalDistance =
+                Vector2.Distance(
+                    upstreamHorizontal,
+                    downstreamHorizontal);
+
+            if (horizontalDistance <= 0.001f)
+            {
+                return 0f;
+            }
+
+            float elevationDrop =
+                upstream.y - downstream.y;
+
+            return Mathf.Max(
+                0f,
+                elevationDrop / horizontalDistance);
         }
 
         private static string MakeSafeName(string value)
