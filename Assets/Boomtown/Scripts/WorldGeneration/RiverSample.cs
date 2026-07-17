@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace Boomtown.WorldGeneration
 {
+    public enum RiverBendType
+    {
+        Straight = 0,
+        Left = 1,
+        Right = 2
+    }
+
     /// <summary>
     /// Stores one physical sample along a generated river.
     ///
@@ -57,6 +64,17 @@ namespace Boomtown.WorldGeneration
         [Tooltip("Approximate water velocity in metres per second.")]
         [Min(0f)]
         public float velocity;
+
+        [Tooltip("Whether the river turns left, right, or remains approximately straight.")]
+        public RiverBendType bendType;
+
+        [Tooltip("Signed bend value from -1 to 1. Negative is left; positive is right.")]
+        [Range(-1f, 1f)]
+        public float signedBend;
+
+        [Tooltip("Absolute bend strength from 0 to 1.")]
+        [Range(0f, 1f)]
+        public float bendStrength;
 
         [Tooltip("Likelihood from 0 to 1 that gravel accumulates near this sample.")]
         [Range(0f, 1f)]
