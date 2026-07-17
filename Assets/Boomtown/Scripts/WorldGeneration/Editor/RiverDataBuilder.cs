@@ -125,6 +125,10 @@ namespace Boomtown.WorldGeneration.Editor
                     Mathf.Abs(sample.signedBend);
                 sample.bendType =
                     ClassifyBend(sample.signedBend);
+                sample.transportCapacity =
+                    CalculateTransportCapacity(sample);
+                sample.depositionPotential =
+                    CalculateDepositionPotential(sample);
 
                 networkSamples.Add(sample);
             }
@@ -284,6 +288,55 @@ namespace Boomtown.WorldGeneration.Editor
             }
 
             return RiverBendType.Straight;
+        }
+
+        private static float CalculateTransportCapacity(
+            RiverSample sample)
+        {
+            float velocityFactor =
+                Mathf.InverseLerp(
+                    MinimumVelocity,
+                    MaximumVelocity,
+                    sample.velocity);
+
+            float slopeFactor =
+                Mathf.InverseLerp(
+                    0f,
+                    0.08f,
+                    sample.slope);
+
+            float depthFactor =
+                Mathf.InverseLerp(
+                    1f,
+                    6f,
+                    sample.depth);
+
+            return Mathf.Clamp01(
+                velocityFactor * 0.62f +
+                slopeFactor * 0.25f +
+                depthFactor * 0.13f);
+        }
+
+        private static float CalculateDepositionPotential(
+            RiverSample sample)
+        {
+            float slowWaterFactor =
+                1f - sample.transportCapacity;
+
+            float widthFactor =
+                Mathf.InverseLerp(
+                    30f,
+                    118f,
+                    sample.TotalWidth);
+
+            float bendFactor =
+                sample.bendStrength;
+
+            return Mathf.Clamp01(
+                slowWaterFactor * 0.52f +
+                widthFactor * 0.18f +
+                bendFactor * 0.18f +
+                sample.gravelProbability * 0.12f);
         }
 
         private static string MakeSafeName(string value)
