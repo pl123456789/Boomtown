@@ -76,6 +76,16 @@ namespace Boomtown.WorldGeneration
         [Range(0f, 1f)]
         public float bendStrength;
 
+        [Header("Sediment and Placer Conditions")]
+
+        [Tooltip("Normalized ability of this river section to keep sediment and gold moving downstream.")]
+        [Range(0f, 1f)]
+        public float transportCapacity;
+
+        [Tooltip("Normalized tendency for sediment and placer gold to settle at this sample.")]
+        [Range(0f, 1f)]
+        public float depositionPotential;
+
         [Tooltip("Likelihood from 0 to 1 that gravel accumulates near this sample.")]
         [Range(0f, 1f)]
         public float gravelProbability;
