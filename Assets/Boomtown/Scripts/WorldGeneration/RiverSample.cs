@@ -86,6 +86,18 @@ namespace Boomtown.WorldGeneration
         [Range(0f, 1f)]
         public float depositionPotential;
 
+        [Tooltip("Normalized placer-gold load entering this sample from upstream.")]
+        [Min(0f)]
+        public float incomingGoldLoad;
+
+        [Tooltip("Normalized placer gold deposited at this sample.")]
+        [Min(0f)]
+        public float depositedGold;
+
+        [Tooltip("Normalized placer-gold load leaving this sample downstream.")]
+        [Min(0f)]
+        public float outgoingGoldLoad;
+
         [Tooltip("Likelihood from 0 to 1 that gravel accumulates near this sample.")]
         [Range(0f, 1f)]
         public float gravelProbability;
