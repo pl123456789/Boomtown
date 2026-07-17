@@ -18,6 +18,8 @@ namespace Boomtown.WorldGeneration.Editor
 
         private const float MinimumVelocity = 0.25f;
         private const float MaximumVelocity = 4.5f;
+        private const float StraightBendThreshold = 0.08f;
+        private const float FullBendAngle = 8f;
 
         public static RiverData Save(
             BoomtownMapDefinition mapDefinition,
@@ -115,6 +117,14 @@ namespace Boomtown.WorldGeneration.Editor
                         index);
                 sample.velocity =
                     CalculateVelocity(sample);
+                sample.signedBend =
+                    CalculateSignedBend(
+                        sourceSamples,
+                        index);
+                sample.bendStrength =
+                    Mathf.Abs(sample.signedBend);
+                sample.bendType =
+                    ClassifyBend(sample.signedBend);
 
                 networkSamples.Add(sample);
             }
@@ -209,6 +219,71 @@ namespace Boomtown.WorldGeneration.Editor
                 depthMultiplier,
                 MinimumVelocity,
                 MaximumVelocity);
+        }
+
+        private static float CalculateSignedBend(
+            IReadOnlyList<RiverSample> samples,
+            int index)
+        {
+            if (index <= 0 ||
+                index >= samples.Count - 1)
+            {
+                return 0f;
+            }
+
+            Vector3 incoming =
+                samples[index].position -
+                samples[index - 1].position;
+            Vector3 outgoing =
+                samples[index + 1].position -
+                samples[index].position;
+
+            incoming.y = 0f;
+            outgoing.y = 0f;
+
+            if (incoming.sqrMagnitude <= 0.0001f ||
+                outgoing.sqrMagnitude <= 0.0001f)
+            {
+                return 0f;
+            }
+
+            incoming.Normalize();
+            outgoing.Normalize();
+
+            float angle =
+                Vector3.Angle(
+                    incoming,
+                    outgoing);
+            float bendStrength =
+                Mathf.InverseLerp(
+                    0f,
+                    FullBendAngle,
+                    angle);
+            float crossY =
+                Vector3.Cross(
+                    incoming,
+                    outgoing).y;
+
+            return Mathf.Clamp(
+                bendStrength * Mathf.Sign(crossY),
+                -1f,
+                1f);
+        }
+
+        private static RiverBendType ClassifyBend(
+            float signedBend)
+        {
+            if (signedBend <= -StraightBendThreshold)
+            {
+                return RiverBendType.Left;
+            }
+
+            if (signedBend >= StraightBendThreshold)
+            {
+                return RiverBendType.Right;
+            }
+
+            return RiverBendType.Straight;
         }
 
         private static string MakeSafeName(string value)
