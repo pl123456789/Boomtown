@@ -16,6 +16,9 @@ namespace Boomtown.WorldGeneration.Editor
         private const string GeneratedFolder =
             "Assets/Boomtown/Scripts/WorldGeneration/Generated";
 
+        private const float MinimumVelocity = 0.25f;
+        private const float MaximumVelocity = 4.5f;
+
         public static RiverData Save(
             BoomtownMapDefinition mapDefinition,
             IReadOnlyList<RiverSample> samples)
@@ -110,6 +113,8 @@ namespace Boomtown.WorldGeneration.Editor
                     CalculateDownhillSlope(
                         sourceSamples,
                         index);
+                sample.velocity =
+                    CalculateVelocity(sample);
 
                 networkSamples.Add(sample);
             }
@@ -157,6 +162,53 @@ namespace Boomtown.WorldGeneration.Editor
             return Mathf.Max(
                 0f,
                 elevationDrop / horizontalDistance);
+        }
+
+        private static float CalculateVelocity(
+            RiverSample sample)
+        {
+            float slopeFactor =
+                Mathf.InverseLerp(
+                    0f,
+                    0.08f,
+                    sample.slope);
+
+            float widthFactor =
+                Mathf.InverseLerp(
+                    30f,
+                    118f,
+                    sample.TotalWidth);
+
+            float depthFactor =
+                Mathf.InverseLerp(
+                    1f,
+                    6f,
+                    sample.depth);
+
+            float slopeVelocity =
+                Mathf.Lerp(
+                    0.55f,
+                    3.8f,
+                    slopeFactor);
+
+            float channelMultiplier =
+                Mathf.Lerp(
+                    1.20f,
+                    0.78f,
+                    widthFactor);
+
+            float depthMultiplier =
+                Mathf.Lerp(
+                    0.90f,
+                    1.10f,
+                    depthFactor);
+
+            return Mathf.Clamp(
+                slopeVelocity *
+                channelMultiplier *
+                depthMultiplier,
+                MinimumVelocity,
+                MaximumVelocity);
         }
 
         private static string MakeSafeName(string value)
