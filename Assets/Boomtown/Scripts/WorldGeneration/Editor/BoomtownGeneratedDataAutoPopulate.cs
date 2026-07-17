@@ -1,10 +1,8 @@
-// Scene-data assignment is now an automatic stage of world generation.
+// Deprecated compatibility shim.
 //
-// The former menu command:
-// Boomtown > World Generator > Auto Populate Generated Data
-//
-// has been intentionally removed. Users should never need to manually wire
-// generated RiverData or GeologyData.
+// Generated RiverData, GeologyData and prospecting references are now wired
+// automatically by BoomtownWorldGenerator. This class intentionally exposes
+// no Unity menu commands.
 
 namespace Boomtown.WorldGeneration.Editor
 {

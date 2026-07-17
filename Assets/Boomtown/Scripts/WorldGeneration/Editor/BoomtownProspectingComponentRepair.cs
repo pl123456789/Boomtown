@@ -12,8 +12,6 @@ namespace Boomtown.WorldGeneration.Editor
     /// </summary>
     public static class BoomtownProspectingComponentRepair
     {
-        [MenuItem(
-            "Boomtown/Tools/Repair Prospecting Components")]
         public static void Repair()
         {
             int removedMissingScripts = 0;

@@ -15,9 +15,9 @@ MonoBehaviour:
   districtName: Hope
   region: British Columbia
   historicalYear: 1858
-  worldSeed: 94A8E911EE1E
-  generationId: 1e744d695f5b44e1ac826bcfd680e455
-  generatedUtc: 2026-07-17T18:02:31.8350303Z
+  worldSeed: 5953A7E7DBC1
+  generationId: 0af653ffd7e8430186c1fda4c23ad7f0
+  generatedUtc: 2026-07-17T22:35:08.7287178Z
   stage: 9
   generationSucceeded: 1
   validationSummary: 'PASS: Terrain generated.
@@ -25,10 +25,10 @@ MonoBehaviour:
     PASS: River has 121 samples.
 
     PASS:
-    Finite placer gold: 799.41 oz across 160 cells.
+    Finite placer gold: 880.33 oz across 472 cells.
 
     PASS: Quartz-vein hard
-    rock: 75460.23 oz remaining from 76506.77 oz generated.
+    rock: 62673.90 oz remaining from 63573.04 oz generated.
 
     PASS: Bill and
     Ted are present.'
@@ -36,29 +36,29 @@ MonoBehaviour:
   riverData: {fileID: 11400000, guid: 575c629fc2d51634085c09a6c884a043, type: 2}
   geologyData: {fileID: 11400000, guid: 25945a3cf6ae69b48862aef7a227de55, type: 2}
   riverSampleCount: 121
-  placerDepositCellCount: 160
-  initialPlacerGoldOunces: 799.4054
-  remainingPlacerGoldOunces: 799.4054
+  placerDepositCellCount: 472
+  initialPlacerGoldOunces: 880.3295
+  remainingPlacerGoldOunces: 880.3295
   generatedTreeCount: 510
   watershedCount: 0
-  mineralizedMountainCount: 2
-  quartzVeinCount: 9
-  initialHardRockGoldOunces: 76506.77
-  remainingHardRockGoldOunces: 75460.234
+  mineralizedMountainCount: 1
+  quartzVeinCount: 6
+  initialHardRockGoldOunces: 63573.035
+  remainingHardRockGoldOunces: 62673.9
   modules:
   - moduleName: Terrain, river, paint, forest and spawn
     completed: 1
     message: Generated the playable terrain and currently connected world modules.
-    durationMilliseconds: 25134.9959
+    durationMilliseconds: 25575.052600000003
   - moduleName: Geology and finite gold
     completed: 1
     message: Generated source geology and finite exhaustible placer inventory.
-    durationMilliseconds: 194.1062
+    durationMilliseconds: 218.80280000000002
   - moduleName: Scene wiring
     completed: 1
     message: Automatically connected RiverData, GeologyData, prospecting controllers
       and editor debug references.
-    durationMilliseconds: 2.9404000000000003
+    durationMilliseconds: 1.0924
   - moduleName: Validation
     completed: 1
     message: 'PASS: Terrain generated.
@@ -66,11 +66,11 @@ MonoBehaviour:
       PASS: River has 121 samples.
 
       PASS:
-      Finite placer gold: 799.41 oz across 160 cells.
+      Finite placer gold: 880.33 oz across 472 cells.
 
       PASS: Quartz-vein hard
-      rock: 75460.23 oz remaining from 76506.77 oz generated.
+      rock: 62673.90 oz remaining from 63573.04 oz generated.
 
       PASS: Bill
       and Ted are present.'
-    durationMilliseconds: 0.6822
+    durationMilliseconds: 0.40230000000000005

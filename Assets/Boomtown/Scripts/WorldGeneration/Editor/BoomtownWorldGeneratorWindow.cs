@@ -122,7 +122,7 @@ public sealed class BoomtownWorldGeneratorWindow : EditorWindow
             EditorGUILayout.Space(6f);
 
             if (GUILayout.Button(
-                    "Create New Random District Seed",
+                    "Create New Seed Only",
                     GUILayout.Height(32f)))
             {
                 Undo.RecordObject(
@@ -148,7 +148,7 @@ public sealed class BoomtownWorldGeneratorWindow : EditorWindow
             mapDefinition == null);
 
         if (GUILayout.Button(
-                "Generate Current Seed",
+                "Generate District (Current Seed)",
                 GUILayout.Height(44f)))
         {
             BoomtownWorldGenerator.GenerateWorld(
@@ -156,12 +156,12 @@ public sealed class BoomtownWorldGeneratorWindow : EditorWindow
         }
 
         if (GUILayout.Button(
-                "Generate New Random District",
+                "New Random District",
                 GUILayout.Height(44f)))
         {
             Undo.RecordObject(
                 mapDefinition,
-                "Generate New Random District");
+                "New Random District");
 
             mapDefinition.worldSeed =
                 BoomtownWorldGenerator
@@ -194,8 +194,8 @@ public sealed class BoomtownWorldGeneratorWindow : EditorWindow
             $"Region: {mapDefinition.region}\n" +
             $"Year: {mapDefinition.year}\n" +
             $"Seed: {mapDefinition.worldSeed}\n\n" +
-            "Generate Current Seed reproduces the same district.\n" +
-            "Generate New Random District creates a different replay map.",
+            "Generate District (Current Seed) rebuilds this exact district.\n" +
+            "New Random District creates a new seed and generates a different replay map.",
             MessageType.None);
 
         EditorGUILayout.Space(6f);
