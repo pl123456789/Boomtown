@@ -15,7 +15,7 @@ MonoBehaviour:
   mapName: Hope
   region: British Columbia
   year: 1858
-  worldSeed: HOPE1858
+  worldSeed: 94A8E911EE1E
   demFile: 
   heightmapFile: 
   forestDensity: 0.85

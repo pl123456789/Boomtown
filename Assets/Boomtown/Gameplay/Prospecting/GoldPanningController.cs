@@ -53,6 +53,13 @@ namespace Boomtown.Gameplay.Prospecting
 
         public bool IsPanning => isPanning;
 
+        public void AssignGeologyData(
+            BoomtownGeologyData generatedGeology)
+        {
+            geologyData =
+                generatedGeology;
+        }
+
         public bool CanPanAt(Vector3 worldPosition)
         {
             return sensor != null &&
@@ -173,20 +180,24 @@ namespace Boomtown.Gameplay.Prospecting
                 ui.ShowProgress(1f);
             }
 
-            float geologyGrade =
-                geologyData.SamplePlacer(
-                    sensor.SamplePoint);
+            GoldExtractionResult extraction =
+                BoomtownGoldExtractionService.Pan(
+                    geologyData,
+                    sensor.SamplePoint,
+                    materialProcessed: 1f,
+                    recoveryEfficiency: 0.65f);
 
             PanOutcome outcome =
                 resultEvaluator.Evaluate(
-                    geologyGrade);
+                    extraction.grade);
 
             inventory.AddGold(
-                outcome.GoldOunces);
+                extraction.extractedOunces);
 
             string resultText =
                 BuildResultText(
                     outcome,
+                    extraction.extractedOunces,
                     inventory.TotalGoldOunces);
 
             if (showPlayerUI)
@@ -196,7 +207,8 @@ namespace Boomtown.Gameplay.Prospecting
 
             Debug.Log(
                 $"[Gold Panning] {resultText} | " +
-                $"Geology grade: {outcome.SampledGrade:0.000}",
+                $"Geology grade: {extraction.grade:0.000} | " +
+                $"Deposit remaining: {extraction.remainingOunces:0.####} oz",
                 this);
 
             if (resultDisplayDuration > 0f)
@@ -305,11 +317,12 @@ namespace Boomtown.Gameplay.Prospecting
 
         private static string BuildResultText(
             PanOutcome outcome,
+            float extractedOunces,
             float totalGoldOunces)
         {
             string reward =
-                outcome.GoldOunces > 0f
-                    ? $"+{FormatGold(outcome.GoldOunces)}"
+                extractedOunces > 0f
+                    ? $"+{FormatGold(extractedOunces)}"
                     : "No gold";
 
             return
