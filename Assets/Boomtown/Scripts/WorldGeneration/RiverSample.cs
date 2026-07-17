@@ -14,6 +14,16 @@ namespace Boomtown.WorldGeneration
     {
         [Header("River Path")]
 
+        [Tooltip("Zero-based position of this sample in the river sample list.")]
+        [Min(0)]
+        public int sampleIndex;
+
+        [Tooltip("Index of the previous upstream sample, or -1 at the river start.")]
+        public int previousSampleIndex;
+
+        [Tooltip("Index of the next downstream sample, or -1 at the river end.")]
+        public int nextSampleIndex;
+
         [Tooltip("World-space position of the river centre at this sample.")]
         public Vector3 position;
 
@@ -61,6 +71,9 @@ namespace Boomtown.WorldGeneration
         public RiverLandscapeType rightLandscape;
 
         public float TotalWidth => leftWidth + rightWidth;
+
+        public bool HasPreviousSample => previousSampleIndex >= 0;
+        public bool HasNextSample => nextSampleIndex >= 0;
 
         public Vector3 RightDirection
         {
