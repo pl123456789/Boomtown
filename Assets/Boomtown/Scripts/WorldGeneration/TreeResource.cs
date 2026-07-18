@@ -2,6 +2,15 @@ using UnityEngine;
 
 namespace Boomtown.WorldGeneration
 {
+    public enum TreeSpecies
+    {
+        DouglasFir = 0,
+        WesternRedCedar = 1,
+        WesternHemlock = 2,
+        LodgepolePine = 3,
+        EngelmannSpruce = 4
+    }
+
     /// <summary>
     /// Stores inspectable forestry values for one generated tree.
     /// Board feet are a gameplay estimate, not a professional timber cruise.
@@ -9,6 +18,9 @@ namespace Boomtown.WorldGeneration
     public class TreeResource : MonoBehaviour
     {
         [Header("Tree Identity")]
+
+        [Tooltip("Regional tree species used for appearance and timber values.")]
+        public TreeSpecies species;
 
         [Tooltip("Approximate tree age in years.")]
         [Min(1)]
