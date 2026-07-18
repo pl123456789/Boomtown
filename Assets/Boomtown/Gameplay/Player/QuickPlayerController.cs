@@ -52,6 +52,9 @@ public sealed class QuickPlayerController : MonoBehaviour
     [SerializeField]
     private float _gravity = -20f;
 
+    [SerializeField, Min(0f)]
+    private float _groundedDownwardSpeed = 2f;
+
     private CharacterController _characterController;
     private WaypointPath _waypointPath;
     private GoldPanningController _goldPanningController;
@@ -401,10 +404,14 @@ public sealed class QuickPlayerController : MonoBehaviour
 
     private void UpdateGravity()
     {
-        if (_characterController.isGrounded &&
-            _verticalVelocity < 0f)
+        if (_characterController.isGrounded)
         {
-            _verticalVelocity = 0f;
+            // Keep Bill gently pressed onto descending terrain instead of
+            // resetting vertical velocity to zero and repeatedly losing contact.
+            _verticalVelocity =
+                -_groundedDownwardSpeed;
+
+            return;
         }
 
         _verticalVelocity +=
