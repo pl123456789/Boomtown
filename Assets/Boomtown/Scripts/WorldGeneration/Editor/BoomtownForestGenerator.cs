@@ -5,12 +5,10 @@ using UnityEngine;
 namespace Boomtown.WorldGeneration.Editor
 {
     /// <summary>
-    /// Generates a deterministic placeholder forest as ordinary prefab instances.
+    /// Generates a deterministic lightweight forest as ordinary prefab instances.
     ///
-    /// We are intentionally NOT using Unity Terrain tree instances in this
-    /// prototype version because Unity 6 requires special tree shaders for
-    /// terrain billboarding. Normal prefab instances are easier to verify and
-    /// can later be replaced by a production vegetation system.
+    /// Normal prefab instances remain easy to inspect and can later be replaced
+    /// by a production vegetation system without changing forest placement.
     /// </summary>
     public static class BoomtownForestGenerator
     {
@@ -23,7 +21,9 @@ namespace Boomtown.WorldGeneration.Editor
         private const string FoliageMaterialPath =
             GeneratedFolder + "/BT_TreeFoliage.mat";
 
-        // Keep the first verified test light.
+        private const string TrunkMaterialPath =
+            GeneratedFolder + "/BT_TreeTrunk.mat";
+
         private const int MaximumTreeCount = 600;
 
         public static void Generate(
@@ -46,7 +46,6 @@ namespace Boomtown.WorldGeneration.Editor
 
             EnsureGeneratedFolderExists();
 
-            // Remove Terrain-tree data left over from the earlier attempt.
             terrain.terrainData.treeInstances = Array.Empty<TreeInstance>();
             terrain.terrainData.treePrototypes = Array.Empty<TreePrototype>();
 
@@ -56,14 +55,12 @@ namespace Boomtown.WorldGeneration.Editor
                 $"GeneratedForest_{MakeSafeName(mapDefinition.mapName)}";
 
             GameObject oldForest = GameObject.Find(forestName);
-
             if (oldForest != null)
             {
                 UnityEngine.Object.DestroyImmediate(oldForest);
             }
 
             GameObject forestRoot = new GameObject(forestName);
-
             forestRoot.transform.SetParent(
                 BoomtownWorldHierarchy.GetForestContainer(),
                 false);
@@ -90,17 +87,14 @@ namespace Boomtown.WorldGeneration.Editor
                 float normalizedX = (float)random.NextDouble();
                 float normalizedZ = (float)random.NextDouble();
 
-                // Leave the centre corridor open for the future Fraser River,
-                // wagon road, gravel bars, and Hope settlement.
                 if (Mathf.Abs(normalizedX - 0.5f) < 0.08f)
                 {
                     continue;
                 }
 
-                float slope =
-                    terrainData.GetSteepness(
-                        normalizedX,
-                        normalizedZ);
+                float slope = terrainData.GetSteepness(
+                    normalizedX,
+                    normalizedZ);
 
                 if (slope > 38f)
                 {
@@ -130,44 +124,47 @@ namespace Boomtown.WorldGeneration.Editor
                     terrainPosition.y;
 
                 GameObject tree =
-                    (GameObject)PrefabUtility.InstantiatePrefab(
-                        treePrefab);
+                    (GameObject)PrefabUtility.InstantiatePrefab(treePrefab);
 
                 tree.transform.SetParent(forestRoot.transform);
                 tree.transform.position =
                     new Vector3(worldX, worldY, worldZ);
 
-                float scale = Mathf.Lerp(
-                    0.8f,
-                    1.35f,
+                float heightScale = Mathf.Lerp(
+                    0.72f,
+                    1.48f,
+                    (float)random.NextDouble());
+
+                float widthScale = Mathf.Lerp(
+                    0.82f,
+                    1.18f,
                     (float)random.NextDouble());
 
                 tree.transform.localScale =
-                    new Vector3(scale, scale, scale);
+                    new Vector3(
+                        heightScale * widthScale,
+                        heightScale,
+                        heightScale * widthScale);
 
-                tree.transform.rotation =
-                    Quaternion.Euler(
+                tree.transform.rotation = Quaternion.Euler(
+                    0f,
+                    Mathf.Lerp(
                         0f,
-                        Mathf.Lerp(
-                            0f,
-                            360f,
-                            (float)random.NextDouble()),
-                        0f);
+                        360f,
+                        (float)random.NextDouble()),
+                    0f);
 
                 created++;
             }
 
             Selection.activeGameObject = forestRoot;
-
             EditorUtility.SetDirty(terrain.terrainData);
             EditorUtility.SetDirty(forestRoot);
-
             AssetDatabase.SaveAssets();
 
             Debug.Log(
-                $"[Boomtown Forest Generator] Created {created} visible " +
-                $"placeholder tree GameObjects using seed " +
-                $"{mapDefinition.worldSeed}.");
+                $"[Boomtown Forest Generator] Created {created} layered " +
+                $"conifer GameObjects using seed {mapDefinition.worldSeed}.");
         }
 
         private static GameObject RebuildPrototypeTree()
@@ -176,25 +173,50 @@ namespace Boomtown.WorldGeneration.Editor
 
             Material foliageMaterial = GetOrCreateMaterial(
                 FoliageMaterialPath,
-                new Color32(62, 92, 55, 255)); // #3E5C37
+                new Color32(48, 82, 45, 255));
 
-            // One capsule is enough for a visible placeholder tree.
-            // Its renderer is standard URP and does not require a tree shader.
-            GameObject tree =
-                GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            Material trunkMaterial = GetOrCreateMaterial(
+                TrunkMaterialPath,
+                new Color32(92, 63, 40, 255));
 
-            tree.name = "BT_PrototypeConifer";
+            GameObject tree = new GameObject("BT_PrototypeConifer");
 
-            // Approximate placeholder dimensions:
-            // width 2.4 m, height 7 m.
-            tree.transform.localScale =
-                new Vector3(1.2f, 3.5f, 1.2f);
+            GameObject trunk =
+                GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            trunk.name = "Trunk";
+            trunk.transform.SetParent(tree.transform, false);
+            trunk.transform.localPosition = new Vector3(0f, 2.4f, 0f);
+            trunk.transform.localScale = new Vector3(0.34f, 2.4f, 0.34f);
+            trunk.GetComponent<MeshRenderer>().sharedMaterial = trunkMaterial;
+            UnityEngine.Object.DestroyImmediate(trunk.GetComponent<Collider>());
 
-            UnityEngine.Object.DestroyImmediate(
-                tree.GetComponent<Collider>());
+            CreateCanopyLayer(
+                tree.transform,
+                "LowerCanopy",
+                new Vector3(0f, 3.2f, 0f),
+                new Vector3(2.4f, 1.35f, 2.4f),
+                foliageMaterial);
 
-            tree.GetComponent<MeshRenderer>().sharedMaterial =
-                foliageMaterial;
+            CreateCanopyLayer(
+                tree.transform,
+                "MiddleCanopy",
+                new Vector3(0f, 4.8f, 0f),
+                new Vector3(1.85f, 1.28f, 1.85f),
+                foliageMaterial);
+
+            CreateCanopyLayer(
+                tree.transform,
+                "UpperCanopy",
+                new Vector3(0f, 6.15f, 0f),
+                new Vector3(1.25f, 1.08f, 1.25f),
+                foliageMaterial);
+
+            CreateCanopyLayer(
+                tree.transform,
+                "Crown",
+                new Vector3(0f, 7.05f, 0f),
+                new Vector3(0.62f, 0.82f, 0.62f),
+                foliageMaterial);
 
             GameObject savedPrefab =
                 PrefabUtility.SaveAsPrefabAsset(
@@ -202,8 +224,25 @@ namespace Boomtown.WorldGeneration.Editor
                     TreePrefabPath);
 
             UnityEngine.Object.DestroyImmediate(tree);
-
             return savedPrefab;
+        }
+
+        private static void CreateCanopyLayer(
+            Transform parent,
+            string objectName,
+            Vector3 localPosition,
+            Vector3 localScale,
+            Material foliageMaterial)
+        {
+            GameObject layer =
+                GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+            layer.name = objectName;
+            layer.transform.SetParent(parent, false);
+            layer.transform.localPosition = localPosition;
+            layer.transform.localScale = localScale;
+            layer.GetComponent<MeshRenderer>().sharedMaterial = foliageMaterial;
+            UnityEngine.Object.DestroyImmediate(layer.GetComponent<Collider>());
         }
 
         private static Material GetOrCreateMaterial(
@@ -229,7 +268,6 @@ namespace Boomtown.WorldGeneration.Editor
 
             material.color = colour;
             EditorUtility.SetDirty(material);
-
             return material;
         }
 
