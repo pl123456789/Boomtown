@@ -6,9 +6,10 @@ using UnityEngine.Rendering;
 namespace Boomtown.WorldGeneration.Editor
 {
     /// <summary>
-    /// Combines the procedural canopy layers in each generated species prefab
-    /// into one shared canopy mesh. Each tree prefab then uses only two renderers:
-    /// one trunk and one canopy.
+    /// Automatically combines the procedural canopy layers in each generated
+    /// species prefab into one shared canopy mesh. The world generator creates
+    /// the species prefabs and forest hierarchy; this listener completes the
+    /// optimization without requiring a separate manual command.
     /// </summary>
     [InitializeOnLoad]
     public static class TreePrefabMeshOptimizer
@@ -31,10 +32,8 @@ namespace Boomtown.WorldGeneration.Editor
         static TreePrefabMeshOptimizer()
         {
             EditorApplication.hierarchyChanged += QueueOptimization;
-            EditorApplication.delayCall += OptimizeGeneratedTreePrefabs;
         }
 
-        [MenuItem("Boomtown/World Generation/Optimize Generated Tree Prefabs")]
         public static void OptimizeGeneratedTreePrefabs()
         {
             if (optimizing)
@@ -63,9 +62,9 @@ namespace Boomtown.WorldGeneration.Editor
                     AssetDatabase.Refresh();
 
                     Debug.Log(
-                        $"[Tree Prefab Optimizer] Combined canopy layers for " +
-                        $"{optimizedCount} species prefab(s). Each tree now uses " +
-                        "one trunk renderer and one canopy renderer.");
+                        $"[Boomtown World Generator] Automatically combined " +
+                        $"canopy layers for {optimizedCount} tree species. " +
+                        "Generated trees now use one trunk renderer and one canopy renderer.");
                 }
             }
             finally
@@ -81,8 +80,39 @@ namespace Boomtown.WorldGeneration.Editor
                 return;
             }
 
+            if (!GeneratedForestExists())
+            {
+                return;
+            }
+
             optimizationQueued = true;
             EditorApplication.delayCall += OptimizeGeneratedTreePrefabs;
+        }
+
+        private static bool GeneratedForestExists()
+        {
+            Transform forestContainer =
+                BoomtownWorldHierarchy.GetForestContainer();
+
+            if (forestContainer == null)
+            {
+                return false;
+            }
+
+            for (int index = 0;
+                 index < forestContainer.childCount;
+                 index++)
+            {
+                if (forestContainer
+                    .GetChild(index)
+                    .name
+                    .StartsWith("GeneratedForest_"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool OptimizeSpeciesPrefab(string speciesName)
