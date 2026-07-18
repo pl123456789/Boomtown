@@ -6,9 +6,9 @@ using UnityEngine.Rendering;
 namespace Boomtown.WorldGeneration.Editor
 {
     /// <summary>
-    /// Rebuilds every regional tree prefab from procedural low-poly meshes.
-    /// Called automatically by BoomtownWorldGenerator after forest generation.
-    /// Each species prefab uses two renderers: one trunk and one canopy.
+    /// Rebuilds every regional tree prefab from procedural low-poly meshes and
+    /// immediately applies those meshes to the trees already created by the
+    /// world generator. Each tree uses two renderers: trunk and canopy.
     /// </summary>
     public static class TreePrefabMeshOptimizer
     {
@@ -48,21 +48,24 @@ namespace Boomtown.WorldGeneration.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
+            int refreshedInstances = RefreshGeneratedForestInstances();
+
             Debug.Log(
                 $"[Boomtown Tree Builder] Rebuilt {rebuilt} regional tree " +
-                "prefab(s) from procedural low-poly meshes. Each tree uses " +
-                "one tapered trunk renderer and one combined canopy renderer.");
+                $"prefab(s) and refreshed {refreshedInstances} generated tree " +
+                "instance(s). Each tree now uses one tapered trunk renderer " +
+                "and one procedural canopy renderer.");
         }
 
         private static TreeShape[] BuildShapes()
         {
             return new[]
             {
-                new TreeShape { name = "DouglasFir", canopyTiers = 8, radialSegments = 9, trunkHeight = 8.2f, trunkBaseRadius = 0.34f, trunkTopRadius = 0.12f, crownBottom = 2.2f, crownTop = 8.0f, lowerRadius = 2.25f, upperRadius = 0.28f, tierHeight = 0.95f, droop = 0.12f, irregularity = 0.16f },
-                new TreeShape { name = "RedCedar", canopyTiers = 9, radialSegments = 9, trunkHeight = 7.8f, trunkBaseRadius = 0.46f, trunkTopRadius = 0.14f, crownBottom = 1.5f, crownTop = 7.7f, lowerRadius = 2.55f, upperRadius = 0.34f, tierHeight = 0.82f, droop = 0.28f, irregularity = 0.22f },
-                new TreeShape { name = "Hemlock", canopyTiers = 8, radialSegments = 9, trunkHeight = 8.0f, trunkBaseRadius = 0.31f, trunkTopRadius = 0.10f, crownBottom = 2.0f, crownTop = 7.9f, lowerRadius = 1.95f, upperRadius = 0.25f, tierHeight = 0.86f, droop = 0.24f, irregularity = 0.25f },
-                new TreeShape { name = "Lodgepole", canopyTiers = 7, radialSegments = 8, trunkHeight = 8.5f, trunkBaseRadius = 0.25f, trunkTopRadius = 0.09f, crownBottom = 3.0f, crownTop = 8.3f, lowerRadius = 1.45f, upperRadius = 0.22f, tierHeight = 0.82f, droop = 0.06f, irregularity = 0.30f },
-                new TreeShape { name = "Spruce", canopyTiers = 9, radialSegments = 9, trunkHeight = 8.1f, trunkBaseRadius = 0.32f, trunkTopRadius = 0.10f, crownBottom = 1.9f, crownTop = 8.0f, lowerRadius = 2.05f, upperRadius = 0.24f, tierHeight = 0.78f, droop = 0.16f, irregularity = 0.12f }
+                new TreeShape { name = "DouglasFir", canopyTiers = 10, radialSegments = 10, trunkHeight = 8.4f, trunkBaseRadius = 0.36f, trunkTopRadius = 0.10f, crownBottom = 2.0f, crownTop = 8.2f, lowerRadius = 2.35f, upperRadius = 0.20f, tierHeight = 0.78f, droop = 0.12f, irregularity = 0.18f },
+                new TreeShape { name = "RedCedar", canopyTiers = 11, radialSegments = 10, trunkHeight = 8.0f, trunkBaseRadius = 0.50f, trunkTopRadius = 0.13f, crownBottom = 1.2f, crownTop = 7.9f, lowerRadius = 2.75f, upperRadius = 0.26f, tierHeight = 0.68f, droop = 0.34f, irregularity = 0.24f },
+                new TreeShape { name = "Hemlock", canopyTiers = 10, radialSegments = 10, trunkHeight = 8.2f, trunkBaseRadius = 0.32f, trunkTopRadius = 0.09f, crownBottom = 1.8f, crownTop = 8.0f, lowerRadius = 2.05f, upperRadius = 0.18f, tierHeight = 0.72f, droop = 0.30f, irregularity = 0.30f },
+                new TreeShape { name = "Lodgepole", canopyTiers = 8, radialSegments = 9, trunkHeight = 8.7f, trunkBaseRadius = 0.25f, trunkTopRadius = 0.07f, crownBottom = 3.1f, crownTop = 8.5f, lowerRadius = 1.48f, upperRadius = 0.16f, tierHeight = 0.68f, droop = 0.05f, irregularity = 0.34f },
+                new TreeShape { name = "Spruce", canopyTiers = 11, radialSegments = 10, trunkHeight = 8.3f, trunkBaseRadius = 0.33f, trunkTopRadius = 0.08f, crownBottom = 1.6f, crownTop = 8.15f, lowerRadius = 2.20f, upperRadius = 0.18f, tierHeight = 0.66f, droop = 0.18f, irregularity = 0.14f }
             };
         }
 
@@ -72,8 +75,10 @@ namespace Boomtown.WorldGeneration.Editor
             string trunkMaterialPath = $"{GeneratedFolder}/BT_{shape.name}_Trunk.mat";
             string foliageMaterialPath = $"{GeneratedFolder}/BT_{shape.name}_Foliage.mat";
 
-            Material trunkMaterial = AssetDatabase.LoadAssetAtPath<Material>(trunkMaterialPath);
-            Material foliageMaterial = AssetDatabase.LoadAssetAtPath<Material>(foliageMaterialPath);
+            Material trunkMaterial =
+                AssetDatabase.LoadAssetAtPath<Material>(trunkMaterialPath);
+            Material foliageMaterial =
+                AssetDatabase.LoadAssetAtPath<Material>(foliageMaterialPath);
 
             if (trunkMaterial == null || foliageMaterial == null)
             {
@@ -83,8 +88,10 @@ namespace Boomtown.WorldGeneration.Editor
             Mesh trunkMesh = BuildTaperedTrunkMesh(shape);
             Mesh canopyMesh = BuildCanopyMesh(shape);
 
-            string trunkMeshPath = $"{GeneratedFolder}/BT_{shape.name}_TrunkMesh.asset";
-            string canopyMeshPath = $"{GeneratedFolder}/BT_{shape.name}_CanopyMesh.asset";
+            string trunkMeshPath =
+                $"{GeneratedFolder}/BT_{shape.name}_TrunkMesh.asset";
+            string canopyMeshPath =
+                $"{GeneratedFolder}/BT_{shape.name}_CanopyMesh.asset";
 
             AssetDatabase.DeleteAsset(trunkMeshPath);
             AssetDatabase.DeleteAsset(canopyMeshPath);
@@ -92,26 +99,123 @@ namespace Boomtown.WorldGeneration.Editor
             AssetDatabase.CreateAsset(canopyMesh, canopyMeshPath);
 
             GameObject root = new GameObject($"BT_{shape.name}");
-
-            GameObject trunk = new GameObject("Trunk");
-            trunk.transform.SetParent(root.transform, false);
-            trunk.AddComponent<MeshFilter>().sharedMesh = trunkMesh;
-            MeshRenderer trunkRenderer = trunk.AddComponent<MeshRenderer>();
-            trunkRenderer.sharedMaterial = trunkMaterial;
-            trunkRenderer.shadowCastingMode = ShadowCastingMode.On;
-            trunkRenderer.receiveShadows = true;
-
-            GameObject canopy = new GameObject("Canopy");
-            canopy.transform.SetParent(root.transform, false);
-            canopy.AddComponent<MeshFilter>().sharedMesh = canopyMesh;
-            MeshRenderer canopyRenderer = canopy.AddComponent<MeshRenderer>();
-            canopyRenderer.sharedMaterial = foliageMaterial;
-            canopyRenderer.shadowCastingMode = ShadowCastingMode.On;
-            canopyRenderer.receiveShadows = true;
+            CreateMeshChild(root.transform, "Trunk", trunkMesh, trunkMaterial);
+            CreateMeshChild(root.transform, "Canopy", canopyMesh, foliageMaterial);
 
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
             return true;
+        }
+
+        private static int RefreshGeneratedForestInstances()
+        {
+            TreeResource[] resources =
+                Object.FindObjectsByType<TreeResource>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None);
+
+            int refreshed = 0;
+
+            foreach (TreeResource resource in resources)
+            {
+                if (resource == null)
+                {
+                    continue;
+                }
+
+                string speciesName = GetSpeciesAssetName(resource.species);
+                string prefabPath =
+                    $"{GeneratedFolder}/BT_{speciesName}.prefab";
+
+                GameObject prefab =
+                    AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+
+                if (prefab == null)
+                {
+                    continue;
+                }
+
+                Transform prefabTrunk = prefab.transform.Find("Trunk");
+                Transform prefabCanopy = prefab.transform.Find("Canopy");
+
+                if (prefabTrunk == null || prefabCanopy == null)
+                {
+                    continue;
+                }
+
+                MeshFilter trunkFilter = prefabTrunk.GetComponent<MeshFilter>();
+                MeshRenderer trunkRenderer =
+                    prefabTrunk.GetComponent<MeshRenderer>();
+                MeshFilter canopyFilter = prefabCanopy.GetComponent<MeshFilter>();
+                MeshRenderer canopyRenderer =
+                    prefabCanopy.GetComponent<MeshRenderer>();
+
+                if (trunkFilter == null || trunkRenderer == null ||
+                    canopyFilter == null || canopyRenderer == null)
+                {
+                    continue;
+                }
+
+                for (int childIndex = resource.transform.childCount - 1;
+                     childIndex >= 0;
+                     childIndex--)
+                {
+                    Object.DestroyImmediate(
+                        resource.transform.GetChild(childIndex).gameObject);
+                }
+
+                CreateMeshChild(
+                    resource.transform,
+                    "Trunk",
+                    trunkFilter.sharedMesh,
+                    trunkRenderer.sharedMaterial);
+
+                CreateMeshChild(
+                    resource.transform,
+                    "Canopy",
+                    canopyFilter.sharedMesh,
+                    canopyRenderer.sharedMaterial);
+
+                EditorUtility.SetDirty(resource.gameObject);
+                refreshed++;
+            }
+
+            return refreshed;
+        }
+
+        private static string GetSpeciesAssetName(TreeSpecies species)
+        {
+            switch (species)
+            {
+                case TreeSpecies.WesternRedCedar:
+                    return "RedCedar";
+                case TreeSpecies.WesternHemlock:
+                    return "Hemlock";
+                case TreeSpecies.LodgepolePine:
+                    return "Lodgepole";
+                case TreeSpecies.EngelmannSpruce:
+                    return "Spruce";
+                default:
+                    return "DouglasFir";
+            }
+        }
+
+        private static void CreateMeshChild(
+            Transform parent,
+            string objectName,
+            Mesh mesh,
+            Material material)
+        {
+            GameObject child = new GameObject(objectName);
+            child.transform.SetParent(parent, false);
+
+            MeshFilter filter = child.AddComponent<MeshFilter>();
+            filter.sharedMesh = mesh;
+
+            MeshRenderer renderer = child.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = ShadowCastingMode.On;
+            renderer.receiveShadows = true;
         }
 
         private static Mesh BuildTaperedTrunkMesh(TreeShape shape)
@@ -121,28 +225,41 @@ namespace Boomtown.WorldGeneration.Editor
             List<int> triangles = new List<int>();
             List<Vector2> uvs = new List<Vector2>();
 
-            for (int ring = 0; ring < 2; ring++)
+            for (int ring = 0; ring < 3; ring++)
             {
-                float y = ring == 0 ? 0f : shape.trunkHeight;
-                float radius = ring == 0 ? shape.trunkBaseRadius : shape.trunkTopRadius;
+                float t = ring / 2f;
+                float y = shape.trunkHeight * t;
+                float radius = Mathf.Lerp(
+                    shape.trunkBaseRadius,
+                    shape.trunkTopRadius,
+                    Mathf.Pow(t, 0.72f));
 
                 for (int i = 0; i < segments; i++)
                 {
                     float angle = i / (float)segments * Mathf.PI * 2f;
-                    vertices.Add(new Vector3(Mathf.Cos(angle) * radius, y, Mathf.Sin(angle) * radius));
-                    uvs.Add(new Vector2(i / (float)segments, ring));
+                    vertices.Add(new Vector3(
+                        Mathf.Cos(angle) * radius,
+                        y,
+                        Mathf.Sin(angle) * radius));
+                    uvs.Add(new Vector2(i / (float)segments, t));
                 }
             }
 
-            for (int i = 0; i < segments; i++)
+            for (int ring = 0; ring < 2; ring++)
             {
-                int next = (i + 1) % segments;
-                int a = i;
-                int b = next;
-                int c = segments + i;
-                int d = segments + next;
-                triangles.Add(a); triangles.Add(c); triangles.Add(b);
-                triangles.Add(b); triangles.Add(c); triangles.Add(d);
+                int ringStart = ring * segments;
+                int nextRingStart = (ring + 1) * segments;
+
+                for (int i = 0; i < segments; i++)
+                {
+                    int next = (i + 1) % segments;
+                    int a = ringStart + i;
+                    int b = ringStart + next;
+                    int c = nextRingStart + i;
+                    int d = nextRingStart + next;
+                    triangles.Add(a); triangles.Add(c); triangles.Add(b);
+                    triangles.Add(b); triangles.Add(c); triangles.Add(d);
+                }
             }
 
             Mesh mesh = new Mesh { name = $"BT_{shape.name}_TrunkMesh" };
@@ -159,24 +276,45 @@ namespace Boomtown.WorldGeneration.Editor
             List<Vector3> vertices = new List<Vector3>();
             List<int> triangles = new List<int>();
             List<Vector2> uvs = new List<Vector2>();
-            System.Random random = new System.Random(StableHash(shape.name));
+            System.Random random =
+                new System.Random(StableHash(shape.name));
 
             for (int tier = 0; tier < shape.canopyTiers; tier++)
             {
-                float t = tier / (float)Mathf.Max(1, shape.canopyTiers - 1);
-                float centreY = Mathf.Lerp(shape.crownBottom, shape.crownTop, t);
-                float radius = Mathf.Lerp(shape.lowerRadius, shape.upperRadius, t);
-                float offsetX = Mathf.Lerp(-shape.irregularity, shape.irregularity, (float)random.NextDouble());
-                float offsetZ = Mathf.Lerp(-shape.irregularity, shape.irregularity, (float)random.NextDouble());
-                float ellipse = Mathf.Lerp(0.82f, 1.16f, (float)random.NextDouble());
-                float rotation = (float)random.NextDouble() * Mathf.PI * 2f;
+                float t = tier /
+                    (float)Mathf.Max(1, shape.canopyTiers - 1);
+                float centreY =
+                    Mathf.Lerp(shape.crownBottom, shape.crownTop, t);
+                float radius = Mathf.Lerp(
+                    shape.lowerRadius,
+                    shape.upperRadius,
+                    Mathf.Pow(t, 0.88f));
 
-                AddCanopyTier(vertices, triangles, uvs, shape.radialSegments,
+                float offsetX = Mathf.Lerp(
+                    -shape.irregularity,
+                    shape.irregularity,
+                    (float)random.NextDouble());
+                float offsetZ = Mathf.Lerp(
+                    -shape.irregularity,
+                    shape.irregularity,
+                    (float)random.NextDouble());
+                float ellipse = Mathf.Lerp(
+                    0.78f,
+                    1.22f,
+                    (float)random.NextDouble());
+                float rotation =
+                    (float)random.NextDouble() * Mathf.PI * 2f;
+
+                AddCanopyTier(
+                    vertices,
+                    triangles,
+                    uvs,
+                    shape.radialSegments,
                     new Vector3(offsetX, 0f, offsetZ),
                     centreY - shape.droop,
                     centreY + shape.tierHeight,
                     radius,
-                    radius * 0.18f,
+                    radius * 0.10f,
                     ellipse,
                     rotation);
             }
@@ -217,9 +355,14 @@ namespace Boomtown.WorldGeneration.Editor
 
                 for (int i = 0; i < segments; i++)
                 {
-                    float angle = i / (float)segments * Mathf.PI * 2f + rotation;
-                    float x = Mathf.Cos(angle) * radius * ellipse;
-                    float z = Mathf.Sin(angle) * radius / ellipse;
+                    float angle =
+                        i / (float)segments * Mathf.PI * 2f + rotation;
+                    float edgeNoise =
+                        1f + Mathf.Sin(i * 2.31f + rotation) * 0.08f;
+                    float x =
+                        Mathf.Cos(angle) * radius * ellipse * edgeNoise;
+                    float z =
+                        Mathf.Sin(angle) * radius / ellipse * edgeNoise;
                     vertices.Add(offset + new Vector3(x, y, z));
                     uvs.Add(new Vector2(i / (float)segments, ring));
                 }
