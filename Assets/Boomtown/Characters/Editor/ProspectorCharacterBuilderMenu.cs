@@ -1,20 +1,35 @@
 using UnityEditor;
+using UnityEngine;
 
 namespace Boomtown.Characters.Editor
 {
     /// <summary>
-    /// Provides a unique menu command for Character Generator 3.0 so it cannot
-    /// collide with the legacy Prototype 2.0 editor command.
+    /// Owns the single public menu entry for the current character generator and
+    /// removes the legacy prototype command after Unity finishes rebuilding menus.
     /// </summary>
+    [InitializeOnLoad]
     public static class ProspectorCharacterBuilderMenu
     {
-        [MenuItem("Boomtown/Characters/Build Character Prototype 3.0", priority = 1)]
-        private static void OpenGenerator3()
+        private const string LegacyMenuPath = "Boomtown/Characters/Build Character Prototype";
+        private const string CurrentMenuPath = "Boomtown/Characters/Character Generator 3.1";
+
+        static ProspectorCharacterBuilderMenu()
+        {
+            EditorApplication.delayCall += RemoveLegacyMenuItem;
+        }
+
+        [MenuItem(CurrentMenuPath, priority = 1)]
+        private static void OpenGenerator()
         {
             ProspectorCharacterBuilder window = EditorWindow.GetWindow<ProspectorCharacterBuilder>();
-            window.titleContent = new UnityEngine.GUIContent("Prospector 3.0");
+            window.titleContent = new GUIContent("Character Generator 3.1");
             window.Show();
             window.Focus();
+        }
+
+        private static void RemoveLegacyMenuItem()
+        {
+            Menu.RemoveMenuItem(LegacyMenuPath);
         }
     }
 }
