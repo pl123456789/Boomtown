@@ -7,6 +7,7 @@ namespace Boomtown.Characters.Editor
     public sealed class ProspectorCharacterBuilder : EditorWindow
     {
         private const string VisualRootName = "Visual";
+        private const string MaterialFolder = "Assets/Boomtown/Characters/Materials/Generated";
 
         [SerializeField] private int appearanceSeed = 1858;
         [SerializeField] private float targetHeight = 1.85f;
@@ -16,9 +17,9 @@ namespace Boomtown.Characters.Editor
 
         private void OnGUI()
         {
-            EditorGUILayout.LabelField("Character Generator 3.2", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Character Generator 3.3", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "Built from the Prospector 1 T-pose reference: slimmer shoulders, layered vest, rolled sleeves, heavier boots, fitted hat and frontier gear.",
+                "Prospector 1 reference build with persistent URP materials. Rebuilding updates fixed material assets instead of creating temporary or endlessly named files.",
                 MessageType.Info);
 
             appearanceSeed = EditorGUILayout.IntField("Appearance Seed", appearanceSeed);
@@ -63,13 +64,16 @@ namespace Boomtown.Characters.Editor
         private static GameObject ResolveCharacterRoot(GameObject selected)
         {
             if (selected == null) return null;
+
             Transform current = selected.transform;
             while (current != null)
             {
-                if (current.GetComponent<CharacterController>() != null || current.GetComponent<CapsuleCollider>() != null)
+                if (current.GetComponent<CharacterController>() != null ||
+                    current.GetComponent<CapsuleCollider>() != null)
                     return current.gameObject;
                 current = current.parent;
             }
+
             return selected;
         }
 
@@ -77,14 +81,16 @@ namespace Boomtown.Characters.Editor
         {
             Undo.IncrementCurrentGroup();
             int undoGroup = Undo.GetCurrentGroup();
-            Undo.SetCurrentGroupName("Build Prospector Character 3.2");
+            Undo.SetCurrentGroupName("Build Prospector Character 3.3");
 
             Transform previousVisual = characterRoot.transform.Find(VisualRootName);
             if (previousVisual != null)
                 Undo.DestroyObjectImmediate(previousVisual.gameObject);
 
+            EnsureMaterialFolders();
+
             System.Random random = new System.Random(seed);
-            Palette palette = Palette.Create(random);
+            Palette palette = Palette.Create(random, characterRoot.name);
             Appearance appearance = Appearance.Create(random, characterRoot.name);
 
             GameObject visual = new GameObject(VisualRootName);
@@ -101,6 +107,7 @@ namespace Boomtown.Characters.Editor
 
             Selection.activeGameObject = characterRoot;
             EditorUtility.SetDirty(characterRoot);
+            AssetDatabase.SaveAssets();
             Undo.CollapseUndoOperations(undoGroup);
         }
 
@@ -117,41 +124,28 @@ namespace Boomtown.Characters.Editor
             Part("Head", PrimitiveType.Sphere, body, new Vector3(0f, 1.87f, 0f), new Vector3(0.28f, 0.34f, 0.27f), p.Skin);
             Part("Nose", PrimitiveType.Sphere, body, new Vector3(0f, 1.87f, 0.145f), new Vector3(0.055f, 0.075f, 0.055f), p.Skin);
 
-            BuildArms(body, p, a);
-            BuildLegs(body, p);
+            BuildArm(body, "Left", -1f, p);
+            BuildArm(body, "Right", 1f, p);
+            BuildLeg(body, "Left", -0.17f, p);
+            BuildLeg(body, "Right", 0.17f, p);
             BuildClothing(body, p, a);
             BuildFace(body, p, a);
             BuildHat(body, p);
             BuildGear(body, p, a);
         }
 
-        private static void BuildArms(Transform root, Palette p, Appearance a)
-        {
-            BuildArm(root, "Left", -1f, p, a);
-            BuildArm(root, "Right", 1f, p, a);
-        }
-
-        private static void BuildArm(Transform root, string sideName, float side, Palette p, Appearance a)
+        private static void BuildArm(Transform root, string sideName, float side, Palette p)
         {
             Part(sideName + "Sleeve", PrimitiveType.Capsule, root,
                 new Vector3(0.36f * side, 1.43f, 0f), new Vector3(0.18f, 0.34f, 0.18f), p.Shirt,
                 new Vector3(0f, 0f, -8f * side));
-
             Part(sideName + "RolledCuff", PrimitiveType.Cylinder, root,
                 new Vector3(0.40f * side, 1.21f, 0.01f), new Vector3(0.16f, 0.07f, 0.16f), p.Shirt);
-
             Part(sideName + "Forearm", PrimitiveType.Capsule, root,
                 new Vector3(0.42f * side, 1.04f, 0.015f), new Vector3(0.145f, 0.30f, 0.145f), p.Skin,
                 new Vector3(0f, 0f, -3f * side));
-
             Part(sideName + "Hand", PrimitiveType.Sphere, root,
                 new Vector3(0.435f * side, 0.82f, 0.03f), new Vector3(0.15f, 0.19f, 0.13f), p.Skin);
-        }
-
-        private static void BuildLegs(Transform root, Palette p)
-        {
-            BuildLeg(root, "Left", -0.17f, p);
-            BuildLeg(root, "Right", 0.17f, p);
         }
 
         private static void BuildLeg(Transform root, string sideName, float x, Palette p)
@@ -171,7 +165,6 @@ namespace Boomtown.Characters.Editor
         {
             Part("Belt", PrimitiveType.Cube, root, new Vector3(0f, 0.98f, 0.015f), new Vector3(0.49f, 0.09f, 0.33f), p.Leather);
             Part("Buckle", PrimitiveType.Cube, root, new Vector3(0f, 0.98f, 0.19f), new Vector3(0.11f, 0.08f, 0.035f), p.Metal);
-
             Part("VestLeft", PrimitiveType.Cube, root, new Vector3(-0.15f, 1.34f, 0.175f), new Vector3(0.24f, 0.52f, 0.055f), p.Vest, new Vector3(0f, -2f, 0f));
             Part("VestRight", PrimitiveType.Cube, root, new Vector3(0.15f, 1.34f, 0.175f), new Vector3(0.24f, 0.52f, 0.055f), p.Vest, new Vector3(0f, 2f, 0f));
             Part("VestBack", PrimitiveType.Cube, root, new Vector3(0f, 1.34f, -0.17f), new Vector3(0.50f, 0.52f, 0.055f), p.Vest);
@@ -273,9 +266,26 @@ namespace Boomtown.Characters.Editor
         {
             Renderer[] renderers = root.GetComponentsInChildren<Renderer>();
             if (renderers.Length == 0) return new Bounds(root.position, Vector3.zero);
+
             Bounds bounds = renderers[0].bounds;
-            for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+            for (int i = 1; i < renderers.Length; i++)
+                bounds.Encapsulate(renderers[i].bounds);
             return bounds;
+        }
+
+        private static void EnsureMaterialFolders()
+        {
+            EnsureFolder("Assets", "Boomtown");
+            EnsureFolder("Assets/Boomtown", "Characters");
+            EnsureFolder("Assets/Boomtown/Characters", "Materials");
+            EnsureFolder("Assets/Boomtown/Characters/Materials", "Generated");
+        }
+
+        private static void EnsureFolder(string parent, string child)
+        {
+            string path = parent + "/" + child;
+            if (!AssetDatabase.IsValidFolder(path))
+                AssetDatabase.CreateFolder(parent, child);
         }
 
         private sealed class Appearance
@@ -303,7 +313,7 @@ namespace Boomtown.Characters.Editor
         {
             public Material Skin, Shirt, Trousers, Vest, Leather, Boots, Hat, Hair, Canvas, Accent, Metal, Dark;
 
-            public static Palette Create(System.Random random)
+            public static Palette Create(System.Random random, string characterName)
             {
                 Color[] shirts =
                 {
@@ -324,37 +334,58 @@ namespace Boomtown.Characters.Editor
                     new Color(0.34f, 0.25f, 0.18f), new Color(0.15f, 0.14f, 0.13f)
                 };
 
+                string owner = Sanitize(characterName);
                 return new Palette
                 {
-                    Skin = Mat("Skin", new Color(0.72f, 0.50f, 0.34f)),
-                    Shirt = Mat("Shirt", Pick(shirts, random)),
-                    Trousers = Mat("Trousers", Pick(trousers, random)),
-                    Vest = Mat("Vest", new Color(0.24f, 0.14f, 0.07f)),
-                    Leather = Mat("Leather", new Color(0.16f, 0.075f, 0.035f)),
-                    Boots = Mat("Boots", new Color(0.075f, 0.055f, 0.035f)),
-                    Hat = Mat("Hat", new Color(0.30f, 0.20f, 0.11f)),
-                    Hair = Mat("Hair", Pick(hair, random)),
-                    Canvas = Mat("Canvas", new Color(0.29f, 0.27f, 0.19f)),
-                    Accent = Mat("Accent", Pick(accents, random)),
-                    Metal = Mat("Metal", new Color(0.55f, 0.44f, 0.22f)),
-                    Dark = Mat("Dark", new Color(0.02f, 0.018f, 0.015f))
+                    Skin = Mat(owner, "Skin", new Color(0.72f, 0.50f, 0.34f)),
+                    Shirt = Mat(owner, "Shirt", Pick(shirts, random)),
+                    Trousers = Mat(owner, "Trousers", Pick(trousers, random)),
+                    Vest = Mat(owner, "Vest", new Color(0.24f, 0.14f, 0.07f)),
+                    Leather = Mat(owner, "Leather", new Color(0.16f, 0.075f, 0.035f)),
+                    Boots = Mat(owner, "Boots", new Color(0.075f, 0.055f, 0.035f)),
+                    Hat = Mat(owner, "Hat", new Color(0.30f, 0.20f, 0.11f)),
+                    Hair = Mat(owner, "Hair", Pick(hair, random)),
+                    Canvas = Mat(owner, "Canvas", new Color(0.29f, 0.27f, 0.19f)),
+                    Accent = Mat(owner, "Accent", Pick(accents, random)),
+                    Metal = Mat(owner, "Metal", new Color(0.55f, 0.44f, 0.22f)),
+                    Dark = Mat(owner, "Dark", new Color(0.02f, 0.018f, 0.015f))
                 };
             }
 
             private static Color Pick(Color[] colors, System.Random random) => colors[random.Next(colors.Length)];
 
-            private static Material Mat(string name, Color color)
+            private static Material Mat(string owner, string role, Color color)
             {
+                string path = MaterialFolder + "/" + owner + "_" + role + ".mat";
+                Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
                 Shader shader = Shader.Find("Universal Render Pipeline/Lit");
                 if (shader == null) shader = Shader.Find("Standard");
-                Material material = new Material(shader)
+
+                if (material == null)
                 {
-                    name = "Generated " + name,
-                    color = color,
-                    hideFlags = HideFlags.HideAndDontSave
-                };
+                    material = new Material(shader) { name = owner + " " + role };
+                    AssetDatabase.CreateAsset(material, path);
+                }
+                else if (material.shader == null || material.shader.name == "Hidden/InternalErrorShader")
+                {
+                    material.shader = shader;
+                }
+
+                if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
+                if (material.HasProperty("_Color")) material.SetColor("_Color", color);
+                material.color = color;
                 if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.06f);
+                if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", role == "Metal" ? 0.35f : 0f);
+                EditorUtility.SetDirty(material);
                 return material;
+            }
+
+            private static string Sanitize(string value)
+            {
+                if (string.IsNullOrWhiteSpace(value)) return "Prospector";
+                foreach (char invalid in System.IO.Path.GetInvalidFileNameChars())
+                    value = value.Replace(invalid, '_');
+                return value.Replace(' ', '_');
             }
         }
     }
