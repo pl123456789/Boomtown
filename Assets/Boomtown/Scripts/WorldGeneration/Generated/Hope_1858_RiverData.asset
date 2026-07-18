@@ -13,1092 +13,2665 @@ MonoBehaviour:
   m_Name: Hope_1858_RiverData
   m_EditorClassIdentifier: Assembly-CSharp::Boomtown.WorldGeneration.RiverData
   samples:
-  - position: {x: 68.16792, y: 53.767628, z: -1000}
+  - sampleIndex: 0
+    previousSampleIndex: -1
+    nextSampleIndex: 1
+    position: {x: 68.16792, y: 53.767628, z: -1000}
     tangent: {x: 0.2877244, y: 0, z: 0.95771325}
+    distanceDownstream: 0
     leftWidth: 25.329037
     rightWidth: 25.329037
     depth: 3
-    velocity: 2.0478737
+    slope: 0
+    velocity: 0.59365714
+    bendType: 0
+    signedBend: 0
+    bendStrength: 0
+    transportCapacity: 0.10213351
+    depositionPotential: 0.53806996
+    incomingGoldLoad: 1.0192828
+    depositedGold: 0.52043813
+    outgoingGoldLoad: 0.49884468
     gravelProbability: 0.24103522
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 73.17507, y: 53.794296, z: -983.3333}
+  - sampleIndex: 1
+    previousSampleIndex: 0
+    nextSampleIndex: 2
+    position: {x: 73.17507, y: 53.794296, z: -983.3333}
     tangent: {x: 0.29472288, y: 0, z: 0.9555828}
+    distanceDownstream: 17.402607
     leftWidth: 24.642677
     rightWidth: 26.071182
     depth: 3
-    velocity: 2.0345678
+    slope: 0.0032652062
+    velocity: 0.73665726
+    bendType: 2
+    signedBend: 0.1045331
+    bendStrength: 0.1045331
+    transportCapacity: 0.13319847
+    depositionPotential: 0.542878
+    incomingGoldLoad: 0.519482
+    depositedGold: 0.26323333
+    outgoingGoldLoad: 0.25624868
     gravelProbability: 0.25796667
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 78.448654, y: 53.65373, z: -966.6667}
+  - sampleIndex: 2
+    previousSampleIndex: 1
+    nextSampleIndex: 3
+    position: {x: 78.448654, y: 53.65373, z: -966.6667}
     tangent: {x: 0.3070737, y: 0, z: 0.9516857}
+    distanceDownstream: 34.884224
     leftWidth: 24.389727
     rightWidth: 26.521566
     depth: 3
-    velocity: 2.0252209
+    slope: 0.016510166
+    velocity: 1.3161768
+    bendType: 2
+    signedBend: 0.08103864
+    bendStrength: 0.08103864
+    transportCapacity: 0.25913066
+    depositionPotential: 0.47461706
+    incomingGoldLoad: 0.27758533
+    depositedGold: 0.11467693
+    outgoingGoldLoad: 0.1629084
     gravelProbability: 0.26670814
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 83.9305, y: 53.21602, z: -950}
+  - sampleIndex: 3
+    previousSampleIndex: 2
+    nextSampleIndex: 4
+    position: {x: 83.9305, y: 53.21602, z: -950}
     tangent: {x: 0.31609383, y: 0, z: 0.94872797}
+    distanceDownstream: 52.43474
     leftWidth: 24.723097
     rightWidth: 26.631704
     depth: 3
-    velocity: 2.0197833
+    slope: 0.035302673
+    velocity: 2.135202
+    bendType: 0
+    signedBend: 0.054960698
+    bendStrength: 0.054960698
+    transportCapacity: 0.43733856
+    depositionPotential: 0.37798303
+    incomingGoldLoad: 0.18412568
+    depositedGold: 0.05437779
+    outgoingGoldLoad: 0.12974788
     gravelProbability: 0.26521584
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 89.55455, y: 52.413376, z: -933.3333}
+  - sampleIndex: 4
+    previousSampleIndex: 3
+    nextSampleIndex: 5
+    position: {x: 89.55455, y: 52.413376, z: -933.3333}
     tangent: {x: 0.32150546, y: 0, z: 0.94690776}
+    distanceDownstream: 70.04305
     leftWidth: 25.53973
     rightWidth: 26.557682
     depth: 3
-    velocity: 2.014868
+    slope: 0.056017905
+    velocity: 3.0310009
+    bendType: 0
+    signedBend: 0.02686142
+    bendStrength: 0.02686142
+    transportCapacity: 0.6327549
+    depositionPotential: 0.27183196
+    incomingGoldLoad: 0.15030135
+    depositedGold: 0.027930569
+    outgoingGoldLoad: 0.12237078
     gravelProbability: 0.2569184
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 95.24822, y: 51.24406, z: -916.6667}
+  - sampleIndex: 5
+    previousSampleIndex: 4
+    nextSampleIndex: 6
+    position: {x: 95.24822, y: 51.24406, z: -916.6667}
     tangent: {x: 0.32307702, y: 0, z: 0.9463727}
+    distanceDownstream: 87.69416
     leftWidth: 26.683691
     rightWidth: 26.46496
     depth: 3
-    velocity: 2.003652
+    slope: 0.07544087
+    velocity: 3.8596056
+    bendType: 0
+    signedBend: -0.0024727925
+    bendStrength: 0.0024727925
+    transportCapacity: 0.81433046
+    depositionPotential: 0.17444399
+    incomingGoldLoad: 0.14243825
+    depositedGold: 0.01473046
+    outgoingGoldLoad: 0.1277078
     gravelProbability: 0.25084344
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 100.93403, y: 49.756184, z: -900}
+  - sampleIndex: 6
+    previousSampleIndex: 5
+    nextSampleIndex: 7
+    position: {x: 100.93403, y: 49.756184, z: -900}
     tangent: {x: 0.32059366, y: 0, z: 0.9472168}
+    distanceDownstream: 105.36676
     leftWidth: 28.066597
     rightWidth: 26.427475
     depth: 3
-    velocity: 1.9697094
+    slope: 0.09157315
+    velocity: 4.0334516
+    bendType: 0
+    signedBend: -0.034530703
+    bendStrength: 0.034530703
+    transportCapacity: 0.8539388
+    depositionPotential: 0.16470161
+    incomingGoldLoad: 0.14932963
+    depositedGold: 0.01409359
+    outgoingGoldLoad: 0.13523604
     gravelProbability: 0.27027294
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 106.53019, y: 48.021523, z: -883.3333}
+  - sampleIndex: 7
+    previousSampleIndex: 6
+    nextSampleIndex: 8
+    position: {x: 106.53019, y: 48.021523, z: -883.3333}
     tangent: {x: 0.31387457, y: 0, z: 0.94946444}
+    distanceDownstream: 123.03324
     leftWidth: 29.662798
     rightWidth: 26.456423
     depth: 3
-    velocity: 1.9308531
+    slope: 0.10380967
+    velocity: 4.0045667
+    bendType: 0
+    signedBend: -0.06694856
+    bendStrength: 0.06694856
+    transportCapacity: 0.849725
+    depositionPotential: 0.17856094
+    incomingGoldLoad: 0.15853038
+    depositedGold: 0.01628061
+    outgoingGoldLoad: 0.14224978
     gravelProbability: 0.2911794
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 111.95338, y: 46.111687, z: -866.6667}
+  - sampleIndex: 8
+    previousSampleIndex: 7
+    nextSampleIndex: 9
+    position: {x: 111.95338, y: 46.111687, z: -866.6667}
     tangent: {x: 0.30275482, y: 0, z: 0.95306844}
+    distanceDownstream: 140.66376
     leftWidth: 31.472828
     rightWidth: 26.549679
     depth: 3
-    velocity: 1.8873918
+    slope: 0.11261487
+    velocity: 3.9707384
+    bendType: 1
+    signedBend: -0.10053741
+    bendStrength: 0.10053741
+    transportCapacity: 0.84479004
+    depositionPotential: 0.19372056
+    incomingGoldLoad: 0.16731371
+    depositedGold: 0.018721394
+    outgoingGoldLoad: 0.14859232
     gravelProbability: 0.31329912
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 117.11896, y: 44.082848, z: -850}
+  - sampleIndex: 9
+    previousSampleIndex: 8
+    nextSampleIndex: 10
+    position: {x: 117.11896, y: 44.082848, z: -850}
     tangent: {x: 0.28708968, y: 0, z: 0.9579037}
+    distanceDownstream: 158.23015
     leftWidth: 33.49736
     rightWidth: 26.703356
     depth: 3
-    velocity: 1.8396243
+    slope: 0.11906027
+    velocity: 3.9320238
+    bendType: 1
+    signedBend: -0.13442276
+    bendStrength: 0.13442276
+    transportCapacity: 0.83914226
+    depositionPotential: 0.20998496
+    incomingGoldLoad: 0.17550476
+    depositedGold: 0.021390753
+    outgoingGoldLoad: 0.15411401
     gravelProbability: 0.3364055
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 121.943596, y: 41.968597, z: -833.3333}
+  - sampleIndex: 10
+    previousSampleIndex: 9
+    nextSampleIndex: 11
+    position: {x: 121.943596, y: 41.968597, z: -833.3333}
     tangent: {x: 0.2667886, y: 0, z: 0.9637551}
+    distanceDownstream: 175.70944
     leftWidth: 35.718178
     rightWidth: 26.904554
     depth: 3
-    velocity: 1.7883197
+    slope: 0.124412686
+    velocity: 3.8889754
+    bendType: 1
+    signedBend: -0.16837183
+    bendStrength: 0.16837183
+    transportCapacity: 0.83286226
+    depositionPotential: 0.22716609
+    incomingGoldLoad: 0.18292682
+    depositedGold: 0.024250071
+    outgoingGoldLoad: 0.15867674
     gravelProbability: 0.36016014
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 126.34635, y: 39.779797, z: -816.6667}
+  - sampleIndex: 11
+    previousSampleIndex: 10
+    nextSampleIndex: 12
+    position: {x: 126.34635, y: 39.779797, z: -816.6667}
     tangent: {x: 0.24181673, y: 0, z: 0.970322}
+    distanceDownstream: 193.0862
     leftWidth: 38.092014
     rightWidth: 27.133242
     depth: 3
-    velocity: 1.7347795
+    slope: 0.12974608
+    velocity: 3.842719
+    bendType: 1
+    signedBend: -0.20164163
+    bendStrength: 0.20164163
+    transportCapacity: 0.8261143
+    depositionPotential: 0.2448577
+    incomingGoldLoad: 0.18940338
+    depositedGold: 0.027220577
+    outgoingGoldLoad: 0.16218281
     gravelProbability: 0.38408312
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 130.25069, y: 37.51145, z: -800}
+  - sampleIndex: 12
+    previousSampleIndex: 11
+    nextSampleIndex: 13
+    position: {x: 130.25069, y: 37.51145, z: -800}
     tangent: {x: 0.21221921, y: 0, z: 0.9772221}
+    distanceDownstream: 210.35373
     leftWidth: 40.55704
     rightWidth: 27.372822
     depth: 3
-    velocity: 1.6805419
+    slope: 0.13557923
+    velocity: 3.7946484
+    bendType: 1
+    signedBend: -0.23379065
+    bendStrength: 0.23379065
+    transportCapacity: 0.81910163
+    depositionPotential: 0.2626444
+    incomingGoldLoad: 0.19479023
+    depositedGold: 0.030207712
+    outgoingGoldLoad: 0.16458252
     gravelProbability: 0.40759277
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 133.58522, y: 35.155144, z: -783.3333}
+  - sampleIndex: 13
+    previousSampleIndex: 12
+    nextSampleIndex: 14
+    position: {x: 133.58522, y: 35.155144, z: -783.3333}
     tangent: {x: 0.17815651, y: 0, z: 0.9840022}
+    distanceDownstream: 227.51328
     leftWidth: 43.036522
     rightWidth: 27.615036
     depth: 3
-    velocity: 1.6272302
+    slope: 0.14168546
+    velocity: 3.746274
+    bendType: 1
+    signedBend: -0.26374725
+    bendStrength: 0.26374725
+    transportCapacity: 0.8120447
+    depositionPotential: 0.2799661
+    incomingGoldLoad: 0.19898513
+    depositedGold: 0.033089954
+    outgoingGoldLoad: 0.16589518
     gravelProbability: 0.4300326
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 136.28578, y: 32.711823, z: -766.6667}
+  - sampleIndex: 14
+    previousSampleIndex: 13
+    nextSampleIndex: 15
+    position: {x: 136.28578, y: 32.711823, z: -766.6667}
     tangent: {x: 0.13995047, y: 0, z: 0.9901585}
+    distanceDownstream: 244.57315
     leftWidth: 45.438213
     rightWidth: 27.858967
     depth: 3
-    velocity: 1.5765654
+    slope: 0.14721377
+    velocity: 3.6992517
+    bendType: 1
+    signedBend: -0.29055992
+    bendStrength: 0.29055992
+    transportCapacity: 0.80518496
+    depositionPotential: 0.29624894
+    incomingGoldLoad: 0.20194978
+    depositedGold: 0.035741344
+    outgoingGoldLoad: 0.16620843
     gravelProbability: 0.45068255
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 138.2966, y: 30.199247, z: -750}
+  - sampleIndex: 15
+    previousSampleIndex: 14
+    nextSampleIndex: 16
+    position: {x: 138.2966, y: 30.199247, z: -750}
     tangent: {x: 0.09807263, y: 0, z: 0.9951793}
+    distanceDownstream: 261.5477
     leftWidth: 47.665493
     rightWidth: 28.114292
     depth: 3
-    velocity: 1.5301185
+    slope: 0.15098995
+    velocity: 3.6551268
+    bendType: 1
+    signedBend: -0.31347528
+    bendStrength: 0.31347528
+    transportCapacity: 0.7987479
+    depositionPotential: 0.3109767
+    incomingGoldLoad: 0.20371483
+    depositedGold: 0.038050003
+    outgoingGoldLoad: 0.16566482
     gravelProbability: 0.46883002
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 139.57071, y: 27.654438, z: -733.3333}
+  - sampleIndex: 16
+    previousSampleIndex: 15
+    nextSampleIndex: 17
+    position: {x: 139.57071, y: 27.654438, z: -733.3333}
     tangent: {x: 0.05319001, y: 0, z: 0.99858445}
+    distanceDownstream: 278.45563
     leftWidth: 49.637146
     rightWidth: 28.405464
     depth: 3
-    velocity: 1.488919
+    slope: 0.15159644
+    velocity: 3.6149082
+    bendType: 1
+    signedBend: -0.3310421
+    bendStrength: 0.3310421
+    transportCapacity: 0.7928807
+    depositionPotential: 0.3236242
+    incomingGoldLoad: 0.20437522
+    depositedGold: 0.039919898
+    outgoingGoldLoad: 0.16445532
     gravelProbability: 0.48388004
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 140.07211, y: 25.138872, z: -716.6667}
+  - sampleIndex: 17
+    previousSampleIndex: 16
+    nextSampleIndex: 18
+    position: {x: 140.07211, y: 25.138872, z: -716.6667}
     tangent: {x: 0.0061366674, y: 0, z: 0.9999811}
+    distanceDownstream: 295.31848
     leftWidth: 51.29284
     rightWidth: 28.764977
     depth: 3
-    velocity: 1.4534749
+    slope: 0.14716552
+    velocity: 3.5790906
+    bendType: 1
+    signedBend: -0.34294054
+    bendStrength: 0.34294054
+    transportCapacity: 0.7876556
+    depositionPotential: 0.3339868
+    incomingGoldLoad: 0.20408693
+    depositedGold: 0.041318115
+    outgoingGoldLoad: 0.16276881
     gravelProbability: 0.49539506
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 139.77527, y: 22.74883, z: -700}
+  - sampleIndex: 18
+    previousSampleIndex: 17
+    nextSampleIndex: 19
+    position: {x: 139.77527, y: 22.74883, z: -700}
     tangent: {x: -0.04212713, y: 0, z: 0.99911225}
+    distanceDownstream: 312.1583
     leftWidth: 52.583664
     rightWidth: 29.219252
     depth: 3
-    velocity: 1.4241495
+    slope: 0.13563778
+    velocity: 3.5480738
+    bendType: 1
+    signedBend: -0.34816274
+    bendStrength: 0.34816274
+    transportCapacity: 0.78313076
+    depositionPotential: 0.3417696
+    incomingGoldLoad: 0.20301402
+    depositedGold: 0.042215638
+    outgoingGoldLoad: 0.16079837
     gravelProbability: 0.503065
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 138.66663, y: 20.61359, z: -683.3333}
+  - sampleIndex: 19
+    previousSampleIndex: 18
+    nextSampleIndex: 20
+    position: {x: 138.66663, y: 20.61359, z: -683.3333}
     tangent: {x: -0.09056386, y: 0, z: 0.9958907}
+    distanceDownstream: 328.99774
     leftWidth: 53.471832
     rightWidth: 29.781921
     depth: 3
-    velocity: 1.4012744
+    slope: 0.11618887
+    velocity: 3.5222871
+    bendType: 1
+    signedBend: -0.3468425
+    bendStrength: 0.3468425
+    transportCapacity: 0.77936894
+    depositionPotential: 0.34689388
+    incomingGoldLoad: 0.20133565
+    depositedGold: 0.04262572
+    outgoingGoldLoad: 0.15870993
     gravelProbability: 0.5067161
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 136.74402, y: 18.85989, z: -666.6667}
+  - sampleIndex: 20
+    previousSampleIndex: 19
+    nextSampleIndex: 21
+    position: {x: 136.74402, y: 18.85989, z: -666.6667}
     tangent: {x: -0.13813403, y: 0, z: 0.9904136}
+    distanceDownstream: 345.8663
     leftWidth: 53.942657
     rightWidth: 30.456087
     depth: 3
-    velocity: 1.3849263
+    slope: 0.09088583
+    velocity: 3.5019367
+    bendType: 1
+    signedBend: -0.33875903
+    bendStrength: 0.33875903
+    transportCapacity: 0.77640015
+    depositionPotential: 0.34928274
+    incomingGoldLoad: 0.19921929
+    depositedGold: 0.0425714
+    outgoingGoldLoad: 0.15664789
     gravelProbability: 0.506367
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 134.0176, y: 17.55474, z: -650}
+  - sampleIndex: 21
+    previousSampleIndex: 20
+    nextSampleIndex: 22
+    position: {x: 134.0176, y: 17.55474, z: -650}
     tangent: {x: -0.18385407, y: 0, z: 0.9829536}
+    distanceDownstream: 362.80487
     leftWidth: 54.006943
     rightWidth: 31.23465
     depth: 3
-    velocity: 1.3748947
+    slope: 0.064457096
+    velocity: 2.907543
+    bendType: 1
+    signedBend: -0.32458594
+    bendStrength: 0.32458594
+    transportCapacity: 0.64111704
+    depositionPotential: 0.4183066
+    incomingGoldLoad: 0.19682643
+    depositedGold: 0.055940993
+    outgoingGoldLoad: 0.14088544
     gravelProbability: 0.50223166
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 130.50926, y: 16.674057, z: -633.3333}
+  - sampleIndex: 22
+    previousSampleIndex: 21
+    nextSampleIndex: 23
+    position: {x: 130.50926, y: 16.674057, z: -633.3333}
     tangent: {x: -0.2268873, y: 0, z: 0.97392106}
+    distanceDownstream: 379.85956
     leftWidth: 53.69065
     rightWidth: 32.097443
     depth: 3
-    velocity: 1.370909
+    slope: 0.041721843
+    velocity: 2.0542724
+    bendType: 1
+    signedBend: -0.30515006
+    bendStrength: 0.30515006
+    transportCapacity: 0.44559225
+    depositionPotential: 0.5166893
+    incomingGoldLoad: 0.18045762
+    depositedGold: 0.072466895
+    outgoingGoldLoad: 0.10799073
     gravelProbability: 0.4946523
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 126.252174, y: 16.126774, z: -616.6667}
+  - sampleIndex: 23
+    previousSampleIndex: 22
+    nextSampleIndex: 24
+    position: {x: 126.252174, y: 16.126774, z: -616.6667}
     tangent: {x: -0.266555, y: 0, z: 0.9638197}
+    distanceDownstream: 397.06998
     leftWidth: 53.030853
     rightWidth: 33.014435
     depth: 3
-    velocity: 1.3726673
+    slope: 0.025048025
+    velocity: 1.4325465
+    bendType: 1
+    signedBend: -0.28118885
+    bendStrength: 0.28118885
+    transportCapacity: 0.30278775
+    depositionPotential: 0.5858892
+    incomingGoldLoad: 0.14671525
+    depositedGold: 0.07294524
+    outgoingGoldLoad: 0.07377002
     gravelProbability: 0.48405653
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 121.290565, y: 15.807781, z: -600}
+  - sampleIndex: 24
+    previousSampleIndex: 23
+    nextSampleIndex: 25
+    position: {x: 121.290565, y: 15.807781, z: -600}
     tangent: {x: -0.30236092, y: 0, z: 0.9531935}
+    distanceDownstream: 414.46243
     leftWidth: 52.079906
     rightWidth: 33.955418
     depth: 3
-    velocity: 1.3796288
+    slope: 0.014200418
+    velocity: 1.029875
+    bendType: 1
+    signedBend: -0.25391746
+    bendStrength: 0.25391746
+    transportCapacity: 0.21014631
+    depositionPotential: 0.6275612
+    incomingGoldLoad: 0.11144632
+    depositedGold: 0.06129548
+    outgoingGoldLoad: 0.05015084
     gravelProbability: 0.4709538
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 115.67855, y: 15.630182, z: -583.3333}
+  - sampleIndex: 25
+    previousSampleIndex: 24
+    nextSampleIndex: 26
+    position: {x: 115.67855, y: 15.630182, z: -583.3333}
     tangent: {x: -0.3339875, y: 0, z: 0.9425775}
+    distanceDownstream: 432.0495
     leftWidth: 50.900917
     rightWidth: 34.89521
     depth: 3
-    velocity: 1.3910071
+    slope: 0.008064809
+    velocity: 0.80305725
+    bendType: 1
+    signedBend: -0.22413477
+    bendStrength: 0.22413477
+    transportCapacity: 0.15788382
+    depositionPotential: 0.6470807
+    incomingGoldLoad: 0.086622596
+    depositedGold: 0.04764243
+    outgoingGoldLoad: 0.038980167
     gravelProbability: 0.45589694
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 109.47943, y: 15.522577, z: -566.6667}
+  - sampleIndex: 26
+    previousSampleIndex: 25
+    nextSampleIndex: 27
+    position: {x: 109.47943, y: 15.522577, z: -566.6667}
     tangent: {x: -0.36126664, y: 0, z: 0.9324626}
+    distanceDownstream: 449.832
     leftWidth: 49.55309
     rightWidth: 35.810863
     depth: 3
-    velocity: 1.406059
+    slope: 0.0059364117
+    velocity: 0.7255376
+    bendType: 1
+    signedBend: -0.19283609
+    bendStrength: 0.19283609
+    transportCapacity: 0.13992383
+    depositionPotential: 0.64792246
+    incomingGoldLoad: 0.07413209
+    depositedGold: 0.04077265
+    outgoingGoldLoad: 0.033359442
     gravelProbability: 0.4393991
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 102.76413, y: 15.41797, z: -550}
+  - sampleIndex: 27
+    previousSampleIndex: 26
+    nextSampleIndex: 28
+    position: {x: 102.76413, y: 15.41797, z: -550}
     tangent: {x: -0.3841467, y: 0, z: 0.9232721}
+    distanceDownstream: 467.801
     leftWidth: 48.084293
     rightWidth: 36.679966
     depth: 3
-    velocity: 1.4242381
+    slope: 0.0073026363
+    velocity: 0.7788113
+    bendType: 1
+    signedBend: -0.16060168
+    bendStrength: 0.16060168
+    transportCapacity: 0.15196498
+    depositionPotential: 0.63253087
+    incomingGoldLoad: 0.067110464
+    depositedGold: 0.036910757
+    outgoingGoldLoad: 0.030199707
     gravelProbability: 0.42188781
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 95.61038, y: 15.258926, z: -533.3333}
+  - sampleIndex: 28
+    previousSampleIndex: 27
+    nextSampleIndex: 29
+    position: {x: 95.61038, y: 15.258926, z: -533.3333}
     tangent: {x: -0.40266505, y: 0, z: 0.9153474}
+    distanceDownstream: 485.93878
     leftWidth: 46.536938
     rightWidth: 37.485767
     depth: 3
-    velocity: 1.4450142
+    slope: 0.011127939
+    velocity: 0.92523474
+    bendType: 1
+    signedBend: -0.12815823
+    bendStrength: 0.12815823
+    transportCapacity: 0.18527964
+    depositionPotential: 0.60567206
+    incomingGoldLoad: 0.062498372
+    depositedGold: 0.034346774
+    outgoingGoldLoad: 0.028151598
     gravelProbability: 0.4037333
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 88.10067, y: 15.012734, z: -516.6667}
+  - sampleIndex: 29
+    previousSampleIndex: 28
+    nextSampleIndex: 30
+    position: {x: 88.10067, y: 15.012734, z: -516.6667}
     tangent: {x: -0.4169094, y: 0, z: 0.9089481}
+    distanceDownstream: 504.22083
     leftWidth: 44.95572
     rightWidth: 38.223557
     depth: 3
-    velocity: 1.4676322
+    slope: 0.015953584
+    velocity: 1.1109707
+    bendType: 1
+    signedBend: -0.09570769
+    bendStrength: 0.09570769
+    transportCapacity: 0.22745538
+    depositionPotential: 0.573962
+    incomingGoldLoad: 0.058975317
+    depositedGold: 0.029999953
+    outgoingGoldLoad: 0.028975364
     gravelProbability: 0.38529652
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 80.32131, y: 14.67387, z: -500}
+  - sampleIndex: 30
+    previousSampleIndex: 29
+    nextSampleIndex: 31
+    position: {x: 80.32131, y: 14.67387, z: -500}
     tangent: {x: -0.42700902, y: 0, z: 0.9042474}
+    distanceDownstream: 522.6168
     leftWidth: 43.386894
     rightWidth: 38.901276
     depth: 3
-    velocity: 1.4911011
+    slope: 0.020803394
+    velocity: 1.2994789
+    bendType: 0
+    signedBend: -0.06395908
+    bendStrength: 0.06395908
+    transportCapacity: 0.27011105
+    depositionPotential: 0.5420401
+    incomingGoldLoad: 0.058330152
+    depositedGold: 0.027347194
+    outgoingGoldLoad: 0.030982958
     gravelProbability: 0.36693487
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 72.3598, y: 14.245857, z: -483.33334}
+  - sampleIndex: 31
+    previousSampleIndex: 30
+    nextSampleIndex: 32
+    position: {x: 72.3598, y: 14.245857, z: -483.33334}
     tangent: {x: -0.43310064, y: 0, z: 0.90134555}
+    distanceDownstream: 541.0924
     leftWidth: 41.87044
     rightWidth: 39.53387
     depth: 3
-    velocity: 1.5144179
+    slope: 0.02582135
+    velocity: 1.4959662
+    bendType: 0
+    signedBend: -0.032618403
+    bendStrength: 0.032618403
+    transportCapacity: 0.3144562
+    depositionPotential: 0.5093747
+    incomingGoldLoad: 0.058899887
+    depositedGold: 0.025284935
+    outgoingGoldLoad: 0.033614952
     gravelProbability: 0.34896165
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 64.304474, y: 13.71895, z: -466.66663}
+  - sampleIndex: 32
+    previousSampleIndex: 31
+    nextSampleIndex: 33
+    position: {x: 64.304474, y: 13.71895, z: -466.66663}
     tangent: {x: -0.4353283, y: 0, z: 0.9002718}
+    distanceDownstream: 559.6112
     leftWidth: 40.43291
     rightWidth: 40.134502
     depth: 3
-    velocity: 1.5368347
+    slope: 0.031852826
+    velocity: 1.7324255
+    bendType: 0
+    signedBend: -0.003497057
+    bendStrength: 0.003497057
+    transportCapacity: 0.3677998
+    depositionPotential: 0.47259992
+    incomingGoldLoad: 0.06014362
+    depositedGold: 0.023196723
+    outgoingGoldLoad: 0.036946896
     gravelProbability: 0.33160838
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 56.241394, y: 13.066479, z: -450}
+  - sampleIndex: 33
+    previousSampleIndex: 32
+    nextSampleIndex: 34
+    position: {x: 56.241394, y: 13.066479, z: -450}
     tangent: {x: -0.43384498, y: 0, z: 0.9009875}
+    distanceDownstream: 578.13727
     leftWidth: 39.08696
     rightWidth: 40.707787
     depth: 3
-    velocity: 1.544474
+    slope: 0.039246578
+    velocity: 2.0223687
+    bendType: 0
+    signedBend: 0.026169593
+    bendStrength: 0.026169593
+    transportCapacity: 0.43320286
+    depositionPotential: 0.4420033
+    incomingGoldLoad: 0.06408382
+    depositedGold: 0.02218997
+    outgoingGoldLoad: 0.041893855
     gravelProbability: 0.33921158
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 48.253777, y: 12.266969, z: -433.33334}
+  - sampleIndex: 34
+    previousSampleIndex: 33
+    nextSampleIndex: 35
+    position: {x: 48.253777, y: 12.266969, z: -433.33334}
     tangent: {x: -0.42881024, y: 0, z: 0.9033945}
+    distanceDownstream: 596.6364
     leftWidth: 37.836483
     rightWidth: 41.25082
     depth: 3
-    velocity: 1.5488225
+    slope: 0.046836775
+    velocity: 2.32129
+    bendType: 0
+    signedBend: 0.05360899
+    bendStrength: 0.05360899
+    transportCapacity: 0.5005296
+    depositionPotential: 0.41186744
+    incomingGoldLoad: 0.0699521
+    depositedGold: 0.021600615
+    outgoingGoldLoad: 0.048351485
     gravelProbability: 0.35072812
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 40.41922, y: 11.338303, z: -416.6667}
+  - sampleIndex: 35
+    previousSampleIndex: 34
+    nextSampleIndex: 36
+    position: {x: 40.41922, y: 11.338303, z: -416.6667}
     tangent: {x: -0.42043093, y: 0, z: 0.90732455}
+    distanceDownstream: 615.07605
     leftWidth: 36.67992
     rightWidth: 41.75838
     depth: 3
-    velocity: 1.5525049
+    slope: 0.051901057
+    velocity: 2.5240698
+    bendType: 0
+    signedBend: 0.07901377
+    bendStrength: 0.07901377
+    transportCapacity: 0.5459375
+    depositionPotential: 0.39281154
+    incomingGoldLoad: 0.07728361
+    depositedGold: 0.022071138
+    outgoingGoldLoad: 0.055212475
     gravelProbability: 0.36165163
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 32.807945, y: 10.360223, z: -399.99997}
+  - sampleIndex: 36
+    previousSampleIndex: 35
+    nextSampleIndex: 37
+    position: {x: 32.807945, y: 10.360223, z: -399.99997}
     tangent: {x: -0.40887603, y: 0, z: 0.9125899}
+    distanceDownstream: 633.42456
     leftWidth: 35.608513
     rightWidth: 42.221214
     depth: 3
-    velocity: 1.5558684
+    slope: 0.051258653
+    velocity: 2.506785
+    bendType: 2
+    signedBend: 0.10300094
+    bendStrength: 0.10300094
+    transportCapacity: 0.5414084
+    depositionPotential: 0.39946797
+    incomingGoldLoad: 0.084963575
+    depositedGold: 0.024752464
+    outgoingGoldLoad: 0.06021111
     gravelProbability: 0.37188873
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 25.484562, y: 9.4660225, z: -383.3333}
+  - sampleIndex: 37
+    previousSampleIndex: 36
+    nextSampleIndex: 38
+    position: {x: 25.484562, y: 9.4660225, z: -383.3333}
     tangent: {x: -0.394255, y: 0, z: 0.9190011}
+    distanceDownstream: 651.6512
     leftWidth: 34.606438
     rightWidth: 42.61828
     depth: 3
-    velocity: 1.5595733
+    slope: 0.042994395
+    velocity: 2.1935673
+    bendType: 2
+    signedBend: 0.12577419
+    bendStrength: 0.12577419
+    transportCapacity: 0.46988967
+    depositionPotential: 0.44064656
+    incomingGoldLoad: 0.09071365
+    depositedGold: 0.030581288
+    outgoingGoldLoad: 0.060132362
     gravelProbability: 0.3812818
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 18.50784, y: 8.800764, z: -366.6667}
+  - sampleIndex: 38
+    previousSampleIndex: 37
+    nextSampleIndex: 39
+    position: {x: 18.50784, y: 8.800764, z: -366.6667}
     tangent: {x: -0.37670526, y: 0, z: 0.9263331}
+    distanceDownstream: 669.7314
     leftWidth: 33.658745
     rightWidth: 42.91703
     depth: 3
-    velocity: 1.5644841
+    slope: 0.027806655
+    velocity: 1.6093564
+    bendType: 2
+    signedBend: 0.14677484
+    bendStrength: 0.14677484
+    transportCapacity: 0.33720192
+    depositionPotential: 0.5130923
+    incomingGoldLoad: 0.09129849
+    depositedGold: 0.038946513
+    outgoingGoldLoad: 0.052351978
     gravelProbability: 0.38957664
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 11.929154, y: 8.465425, z: -350.00003}
+  - sampleIndex: 39
+    previousSampleIndex: 38
+    nextSampleIndex: 40
+    position: {x: 11.929154, y: 8.465425, z: -350.00003}
     tangent: {x: -0.35642967, y: 0, z: 0.9343221}
+    distanceDownstream: 687.6526
     leftWidth: 32.759422
     rightWidth: 43.082863
     depth: 3
-    velocity: 1.5713862
+    slope: 0.008989441
+    velocity: 0.8800371
+    bendType: 2
+    signedBend: 0.16551463
+    bendStrength: 0.16551463
+    transportCapacity: 0.1720033
+    depositionPotential: 0.60169506
+    incomingGoldLoad: 0.08406919
+    depositedGold: 0.046233706
+    outgoingGoldLoad: 0.037835486
     gravelProbability: 0.39646524
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 5.791664, y: 8.480052, z: -333.3333}
+  - sampleIndex: 40
+    previousSampleIndex: 39
+    nextSampleIndex: 41
+    position: {x: 5.791664, y: 8.480052, z: -333.3333}
     tangent: {x: -0.33369946, y: 0, z: 0.94267946}
+    distanceDownstream: 705.41345
     leftWidth: 31.908833
     rightWidth: 43.08257
     depth: 3
-    velocity: 1.5809585
+    slope: 0
+    velocity: 0.5310596
+    bendType: 2
+    signedBend: 0.1814647
+    bendStrength: 0.1814647
+    transportCapacity: 0.093001634
+    depositionPotential: 0.64452505
+    incomingGoldLoad: 0.069965065
+    depositedGold: 0.038480785
+    outgoingGoldLoad: 0.03148428
     gravelProbability: 0.40161976
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 0.12946129, y: 8.789526, z: -316.66666}
+  - sampleIndex: 41
+    previousSampleIndex: 40
+    nextSampleIndex: 42
+    position: {x: 0.12946129, y: 8.789526, z: -316.66666}
     tangent: {x: -0.30886754, y: 0, z: 0.951105}
+    distanceDownstream: 723.0184
     leftWidth: 31.105793
     rightWidth: 42.88104
     depth: 3
-    velocity: 1.5939448
+    slope: 0
+    velocity: 0.5336439
+    bendType: 2
+    signedBend: 0.19416347
+    bendStrength: 0.19416347
+    transportCapacity: 0.09337863
+    depositionPotential: 0.644929
+    incomingGoldLoad: 0.063859895
+    depositedGold: 0.035122942
+    outgoingGoldLoad: 0.028736953
     gravelProbability: 0.40469518
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -5.033195, y: 9.305614, z: -300}
+  - sampleIndex: 42
+    previousSampleIndex: 41
+    nextSampleIndex: 43
+    position: {x: -5.033195, y: 9.305614, z: -300}
     tangent: {x: -0.2823759, y: 0, z: 0.9593038}
+    distanceDownstream: 740.47394
     leftWidth: 30.347836
     rightWidth: 42.44695
     depth: 3
-    velocity: 1.6110451
+    slope: 0
+    velocity: 0.53671044
+    bendType: 2
+    signedBend: 0.20304702
+    bendStrength: 0.20304702
+    transportCapacity: 0.093825996
+    depositionPotential: 0.6439385
+    incomingGoldLoad: 0.061166774
+    depositedGold: 0.033641726
+    outgoingGoldLoad: 0.027525049
     gravelProbability: 0.4053728
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -9.682358, y: 9.95269, z: -283.33337}
+  - sampleIndex: 43
+    previousSampleIndex: 42
+    nextSampleIndex: 44
+    position: {x: -9.682358, y: 9.95269, z: -283.33337}
     tangent: {x: -0.25475106, y: 0, z: 0.9670066}
+    distanceDownstream: 757.78894
     leftWidth: 29.63706
     rightWidth: 41.765797
     depth: 3
-    velocity: 1.6325994
+    slope: 0
+    velocity: 0.5402912
+    bendType: 2
+    signedBend: 0.20769241
+    bendStrength: 0.20769241
+    transportCapacity: 0.09434836
+    depositionPotential: 0.6414234
+    incomingGoldLoad: 0.059799913
+    depositedGold: 0.032889955
+    outgoingGoldLoad: 0.026909959
     gravelProbability: 0.40343583
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -13.814629, y: 10.6850605, z: -266.66666}
+  - sampleIndex: 44
+    previousSampleIndex: 43
+    nextSampleIndex: 45
+    position: {x: -13.814629, y: 10.6850605, z: -266.66666}
     tangent: {x: -0.22657941, y: 0, z: 0.97399265}
+    distanceDownstream: 774.9759
     leftWidth: 28.97825
     rightWidth: 40.84115
     depth: 3
-    velocity: 1.658591
+    slope: 0
+    velocity: 0.54436463
+    bendType: 2
+    signedBend: 0.20797196
+    bendStrength: 0.20797196
+    transportCapacity: 0.09494261
+    depositionPotential: 0.63736767
+    incomingGoldLoad: 0.05881269
+    depositedGold: 0.03234698
+    outgoingGoldLoad: 0.02646571
     gravelProbability: 0.39878413
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -17.436684, y: 11.470223, z: -250}
+  - sampleIndex: 45
+    previousSampleIndex: 44
+    nextSampleIndex: 46
+    position: {x: -17.436684, y: 11.470223, z: -250}
     tangent: {x: -0.19850168, y: 0, z: 0.9801006}
+    distanceDownstream: 792.0496
     leftWidth: 28.3709
     rightWidth: 39.68501
     depth: 3
-    velocity: 1.68893
+    slope: 0
+    velocity: 0.5489012
+    bendType: 2
+    signedBend: 0.2034983
+    bendStrength: 0.2034983
+    transportCapacity: 0.09560441
+    depositionPotential: 0.63172436
+    incomingGoldLoad: 0.05777728
+    depositedGold: 0.031777505
+    outgoingGoldLoad: 0.025999777
     gravelProbability: 0.39139464
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -20.56569, y: 12.260777, z: -233.33334}
+  - sampleIndex: 46
+    previousSampleIndex: 45
+    nextSampleIndex: 47
+    position: {x: -20.56569, y: 12.260777, z: -233.33334}
     tangent: {x: -0.1711799, y: 0, z: 0.9852398}
+    distanceDownstream: 809.0259
     leftWidth: 27.809658
     rightWidth: 38.318134
     depth: 3
-    velocity: 1.7234294
+    slope: 0
+    velocity: 0.55386126
+    bendType: 2
+    signedBend: 0.19458821
+    bendStrength: 0.19458821
+    transportCapacity: 0.096328
+    depositionPotential: 0.62459284
+    incomingGoldLoad: 0.0565063
+    depositedGold: 0.031078465
+    outgoingGoldLoad: 0.025427833
     gravelProbability: 0.3813315
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -23.228168, y: 12.984859, z: -216.66664}
+  - sampleIndex: 47
+    previousSampleIndex: 46
+    nextSampleIndex: 48
+    position: {x: -23.228168, y: 12.984859, z: -216.66664}
     tangent: {x: -0.14527003, y: 0, z: 0.989392}
+    distanceDownstream: 825.91943
     leftWidth: 27.292988
     rightWidth: 36.779858
     depth: 3
-    velocity: 1.761493
+    slope: 0
+    velocity: 0.55914766
+    bendType: 2
+    signedBend: 0.18116115
+    bendStrength: 0.18116115
+    transportCapacity: 0.097099185
+    depositionPotential: 0.61606824
+    incomingGoldLoad: 0.054932073
+    depositedGold: 0.03021264
+    outgoingGoldLoad: 0.024719432
     gravelProbability: 0.368803
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -25.459946, y: 13.566973, z: -199.99998}
+  - sampleIndex: 48
+    previousSampleIndex: 47
+    nextSampleIndex: 49
+    position: {x: -25.459946, y: 13.566973, z: -199.99998}
     tangent: {x: -0.12139191, y: 0, z: 0.9926047}
+    distanceDownstream: 842.74493
     leftWidth: 26.824827
     rightWidth: 35.125492
     depth: 3
-    velocity: 1.8021206
+    slope: 0
+    velocity: 0.56460786
+    bendType: 2
+    signedBend: 0.16384359
+    bendStrength: 0.16384359
+    transportCapacity: 0.097895734
+    depositionPotential: 0.60643744
+    incomingGoldLoad: 0.05305176
+    depositedGold: 0.029178469
+    outgoingGoldLoad: 0.02387329
     gravelProbability: 0.35415408
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -27.304708, y: 13.964287, z: -183.33334}
+  - sampleIndex: 49
+    previousSampleIndex: 48
+    nextSampleIndex: 50
+    position: {x: -27.304708, y: 13.964287, z: -183.33334}
     tangent: {x: -0.10010083, y: 0, z: 0.99497724}
+    distanceDownstream: 859.51807
     leftWidth: 26.406685
     rightWidth: 33.40982
     depth: 3
-    velocity: 1.8443037
+    slope: 0
+    velocity: 0.5700971
+    bendType: 2
+    signedBend: 0.1429332
+    bendStrength: 0.1429332
+    transportCapacity: 0.098696515
+    depositionPotential: 0.595928
+    incomingGoldLoad: 0.050895922
+    depositedGold: 0.027992757
+    outgoingGoldLoad: 0.022903165
     gravelProbability: 0.33778292
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -28.81348, y: 14.190165, z: -166.66669}
+  - sampleIndex: 50
+    previousSampleIndex: 49
+    nextSampleIndex: 51
+    position: {x: -28.81348, y: 14.190165, z: -166.66669}
     tangent: {x: -0.08186949, y: 0, z: 0.99664307}
+    distanceDownstream: 876.2544
     leftWidth: 26.0345
     rightWidth: 31.678726
     depth: 3
-    velocity: 1.8872191
+    slope: 0
+    velocity: 0.57550776
+    bendType: 2
+    signedBend: 0.11923512
+    bendStrength: 0.11923512
+    transportCapacity: 0.09948584
+    depositionPotential: 0.58482695
+    incomingGoldLoad: 0.048510604
+    depositedGold: 0.026680833
+    outgoingGoldLoad: 0.02182977
     gravelProbability: 0.32009298
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -30.042887, y: 14.306776, z: -149.99997}
+  - sampleIndex: 51
+    previousSampleIndex: 50
+    nextSampleIndex: 52
+    position: {x: -30.042887, y: 14.306776, z: -149.99997}
     tangent: {x: -0.06707725, y: 0, z: 0.9977477}
+    distanceDownstream: 892.9668
     leftWidth: 25.705793
     rightWidth: 29.975534
     depth: 3
-    velocity: 1.9300067
+    slope: 0
+    velocity: 0.5807348
+    bendType: 2
+    signedBend: 0.09318262
+    bendStrength: 0.09318262
+    transportCapacity: 0.10024837
+    depositionPotential: 0.57335615
+    incomingGoldLoad: 0.045951415
+    depositedGold: 0.025025927
+    outgoingGoldLoad: 0.020925488
     gravelProbability: 0.30152056
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -31.054438, y: 14.392717, z: -133.33333}
+  - sampleIndex: 52
+    previousSampleIndex: 51
+    nextSampleIndex: 53
+    position: {x: -31.054438, y: 14.392717, z: -133.33333}
     tangent: {x: -0.05600415, y: 0, z: 0.9984305}
+    distanceDownstream: 909.6643
     leftWidth: 25.425646
     rightWidth: 28.34543
     depth: 3
-    velocity: 1.9716
+    slope: 0
+    velocity: 0.58564895
+    bendType: 0
+    signedBend: 0.065657414
+    bendStrength: 0.065657414
+    transportCapacity: 0.100965254
+    depositionPotential: 0.56184554
+    incomingGoldLoad: 0.043529835
+    depositedGold: 0.023222387
+    outgoingGoldLoad: 0.020307448
     gravelProbability: 0.28255433
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -31.912624, y: 14.509855, z: -116.66667}
+  - sampleIndex: 53
+    previousSampleIndex: 52
+    nextSampleIndex: 54
+    position: {x: -31.912624, y: 14.509855, z: -116.66667}
     tangent: {x: -0.04881691, y: 0, z: 0.99880767}
+    distanceDownstream: 926.35345
     leftWidth: 25.203096
     rightWidth: 26.828741
     depth: 3
-    velocity: 2.0109038
+    slope: 0
+    velocity: 0.5901231
+    bendType: 0
+    signedBend: 0.03725642
+    bendStrength: 0.03725642
+    transportCapacity: 0.101617955
+    depositionPotential: 0.5505729
+    incomingGoldLoad: 0.04140275
+    depositedGold: 0.021637028
+    outgoingGoldLoad: 0.019765722
     gravelProbability: 0.26369125
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -32.68361, y: 14.69327, z: -100.00002}
+  - sampleIndex: 54
+    previousSampleIndex: 53
+    nextSampleIndex: 55
+    position: {x: -32.68361, y: 14.69327, z: -100.00002}
     tangent: {x: -0.04558413, y: 0, z: 0.9989605}
+    distanceDownstream: 943.03894
     leftWidth: 25.044907
     rightWidth: 25.453667
     depth: 3
-    velocity: 2.047036
+    slope: 0
+    velocity: 0.59406745
+    bendType: 0
+    signedBend: 0.008915782
+    bendStrength: 0.008915782
+    transportCapacity: 0.10219337
+    depositionPotential: 0.539839
+    incomingGoldLoad: 0.039396293
+    depositedGold: 0.020180952
+    outgoingGoldLoad: 0.019215342
     gravelProbability: 0.24538215
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -33.433678, y: 14.970534, z: -83.33331}
+  - sampleIndex: 55
+    previousSampleIndex: 54
+    nextSampleIndex: 56
+    position: {x: -33.433678, y: 14.970534, z: -83.33331}
     tangent: {x: -0.0462775, y: 0, z: 0.9989286}
+    distanceDownstream: 959.72485
     leftWidth: 24.955568
     rightWidth: 24.238306
     depth: 3
-    velocity: 2.0663555
+    slope: 0
+    velocity: 0.59742385
+    bendType: 0
+    signedBend: -0.018832233
+    bendStrength: 0.018832233
+    transportCapacity: 0.10268301
+    depositionPotential: 0.53870136
+    incomingGoldLoad: 0.038846374
+    depositedGold: 0.019852191
+    outgoingGoldLoad: 0.018994182
     gravelProbability: 0.24538793
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -34.227848, y: 15.392455, z: -66.666664}
+  - sampleIndex: 56
+    previousSampleIndex: 55
+    nextSampleIndex: 57
+    position: {x: -34.227848, y: 15.392455, z: -66.666664}
     tangent: {x: -0.050769493, y: 0, z: 0.99871045}
+    distanceDownstream: 976.4158
     leftWidth: 24.941435
     rightWidth: 23.197325
     depth: 3
-    velocity: 2.0745842
+    slope: 0
+    velocity: 0.6001381
+    bendType: 0
+    signedBend: -0.04552902
+    bendStrength: 0.04552902
+    transportCapacity: 0.103078976
+    depositionPotential: 0.54231507
+    incomingGoldLoad: 0.039406806
+    depositedGold: 0.02026946
+    outgoingGoldLoad: 0.019137347
     gravelProbability: 0.2551578
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -35.128178, y: 16.040903, z: -50.00001}
+  - sampleIndex: 57
+    previousSampleIndex: 56
+    nextSampleIndex: 58
+    position: {x: -35.128178, y: 16.040903, z: -50.00001}
     tangent: {x: -0.058835033, y: 0, z: 0.9982677}
+    distanceDownstream: 993.1193
     leftWidth: 25.011286
     rightWidth: 22.344213
     depth: 3
-    velocity: 2.0787733
+    slope: 0
+    velocity: 0.60215306
+    bendType: 0
+    signedBend: -0.070159644
+    bendStrength: 0.070159644
+    transportCapacity: 0.10337292
+    depositionPotential: 0.54615086
+    incomingGoldLoad: 0.040321477
+    depositedGold: 0.02088339
+    outgoingGoldLoad: 0.019438086
     gravelProbability: 0.2648016
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -36.192417, y: 16.989143, z: -33.333363}
+  - sampleIndex: 58
+    previousSampleIndex: 57
+    nextSampleIndex: 59
+    position: {x: -36.192417, y: 16.989143, z: -33.333363}
     tangent: {x: -0.07016303, y: 0, z: 0.9975355}
+    distanceDownstream: 1009.8468
     leftWidth: 25.171896
     rightWidth: 21.68849
     depth: 3
-    velocity: 2.078955
+    slope: 0
+    velocity: 0.6034267
+    bendType: 1
+    signedBend: -0.0923587
+    bendStrength: 0.0923587
+    transportCapacity: 0.10355872
+    depositionPotential: 0.55014867
+    incomingGoldLoad: 0.04136307
+    depositedGold: 0.021577556
+    outgoingGoldLoad: 0.019785516
     gravelProbability: 0.27406234
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -37.472725, y: 18.234161, z: -16.66665}
+  - sampleIndex: 59
+    previousSampleIndex: 58
+    nextSampleIndex: 60
+    position: {x: -37.472725, y: 18.234161, z: -16.66665}
     tangent: {x: -0.08434702, y: 0, z: 0.9964365}
+    distanceDownstream: 1026.6089
     leftWidth: 25.423544
     rightWidth: 21.233355
     depth: 3
-    velocity: 2.0753524
+    slope: 0
+    velocity: 0.60395014
+    bendType: 1
+    signedBend: -0.11138664
+    bendStrength: 0.11138664
+    transportCapacity: 0.10363508
+    depositionPotential: 0.5541508
+    incomingGoldLoad: 0.042399198
+    depositedGold: 0.022278069
+    outgoingGoldLoad: 0.02012113
     gravelProbability: 0.28267103
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -39.01404, y: 19.663925, z: 0}
+  - sampleIndex: 60
+    previousSampleIndex: 59
+    nextSampleIndex: 61
+    position: {x: -39.01404, y: 19.663925, z: 0}
     tangent: {x: -0.1009075, y: 0, z: 0.9948958}
+    distanceDownstream: 1043.4076
     leftWidth: 25.759579
     rightWidth: 20.977055
     depth: 3
-    velocity: 2.0683458
+    slope: 0
+    velocity: 0.60374504
+    bendType: 1
+    signedBend: -0.12681517
+    bendStrength: 0.12681517
+    transportCapacity: 0.10360516
+    depositionPotential: 0.5580292
+    incomingGoldLoad: 0.043349877
+    depositedGold: 0.022937365
+    outgoingGoldLoad: 0.020412512
     gravelProbability: 0.29035938
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -40.85356, y: 21.103966, z: 16.66665}
+  - sampleIndex: 61
+    previousSampleIndex: 60
+    nextSampleIndex: 62
+    position: {x: -40.85356, y: 21.103966, z: 16.66665}
     tangent: {x: -0.11929957, y: 0, z: 0.9928583}
+    distanceDownstream: 1060.2372
     leftWidth: 26.169605
     rightWidth: 20.916565
     depth: 3
-    velocity: 2.058346
+    slope: 0
+    velocity: 0.6028459
+    bendType: 1
+    signedBend: -0.13816908
+    bendStrength: 0.13816908
+    transportCapacity: 0.10347399
+    depositionPotential: 0.5616395
+    incomingGoldLoad: 0.044163555
+    depositedGold: 0.023520712
+    outgoingGoldLoad: 0.020642843
     gravelProbability: 0.29688802
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -43.019295, y: 22.409418, z: 33.3333}
+  - sampleIndex: 62
+    previousSampleIndex: 61
+    nextSampleIndex: 63
+    position: {x: -43.019295, y: 22.409418, z: 33.3333}
     tangent: {x: -0.13892289, y: 0, z: 0.9903033}
+    distanceDownstream: 1077.0946
     leftWidth: 26.64158
     rightWidth: 21.04941
     depth: 3
-    velocity: 2.0457218
+    slope: 0
+    velocity: 0.60129
+    bendType: 1
+    signedBend: -0.14522511
+    bendStrength: 0.14522511
+    transportCapacity: 0.10324701
+    depositionPotential: 0.56488603
+    incomingGoldLoad: 0.044808082
+    depositedGold: 0.024004795
+    outgoingGoldLoad: 0.020803288
     gravelProbability: 0.30206552
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -45.529663, y: 23.522142, z: 49.999954}
+  - sampleIndex: 63
+    previousSampleIndex: 62
+    nextSampleIndex: 64
+    position: {x: -45.529663, y: 23.522142, z: 49.999954}
     tangent: {x: -0.15914586, y: 0, z: 0.98725504}
+    distanceDownstream: 1093.986
     leftWidth: 27.15908
     rightWidth: 21.37107
     depth: 3
-    velocity: 2.0308807
+    slope: 0
+    velocity: 0.5991312
+    bendType: 1
+    signedBend: -0.14766788
+    bendStrength: 0.14766788
+    transportCapacity: 0.10293208
+    depositionPotential: 0.5676469
+    incomingGoldLoad: 0.045262486
+    depositedGold: 0.024370788
+    outgoingGoldLoad: 0.020891698
     gravelProbability: 0.30574
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -48.392654, y: 24.456842, z: 66.666725}
+  - sampleIndex: 64
+    previousSampleIndex: 63
+    nextSampleIndex: 65
+    position: {x: -48.392654, y: 24.456842, z: 66.666725}
     tangent: {x: -0.17931898, y: 0, z: 0.98379093}
+    distanceDownstream: 1110.9226
     leftWidth: 27.698215
     rightWidth: 21.871841
     depth: 3
-    velocity: 2.0143733
+    slope: 0
+    velocity: 0.5964561
+    bendType: 1
+    signedBend: -0.14547755
+    bendStrength: 0.14547755
+    transportCapacity: 0.10254183
+    depositionPotential: 0.5698279
+    incomingGoldLoad: 0.045514405
+    depositedGold: 0.024605649
+    outgoingGoldLoad: 0.020908756
     gravelProbability: 0.3077838
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -51.60546, y: 25.25397, z: 83.333374}
+  - sampleIndex: 65
+    previousSampleIndex: 64
+    nextSampleIndex: 66
+    position: {x: -51.60546, y: 25.25397, z: 83.333374}
     tangent: {x: -0.1988131, y: 0, z: 0.9800374}
+    distanceDownstream: 1127.9148
     leftWidth: 28.23169
     rightWidth: 22.539001
     depth: 3
-    velocity: 1.9967964
+    slope: 0
+    velocity: 0.5933674
+    bendType: 1
+    signedBend: -0.13885339
+    bendStrength: 0.13885339
+    transportCapacity: 0.102091245
+    depositionPotential: 0.57136476
+    incomingGoldLoad: 0.0455575
+    depositedGold: 0.024701234
+    outgoingGoldLoad: 0.020856265
     gravelProbability: 0.30810928
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -55.15474, y: 25.951317, z: 100.00002}
+  - sampleIndex: 66
+    previousSampleIndex: 65
+    nextSampleIndex: 67
+    position: {x: -55.15474, y: 25.951317, z: 100.00002}
     tangent: {x: -0.21702771, y: 0, z: 0.9761654}
+    distanceDownstream: 1144.9695
     leftWidth: 28.73611
     rightWidth: 23.361423
     depth: 3
-    velocity: 1.9786078
+    slope: 0
+    velocity: 0.58995414
+    bendType: 1
+    signedBend: -0.12787162
+    bendStrength: 0.12787162
+    transportCapacity: 0.10159331
+    depositionPotential: 0.5721914
+    incomingGoldLoad: 0.04539198
+    depositedGold: 0.024653565
+    outgoingGoldLoad: 0.020738415
     gravelProbability: 0.30669644
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -59.016346, y: 26.58463, z: 116.66667}
+  - sampleIndex: 67
+    previousSampleIndex: 66
+    nextSampleIndex: 68
+    position: {x: -59.016346, y: 26.58463, z: 116.66667}
     tangent: {x: -0.23339334, y: 0, z: 0.9723824}
+    distanceDownstream: 1162.0894
     leftWidth: 29.19192
     rightWidth: 24.328566
     depth: 3
-    velocity: 1.9601567
+    slope: 0
+    velocity: 0.5862936
+    bendType: 1
+    signedBend: -0.11275075
+    bendStrength: 0.11275075
+    transportCapacity: 0.101059295
+    depositionPotential: 0.5722841
+    incomingGoldLoad: 0.0450249
+    depositedGold: 0.024465036
+    outgoingGoldLoad: 0.020559866
     gravelProbability: 0.30358106
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -63.15547, y: 27.194696, z: 133.33333}
+  - sampleIndex: 68
+    previousSampleIndex: 67
+    nextSampleIndex: 69
+    position: {x: -63.15547, y: 27.194696, z: 133.33333}
     tangent: {x: -0.24740331, y: 0, z: 0.9689126}
+    distanceDownstream: 1179.2731
     leftWidth: 29.579594
     rightWidth: 25.426777
     depth: 3
-    velocity: 1.9418238
+    slope: 0
+    velocity: 0.58247113
+    bendType: 1
+    signedBend: -0.09403185
+    bendStrength: 0.09403185
+    transportCapacity: 0.10050167
+    depositionPotential: 0.5716728
+    incomingGoldLoad: 0.044465557
+    depositedGold: 0.024142385
+    outgoingGoldLoad: 0.020323172
     gravelProbability: 0.29882115
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -67.52771, y: 27.8235, z: 149.99997}
+  - sampleIndex: 69
+    previousSampleIndex: 68
+    nextSampleIndex: 70
+    position: {x: -67.52771, y: 27.8235, z: 149.99997}
     tangent: {x: -0.25861138, y: 0, z: 0.9659814}
+    distanceDownstream: 1196.5151
     leftWidth: 29.885235
     rightWidth: 26.643719
     depth: 3
-    velocity: 1.923868
+    slope: 0
+    velocity: 0.5785543
+    bendType: 0
+    signedBend: -0.07196664
+    bendStrength: 0.07196664
+    transportCapacity: 0.09993027
+    depositionPotential: 0.57035565
+    incomingGoldLoad: 0.04372425
+    depositedGold: 0.023692325
+    outgoingGoldLoad: 0.020031925
     gravelProbability: 0.2925135
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -72.07942, y: 28.5038, z: 166.66663}
+  - sampleIndex: 70
+    previousSampleIndex: 69
+    nextSampleIndex: 71
+    position: {x: -72.07942, y: 28.5038, z: 166.66663}
     tangent: {x: -0.26661587, y: 0, z: 0.9638029}
+    distanceDownstream: 1213.8055
     leftWidth: 30.110909
     rightWidth: 27.978249
     depth: 3
-    velocity: 1.906093
+    slope: 0
+    velocity: 0.5745407
+    bendType: 0
+    signedBend: -0.046918023
+    bendStrength: 0.046918023
+    transportCapacity: 0.09934476
+    depositionPotential: 0.5684223
+    incomingGoldLoad: 0.042819444
+    depositedGold: 0.023130525
+    outgoingGoldLoad: 0.01968892
     gravelProbability: 0.28484398
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -76.74867, y: 29.256498, z: 183.33328}
+  - sampleIndex: 71
+    previousSampleIndex: 70
+    nextSampleIndex: 72
+    position: {x: -76.74867, y: 29.256498, z: 183.33328}
     tangent: {x: -0.2710681, y: 0, z: 0.9625602}
+    distanceDownstream: 1231.1302
     leftWidth: 30.272371
     rightWidth: 29.440928
     depth: 3
-    velocity: 1.8878736
+    slope: 0
+    velocity: 0.57036257
+    bendType: 0
+    signedBend: -0.019313134
+    bendStrength: 0.019313134
+    transportCapacity: 0.09873524
+    depositionPotential: 0.5660405
+    incomingGoldLoad: 0.041775107
+    depositedGold: 0.022479037
+    outgoingGoldLoad: 0.01929607
     gravelProbability: 0.27607736
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -81.4665, y: 30.098995, z: 200.00005}
+  - sampleIndex: 72
+    previousSampleIndex: 71
+    nextSampleIndex: 73
+    position: {x: -81.4665, y: 30.098995, z: 200.00005}
     tangent: {x: -0.27166256, y: 0, z: 0.96239257}
+    distanceDownstream: 1248.4724
     leftWidth: 30.386164
     rightWidth: 31.044249
     depth: 3
-    velocity: 1.8599749
+    slope: 0
+    velocity: 0.5659453
+    bendType: 0
+    signedBend: 0.010491172
+    bendStrength: 0.010491172
+    transportCapacity: 0.09809084
+    depositionPotential: 0.56867933
+    incomingGoldLoad: 0.041635204
+    depositedGold: 0.022515828
+    outgoingGoldLoad: 0.019119376
     gravelProbability: 0.27923918
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -86.157974, y: 31.049002, z: 216.6667}
+  - sampleIndex: 73
+    previousSampleIndex: 72
+    nextSampleIndex: 74
+    position: {x: -86.157974, y: 31.049002, z: 216.6667}
     tangent: {x: -0.2681324, y: 0, z: 0.96338207}
+    distanceDownstream: 1265.8129
     leftWidth: 30.464167
     rightWidth: 32.79749
     depth: 3
-    velocity: 1.8185523
+    slope: 0
+    velocity: 0.5612344
+    bendType: 0
+    signedBend: 0.042037535
+    bendStrength: 0.042037535
+    transportCapacity: 0.09740361
+    depositionPotential: 0.5809794
+    incomingGoldLoad: 0.043137588
+    depositedGold: 0.023725674
+    outgoingGoldLoad: 0.019411914
     gravelProbability: 0.30022767
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -90.74396, y: 32.108917, z: 233.33334}
+  - sampleIndex: 74
+    previousSampleIndex: 73
+    nextSampleIndex: 75
+    position: {x: -90.74396, y: 32.108917, z: 233.33334}
     tangent: {x: -0.26024136, y: 0, z: 0.96554357}
+    distanceDownstream: 1283.1313
     leftWidth: 30.51672
     rightWidth: 34.70825
     depth: 3
-    velocity: 1.7747934
+    slope: 0
+    velocity: 0.5561838
+    bendType: 0
+    signedBend: 0.07516673
+    bendStrength: 0.07516673
+    transportCapacity: 0.09666681
+    depositionPotential: 0.59399337
+    incomingGoldLoad: 0.04519794
+    depositedGold: 0.024858868
+    outgoingGoldLoad: 0.020339074
     gravelProbability: 0.32232532
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -95.14224, y: 33.2425, z: 250}
+  - sampleIndex: 75
+    previousSampleIndex: 74
+    nextSampleIndex: 76
+    position: {x: -95.14224, y: 33.2425, z: 250}
     tangent: {x: -0.24778214, y: 0, z: 0.96881574}
+    distanceDownstream: 1300.4058
     leftWidth: 30.549824
     rightWidth: 36.776394
     depth: 3
-    velocity: 1.7288038
+    slope: 0
+    velocity: 0.5507783
+    bendType: 2
+    signedBend: 0.10942039
+    bendStrength: 0.10942039
+    transportCapacity: 0.09587825
+    depositionPotential: 0.60762787
+    incomingGoldLoad: 0.047965616
+    depositedGold: 0.02638109
+    outgoingGoldLoad: 0.021584526
     gravelProbability: 0.34533176
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -99.26921, y: 34.37419, z: 266.66666}
+  - sampleIndex: 76
+    previousSampleIndex: 75
+    nextSampleIndex: 77
+    position: {x: -99.26921, y: 34.37419, z: 266.66666}
     tangent: {x: -0.23059726, y: 0, z: 0.9730492}
+    distanceDownstream: 1317.613
     leftWidth: 30.558186
     rightWidth: 38.980618
     depth: 3
-    velocity: 1.6812456
+    slope: 0
+    velocity: 0.54508644
+    bendType: 2
+    signedBend: 0.144211
+    bendStrength: 0.144211
+    transportCapacity: 0.095047906
+    depositionPotential: 0.6216775
+    incomingGoldLoad: 0.051097605
+    depositedGold: 0.028103683
+    outgoingGoldLoad: 0.022993922
     gravelProbability: 0.3689135
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -103.04171, y: 35.419937, z: 283.3333}
+  - sampleIndex: 77
+    previousSampleIndex: 76
+    nextSampleIndex: 78
+    position: {x: -103.04171, y: 35.419937, z: 283.3333}
     tangent: {x: -0.20858748, y: 0, z: 0.97800374}
+    distanceDownstream: 1334.7333
     leftWidth: 30.529148
     rightWidth: 41.275417
     depth: 3
-    velocity: 1.6333066
+    slope: 0
+    velocity: 0.5392578
+    bendType: 2
+    signedBend: 0.1790731
+    bendStrength: 0.1790731
+    transportCapacity: 0.094197616
+    depositionPotential: 0.63587135
+    incomingGoldLoad: 0.054401666
+    depositedGold: 0.029920917
+    outgoingGoldLoad: 0.024480749
     gravelProbability: 0.3925968
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -106.378494, y: 36.32126, z: 299.99994}
+  - sampleIndex: 78
+    previousSampleIndex: 77
+    nextSampleIndex: 79
+    position: {x: -106.378494, y: 36.32126, z: 299.99994}
     tangent: {x: -0.1817317, y: 0, z: 0.9833482}
+    distanceDownstream: 1351.7545
     leftWidth: 30.45547
     rightWidth: 43.601105
     depth: 3
-    velocity: 1.5863107
+    slope: 0
+    velocity: 0.5334645
+    bendType: 2
+    signedBend: 0.21327102
+    bendStrength: 0.21327102
+    transportCapacity: 0.09335247
+    depositionPotential: 0.6498604
+    incomingGoldLoad: 0.057746883
+    depositedGold: 0.031760786
+    outgoingGoldLoad: 0.025986098
     gravelProbability: 0.41582668
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -109.20203, y: 37.052605, z: 316.66672}
+  - sampleIndex: 79
+    previousSampleIndex: 78
+    nextSampleIndex: 80
+    position: {x: -109.20203, y: 37.052605, z: 316.66672}
     tangent: {x: -0.15011887, y: 0, z: 0.98866796}
+    distanceDownstream: 1368.6746
     leftWidth: 30.34067
     rightWidth: 45.8886
     depth: 3
-    velocity: 1.5415465
+    slope: 0
+    velocity: 0.5278752
+    bendType: 2
+    signedBend: 0.24598972
+    bendStrength: 0.24598972
+    transportCapacity: 0.09253708
+    depositionPotential: 0.66327786
+    incomingGoldLoad: 0.061025526
+    depositedGold: 0.03356404
+    outgoingGoldLoad: 0.027461488
     gravelProbability: 0.43799287
     leftLandscape: 2
     rightLandscape: 4
-  - position: {x: -111.43983, y: 37.605072, z: 333.33337}
+  - sampleIndex: 80
+    previousSampleIndex: 79
+    nextSampleIndex: 81
+    position: {x: -111.43983, y: 37.605072, z: 333.33337}
     tangent: {x: -0.11397943, y: 0, z: 0.9934831}
+    distanceDownstream: 1385.4999
     leftWidth: 30.19457
     rightWidth: 48.05378
     depth: 3
-    velocity: 1.5004283
+    slope: 0
+    velocity: 0.5226811
+    bendType: 2
+    signedBend: 0.2762182
+    bendStrength: 0.2762182
+    transportCapacity: 0.091779366
+    depositionPotential: 0.67569274
+    incomingGoldLoad: 0.06413409
+    depositedGold: 0.03527375
+    outgoingGoldLoad: 0.028860342
     gravelProbability: 0.4584076
     leftLandscape: 2
     rightLandscape: 4
-  - position: {x: -113.02626, y: 37.97077, z: 350.00003}
+  - sampleIndex: 81
+    previousSampleIndex: 80
+    nextSampleIndex: 82
+    position: {x: -113.02626, y: 37.97077, z: 350.00003}
     tangent: {x: -0.073727675, y: 0, z: 0.99727845}
+    distanceDownstream: 1402.2458
     leftWidth: 30.031404
     rightWidth: 49.99845
     depth: 3
-    velocity: 1.4644991
+    slope: 0
+    velocity: 0.51809824
+    bendType: 2
+    signedBend: 0.3027756
+    bendStrength: 0.3027756
+    transportCapacity: 0.091110796
+    depositionPotential: 0.6866147
+    incomingGoldLoad: 0.066966295
+    depositedGold: 0.036831465
+    outgoingGoldLoad: 0.03013483
     gravelProbability: 0.47632438
     leftLandscape: 2
     rightLandscape: 4
-  - position: {x: -113.90412, y: 38.142265, z: 366.6667}
+  - sampleIndex: 82
+    previousSampleIndex: 81
+    nextSampleIndex: 83
+    position: {x: -113.90412, y: 38.142265, z: 366.6667}
     tangent: {x: -0.029957525, y: 0, z: 0.9995511}
+    distanceDownstream: 1418.9365
     leftWidth: 29.874235
     rightWidth: 51.62713
     depth: 3
-    velocity: 1.4350798
+    slope: 0
+    velocity: 0.51431274
+    bendType: 2
+    signedBend: 0.3248214
+    bendStrength: 0.3248214
+    transportCapacity: 0.090558566
+    depositionPotential: 0.6956451
+    incomingGoldLoad: 0.06941751
+    depositedGold: 0.03817963
+    outgoingGoldLoad: 0.031237878
     gravelProbability: 0.4910335
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -114.02529, y: 38.12343, z: 383.3333}
+  - sampleIndex: 83
+    previousSampleIndex: 82
+    nextSampleIndex: 84
+    position: {x: -114.02529, y: 38.12343, z: 383.3333}
     tangent: {x: 0.0165434, y: 0, z: 0.99986315}
+    distanceDownstream: 1435.6036
     leftWidth: 29.756027
     rightWidth: 52.865623
     depth: 3
-    velocity: 1.412953
+    slope: 0.0060285036
+    velocity: 0.7391645
+    bendType: 2
+    signedBend: 0.3409818
+    bendStrength: 0.3409818
+    transportCapacity: 0.14219953
+    depositionPotential: 0.67530376
+    incomingGoldLoad: 0.07139495
+    depositedGold: 0.039267223
+    outgoingGoldLoad: 0.032127727
     gravelProbability: 0.50196344
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -113.3526, y: 37.941288, z: 399.99997}
+  - sampleIndex: 84
+    previousSampleIndex: 83
+    nextSampleIndex: 85
+    position: {x: -113.3526, y: 37.941288, z: 399.99997}
     tangent: {x: 0.06481214, y: 0, z: 0.99789745}
+    distanceDownstream: 1452.2849
     leftWidth: 29.711624
     rightWidth: 53.666092
     depth: 3
-    velocity: 1.3984122
+    slope: 0.0141792325
+    velocity: 1.0430856
+    bendType: 2
+    signedBend: 0.35064003
+    bendStrength: 0.35064003
+    transportCapacity: 0.2120073
+    depositionPotential: 0.64309937
+    incomingGoldLoad: 0.07282525
+    depositedGold: 0.04005389
+    outgoingGoldLoad: 0.032771364
     gravelProbability: 0.50871915
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -111.86034, y: 37.64979, z: 416.66663}
+  - sampleIndex: 85
+    previousSampleIndex: 84
+    nextSampleIndex: 86
+    position: {x: -111.86034, y: 37.64979, z: 416.66663}
     tangent: {x: 0.11378147, y: 0, z: 0.99350584}
+    distanceDownstream: 1469.0208
     leftWidth: 29.76686
     rightWidth: 54.00157
     depth: 3
-    velocity: 1.3915249
+    slope: 0.018475095
+    velocity: 1.2023727
+    bendType: 2
+    signedBend: 0.35323855
+    bendStrength: 0.35323855
+    transportCapacity: 0.24866904
+    depositionPotential: 0.625584
+    incomingGoldLoad: 0.073656745
+    depositedGold: 0.04034934
+    outgoingGoldLoad: 0.033307407
     gravelProbability: 0.5110673
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -109.535095, y: 37.321426, z: 433.33328}
+  - sampleIndex: 86
+    previousSampleIndex: 85
+    nextSampleIndex: 87
+    position: {x: -109.535095, y: 37.321426, z: 433.33328}
     tangent: {x: 0.16232821, y: 0, z: 0.9867368}
+    distanceDownstream: 1485.852
     leftWidth: 29.933826
     rightWidth: 53.861546
     depth: 3
-    velocity: 1.392288
+    slope: 0.018326793
+    velocity: 1.1966395
+    bendType: 2
+    signedBend: 0.34854028
+    bendStrength: 0.34854028
+    transportCapacity: 0.24736923
+    depositionPotential: 0.6252105
+    incomingGoldLoad: 0.07402027
+    depositedGold: 0.04055434
+    outgoingGoldLoad: 0.033465926
     gravelProbability: 0.5089108
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -106.37665, y: 37.030685, z: 450.00006}
+  - sampleIndex: 87
+    previousSampleIndex: 86
+    nextSampleIndex: 88
+    position: {x: -106.37665, y: 37.030685, z: 450.00006}
     tangent: {x: 0.20936935, y: 0, z: 0.97783667}
+    distanceDownstream: 1502.818
     leftWidth: 30.21305
     rightWidth: 53.252983
     depth: 3
-    velocity: 1.4005917
+    slope: 0.0141901355
+    velocity: 1.0430304
+    bendType: 2
+    signedBend: 0.33699387
+    bendStrength: 0.33699387
+    transportCapacity: 0.21203332
+    depositionPotential: 0.6400372
+    incomingGoldLoad: 0.073648095
+    depositedGold: 0.040506452
+    outgoingGoldLoad: 0.033141643
     gravelProbability: 0.50227714
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -102.39792, y: 36.8377, z: 466.6667}
+  - sampleIndex: 88
+    previousSampleIndex: 87
+    nextSampleIndex: 89
+    position: {x: -102.39792, y: 36.8377, z: 466.6667}
     tangent: {x: 0.2539331, y: 0, z: 0.96722186}
+    distanceDownstream: 1519.954
     leftWidth: 30.595276
     rightWidth: 52.205368
     depth: 3
-    velocity: 1.4161001
+    slope: 0.0073627615
+    velocity: 0.7888567
+    bendType: 2
+    signedBend: 0.31907412
+    bendStrength: 0.31907412
+    transportCapacity: 0.1536183
+    depositionPotential: 0.66451544
+    incomingGoldLoad: 0.07244986
+    depositedGold: 0.039847426
+    outgoingGoldLoad: 0.032602437
     gravelProbability: 0.49135274
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -97.625374, y: 36.776943, z: 483.33334}
+  - sampleIndex: 89
+    previousSampleIndex: 88
+    nextSampleIndex: 90
+    position: {x: -97.625374, y: 36.776943, z: 483.33334}
     tangent: {x: 0.29505676, y: 0, z: 0.95547974}
+    distanceDownstream: 1537.2906
     leftWidth: 31.05764
     rightWidth: 50.775444
     depth: 3
-    velocity: 1.4381819
+    slope: 0
+    velocity: 0.51345944
+    bendType: 2
+    signedBend: 0.29357553
+    bendStrength: 0.29357553
+    transportCapacity: 0.09043408
+    depositionPotential: 0.6890281
+    incomingGoldLoad: 0.07072777
+    depositedGold: 0.038900275
+    outgoingGoldLoad: 0.0318275
     gravelProbability: 0.4765667
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -92.10443, y: 36.85062, z: 500}
+  - sampleIndex: 90
+    previousSampleIndex: 89
+    nextSampleIndex: 91
+    position: {x: -92.10443, y: 36.85062, z: 500}
     tangent: {x: 0.33185744, y: 0, z: 0.9433295}
+    distanceDownstream: 1554.8481
     leftWidth: 31.560465
     rightWidth: 49.044502
     depth: 3
-    velocity: 1.4659551
+    slope: 0
+    velocity: 0.5166187
+    bendType: 2
+    signedBend: 0.26175708
+    bendStrength: 0.26175708
+    transportCapacity: 0.09089497
+    depositionPotential: 0.6783964
+    incomingGoldLoad: 0.06851773
+    depositedGold: 0.037684754
+    outgoingGoldLoad: 0.030832976
     gravelProbability: 0.45862788
     leftLandscape: 2
     rightLandscape: 4
-  - position: {x: -85.89893, y: 37.02729, z: 516.6666}
+  - sampleIndex: 91
+    previousSampleIndex: 90
+    nextSampleIndex: 92
+    position: {x: -85.89893, y: 37.02729, z: 516.6666}
     tangent: {x: 0.36389774, y: 0, z: 0.93143886}
+    distanceDownstream: 1572.6334
     leftWidth: 32.055733
     rightWidth: 47.105354
     depth: 3
-    velocity: 1.498392
+    slope: 0
+    velocity: 0.5203331
+    bendType: 2
+    signedBend: 0.22804348
+    bendStrength: 0.22804348
+    transportCapacity: 0.091436826
+    depositionPotential: 0.6666668
+    incomingGoldLoad: 0.06590591
+    depositedGold: 0.03624825
+    outgoingGoldLoad: 0.029657662
     gravelProbability: 0.43841168
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -79.08166, y: 37.24938, z: 533.3333}
+  - sampleIndex: 92
+    previousSampleIndex: 91
+    nextSampleIndex: 93
+    position: {x: -79.08166, y: 37.24938, z: 533.3333}
     tangent: {x: 0.39111954, y: 0, z: 0.9203398}
+    distanceDownstream: 1590.6418
     leftWidth: 32.506268
     rightWidth: 45.047947
     depth: 3
-    velocity: 1.5343384
+    slope: 0
+    velocity: 0.5244668
+    bendType: 2
+    signedBend: 0.19334283
+    bendStrength: 0.19334283
+    transportCapacity: 0.09203986
+    depositionPotential: 0.6542222
+    incomingGoldLoad: 0.06299846
+    depositedGold: 0.034649152
+    outgoingGoldLoad: 0.028349306
     gravelProbability: 0.41676003
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -71.73318, y: 37.45102, z: 549.99994}
+  - sampleIndex: 93
+    previousSampleIndex: 92
+    nextSampleIndex: 94
+    position: {x: -71.73318, y: 37.45102, z: 549.99994}
     tangent: {x: 0.4135614, y: 0, z: 0.9104762}
+    distanceDownstream: 1608.8577
     leftWidth: 32.899193
     rightWidth: 42.950584
     depth: 3
-    velocity: 1.5725108
+    slope: 0
+    velocity: 0.5288515
+    bendType: 2
+    signedBend: 0.15808797
+    bendStrength: 0.15808797
+    transportCapacity: 0.092679515
+    depositionPotential: 0.64136744
+    incomingGoldLoad: 0.05989686
+    depositedGold: 0.032943275
+    outgoingGoldLoad: 0.026953585
     gravelProbability: 0.39434445
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -63.940765, y: 37.580723, z: 566.66675}
+  - sampleIndex: 94
+    previousSampleIndex: 93
+    nextSampleIndex: 95
+    position: {x: -63.940765, y: 37.580723, z: 566.66675}
     tangent: {x: 0.43130884, y: 0, z: 0.90220433}
+    distanceDownstream: 1627.2566
     leftWidth: 33.241463
     rightWidth: 40.873352
     depth: 3
-    velocity: 1.6116776
+    slope: 0
+    velocity: 0.5333147
+    bendType: 2
+    signedBend: 0.12264803
+    bendStrength: 0.12264803
+    transportCapacity: 0.093330614
+    depositionPotential: 0.62837553
+    incomingGoldLoad: 0.05668424
+    depositedGold: 0.031176332
+    outgoingGoldLoad: 0.025507908
     gravelProbability: 0.3716332
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -55.797756, y: 37.61946, z: 583.3334}
+  - sampleIndex: 95
+    previousSampleIndex: 94
+    nextSampleIndex: 96
+    position: {x: -55.797756, y: 37.61946, z: 583.3334}
     tangent: {x: 0.44446847, y: 0, z: 0.89579445}
+    distanceDownstream: 1645.8062
     leftWidth: 33.54587
     rightWidth: 38.85432
     depth: 3
-    velocity: 1.6509168
+    slope: 0
+    velocity: 0.5377255
+    bendType: 2
+    signedBend: 0.08725193
+    bendStrength: 0.08725193
+    transportCapacity: 0.09397407
+    depositionPotential: 0.6154365
+    incomingGoldLoad: 0.053421248
+    depositedGold: 0.029381687
+    outgoingGoldLoad: 0.02403956
     gravelProbability: 0.34891674
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -47.401726, y: 37.5869, z: 600}
+  - sampleIndex: 96
+    previousSampleIndex: 95
+    nextSampleIndex: 97
+    position: {x: -47.401726, y: 37.5869, z: 600}
     tangent: {x: 0.45313594, y: 0, z: 0.8914414}
+    distanceDownstream: 1664.4681
     leftWidth: 33.82491
     rightWidth: 36.915325
     depth: 3
-    velocity: 1.6895977
+    slope: 0.0022962084
+    velocity: 0.6339217
+    bendType: 0
+    signedBend: 0.051810876
+    bendStrength: 0.051810876
+    transportCapacity: 0.11518305
+    depositionPotential: 0.5919278
+    incomingGoldLoad: 0.050149396
+    depositedGold: 0.027582169
+    outgoingGoldLoad: 0.022567227
     gravelProbability: 0.32637295
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -38.853825, y: 37.5336, z: 616.6667}
+  - sampleIndex: 97
+    previousSampleIndex: 96
+    nextSampleIndex: 98
+    position: {x: -38.853825, y: 37.5336, z: 616.6667}
     tangent: {x: 0.4573892, y: 0, z: 0.88926667}
+    distanceDownstream: 1683.1991
     leftWidth: 34.093365
     rightWidth: 35.071636
     depth: 3
-    velocity: 1.7271641
+    slope: 0.0017174461
+    velocity: 0.615318
+    bendType: 0
+    signedBend: 0.016588002
+    bendStrength: 0.016588002
+    transportCapacity: 0.11066047
+    depositionPotential: 0.58204865
+    incomingGoldLoad: 0.046897933
+    depositedGold: 0.025786538
+    outgoingGoldLoad: 0.021111395
     gravelProbability: 0.30413383
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -30.256927, y: 37.522522, z: 633.3333}
+  - sampleIndex: 98
+    previousSampleIndex: 97
+    nextSampleIndex: 99
+    position: {x: -30.256927, y: 37.522522, z: 633.3333}
     tangent: {x: 0.4572823, y: 0, z: 0.88932157}
+    distanceDownstream: 1701.9523
     leftWidth: 34.36572
     rightWidth: 33.332035
     depth: 3
-    velocity: 1.7516745
+    slope: 0
+    velocity: 0.54982257
+    bendType: 0
+    signedBend: -0.018338727
+    bendStrength: 0.018338727
+    transportCapacity: 0.09573882
+    depositionPotential: 0.586682
+    incomingGoldLoad: 0.04514887
+    depositedGold: 0.02483188
+    outgoingGoldLoad: 0.020316992
     gravelProbability: 0.30046847
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -21.714092, y: 37.60759, z: 650}
+  - sampleIndex: 99
+    previousSampleIndex: 98
+    nextSampleIndex: 100
+    position: {x: -21.714092, y: 37.60759, z: 650}
     tangent: {x: 0.4528306, y: 0, z: 0.89159656}
+    distanceDownstream: 1720.681
     leftWidth: 34.647247
     rightWidth: 31.693626
     depth: 3
-    velocity: 1.7635661
+    slope: 0
+    velocity: 0.55331314
+    bendType: 0
+    signedBend: -0.05326571
+    bendStrength: 0.05326571
+    transportCapacity: 0.09624804
+    depositionPotential: 0.59153706
+    incomingGoldLoad: 0.04542674
+    depositedGold: 0.024984708
+    outgoingGoldLoad: 0.020442033
     gravelProbability: 0.3138719
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -13.32736, y: 37.817482, z: 666.6666}
+  - sampleIndex: 100
+    previousSampleIndex: 99
+    nextSampleIndex: 101
+    position: {x: -13.32736, y: 37.817482, z: 666.6666}
     tangent: {x: 0.44402358, y: 0, z: 0.8960151}
+    distanceDownstream: 1739.34
     leftWidth: 34.93355
     rightWidth: 30.146679
     depth: 3
-    velocity: 1.7736387
+    slope: 0
+    velocity: 0.55655617
+    bendType: 1
+    signedBend: -0.08794997
+    bendStrength: 0.08794997
+    transportCapacity: 0.096721135
+    depositionPotential: 0.59658235
+    incomingGoldLoad: 0.04663627
+    depositedGold: 0.025649948
+    outgoingGoldLoad: 0.02098632
     gravelProbability: 0.32742795
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: -5.1956773, y: 38.148685, z: 683.33325}
+  - sampleIndex: 101
+    previousSampleIndex: 100
+    nextSampleIndex: 102
+    position: {x: -5.1956773, y: 38.148685, z: 683.33325}
     tangent: {x: 0.43082544, y: 0, z: 0.9024353}
+    distanceDownstream: 1757.8875
     leftWidth: 35.219055
     rightWidth: 28.685696
     depth: 3
-    velocity: 1.7821605
+    slope: 0
+    velocity: 0.5595801
+    bendType: 1
+    signedBend: -0.122473404
+    bendStrength: 0.122473404
+    transportCapacity: 0.09716227
+    depositionPotential: 0.6017948
+    incomingGoldLoad: 0.04826855
+    depositedGold: 0.026547702
+    outgoingGoldLoad: 0.021720847
     gravelProbability: 0.34102786
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 2.5861263, y: 38.568535, z: 700.00006}
+  - sampleIndex: 102
+    previousSampleIndex: 101
+    nextSampleIndex: 103
+    position: {x: 2.5861263, y: 38.568535, z: 700.00006}
     tangent: {x: 0.41319555, y: 0, z: 0.91064227}
+    distanceDownstream: 1776.2863
     leftWidth: 35.497063
     rightWidth: 27.309986
     depth: 3
-    velocity: 1.7893707
+    slope: 0
+    velocity: 0.5624039
+    bendType: 1
+    signedBend: -0.15635714
+    bendStrength: 0.15635714
+    transportCapacity: 0.09757422
+    depositionPotential: 0.6070535
+    incomingGoldLoad: 0.05008252
+    depositedGold: 0.027545387
+    outgoingGoldLoad: 0.022537133
     gravelProbability: 0.35452092
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 9.929061, y: 39.030697, z: 716.6667}
+  - sampleIndex: 103
+    previousSampleIndex: 102
+    nextSampleIndex: 104
+    position: {x: 9.929061, y: 39.030697, z: 716.6667}
     tangent: {x: 0.39111406, y: 0, z: 0.92034215}
+    distanceDownstream: 1794.5046
     leftWidth: 35.749672
     rightWidth: 26.016268
     depth: 3
-    velocity: 1.7957757
+    slope: 0
+    velocity: 0.5650822
+    bendType: 1
+    signedBend: -0.18939625
+    bendStrength: 0.18939625
+    transportCapacity: 0.097964935
+    depositionPotential: 0.6122439
+    incomingGoldLoad: 0.05194951
+    depositedGold: 0.02857223
+    outgoingGoldLoad: 0.023377279
     gravelProbability: 0.36765468
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 16.751648, y: 39.503765, z: 733.3334}
+  - sampleIndex: 104
+    previousSampleIndex: 103
+    nextSampleIndex: 105
+    position: {x: 16.751648, y: 39.503765, z: 733.3334}
     tangent: {x: 0.364597, y: 0, z: 0.9311654}
+    distanceDownstream: 1812.5199
     leftWidth: 35.9473
     rightWidth: 24.800089
     depth: 3
-    velocity: 1.8021334
+    slope: 0
+    velocity: 0.5677024
+    bendType: 1
+    signedBend: -0.22112678
+    bendStrength: 0.22112678
+    transportCapacity: 0.09834717
+    depositionPotential: 0.61716324
+    incomingGoldLoad: 0.053782992
+    depositedGold: 0.029580647
+    outgoingGoldLoad: 0.024202345
     gravelProbability: 0.3800714
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 22.98069, y: 39.9981, z: 750}
+  - sampleIndex: 105
+    previousSampleIndex: 104
+    nextSampleIndex: 106
+    position: {x: 22.98069, y: 39.9981, z: 750}
     tangent: {x: 0.33374244, y: 0, z: 0.94266427}
+    distanceDownstream: 1830.3193
     leftWidth: 36.063343
     rightWidth: 23.666233
     depth: 3
-    velocity: 1.8090422
+    slope: 0
+    velocity: 0.57032067
+    bendType: 1
+    signedBend: -0.25075448
+    bendStrength: 0.25075448
+    transportCapacity: 0.09872913
+    depositionPotential: 0.6215729
+    incomingGoldLoad: 0.05551286
+    depositedGold: 0.030532073
+    outgoingGoldLoad: 0.024980787
     gravelProbability: 0.3913814
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 28.553009, y: 40.56293, z: 766.6666}
+  - sampleIndex: 106
+    previousSampleIndex: 105
+    nextSampleIndex: 107
+    position: {x: 28.553009, y: 40.56293, z: 766.6666}
     tangent: {x: 0.29877156, y: 0, z: 0.95432466}
+    distanceDownstream: 1847.9019
     leftWidth: 36.083233
     rightWidth: 22.631756
     depth: 3
-    velocity: 1.816747
+    slope: 0
+    velocity: 0.57293075
+    bendType: 1
+    signedBend: -0.27742237
+    bendStrength: 0.27742237
+    transportCapacity: 0.099109896
+    depositionPotential: 0.62527895
+    incomingGoldLoad: 0.05707739
+    depositedGold: 0.031392563
+    outgoingGoldLoad: 0.025684826
     gravelProbability: 0.40120754
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 33.41639, y: 41.24652, z: 783.3333}
+  - sampleIndex: 107
+    previousSampleIndex: 106
+    nextSampleIndex: 108
+    position: {x: 33.41639, y: 41.24652, z: 783.3333}
     tangent: {x: 0.26003036, y: 0, z: 0.9656005}
+    distanceDownstream: 1865.2771
     leftWidth: 35.99571
     rightWidth: 21.716564
     depth: 3
-    velocity: 1.8254316
+    slope: 0
+    velocity: 0.5755102
+    bendType: 1
+    signedBend: -0.30057573
+    bendStrength: 0.30057573
+    transportCapacity: 0.099486195
+    depositionPotential: 0.6281531
+    incomingGoldLoad: 0.058416884
+    depositedGold: 0.032129288
+    outgoingGoldLoad: 0.026287597
     gravelProbability: 0.40915072
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 37.52947, y: 42.055088, z: 799.99994}
+  - sampleIndex: 108
+    previousSampleIndex: 107
+    nextSampleIndex: 109
+    position: {x: 37.52947, y: 42.055088, z: 799.99994}
     tangent: {x: 0.21805109, y: 0, z: 0.9759373}
+    distanceDownstream: 1882.4628
     leftWidth: 35.782604
     rightWidth: 20.93437
     depth: 3
-    velocity: 1.8355073
+    slope: 0
+    velocity: 0.57807064
+    bendType: 1
+    signedBend: -0.3186233
+    bendStrength: 0.3186233
+    transportCapacity: 0.099859715
+    depositionPotential: 0.6298455
+    incomingGoldLoad: 0.05946896
+    depositedGold: 0.03270793
+    outgoingGoldLoad: 0.026761029
     gravelProbability: 0.41476703
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 40.86399, y: 42.954163, z: 816.66675}
+  - sampleIndex: 109
+    previousSampleIndex: 108
+    nextSampleIndex: 110
+    position: {x: 40.86399, y: 42.954163, z: 816.66675}
     tangent: {x: 0.17354998, y: 0, z: 0.9848251}
+    distanceDownstream: 1899.4836
     leftWidth: 35.42559
     rightWidth: 20.293976
     depth: 3
-    velocity: 1.847447
+    slope: 0
+    velocity: 0.58063644
+    bendType: 1
+    signedBend: -0.3312176
+    bendStrength: 0.3312176
+    transportCapacity: 0.100234024
+    depositionPotential: 0.6302221
+    incomingGoldLoad: 0.060171977
+    depositedGold: 0.03309459
+    outgoingGoldLoad: 0.027077388
     gravelProbability: 0.41763687
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 43.403625, y: 43.90941, z: 833.3334}
+  - sampleIndex: 110
+    previousSampleIndex: 109
+    nextSampleIndex: 111
+    position: {x: 43.403625, y: 43.90941, z: 833.3334}
     tangent: {x: 0.12740277, y: 0, z: 0.9918511}
+    distanceDownstream: 1916.3698
     leftWidth: 34.922222
     rightWidth: 19.8052
     depth: 3
-    velocity: 1.8614002
+    slope: 0
+    velocity: 0.5831887
+    bendType: 1
+    signedBend: -0.33713
+    bendStrength: 0.33713
+    transportCapacity: 0.10060635
+    depositionPotential: 0.6290442
+    incomingGoldLoad: 0.060475573
+    depositedGold: 0.033261567
+    outgoingGoldLoad: 0.027214006
     gravelProbability: 0.4174773
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 45.14563, y: 44.921455, z: 850}
+  - sampleIndex: 111
+    previousSampleIndex: 110
+    nextSampleIndex: 112
+    position: {x: 45.14563, y: 44.921455, z: 850}
     tangent: {x: 0.08061088, y: 0, z: 0.99674565}
+    distanceDownstream: 1933.1577
     leftWidth: 34.29165
     rightWidth: 19.47971
     depth: 3
-    velocity: 1.877058
+    slope: 0
+    velocity: 0.58564824
+    bendType: 1
+    signedBend: -0.33643982
+    bendStrength: 0.33643982
+    transportCapacity: 0.10096516
+    depositionPotential: 0.6263844
+    incomingGoldLoad: 0.060349904
+    depositedGold: 0.03319245
+    outgoingGoldLoad: 0.027157456
     gravelProbability: 0.41419876
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 46.099426, y: 46.021317, z: 866.6667}
+  - sampleIndex: 112
+    previousSampleIndex: 111
+    nextSampleIndex: 113
+    position: {x: 46.099426, y: 46.021317, z: 866.6667}
     tangent: {x: 0.034233596, y: 0, z: 0.99941385}
+    distanceDownstream: 1949.8878
     leftWidth: 33.567772
     rightWidth: 19.32714
     depth: 3
-    velocity: 1.8938015
+    slope: 0
+    velocity: 0.5879029
+    bendType: 1
+    signedBend: -0.32863125
+    bendStrength: 0.32863125
+    transportCapacity: 0.10129407
+    depositionPotential: 0.62225884
+    incomingGoldLoad: 0.059789218
+    depositedGold: 0.03288407
+    outgoingGoldLoad: 0.02690515
     gravelProbability: 0.40789703
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 46.28742, y: 47.23615, z: 883.3333}
+  - sampleIndex: 113
+    previousSampleIndex: 112
+    nextSampleIndex: 114
+    position: {x: 46.28742, y: 47.23615, z: 883.3333}
     tangent: {x: -0.010660373, y: 0, z: 0.99994314}
+    distanceDownstream: 1966.5997
     leftWidth: 32.79297
     rightWidth: 19.35381
     depth: 3
-    velocity: 1.9108051
+    slope: 0
+    velocity: 0.5898274
+    bendType: 1
+    signedBend: -0.31417695
+    bendStrength: 0.31417695
+    transportCapacity: 0.10157482
+    depositionPotential: 0.61689365
+    incomingGoldLoad: 0.058812123
+    depositedGold: 0.03234667
+    outgoingGoldLoad: 0.026465453
     gravelProbability: 0.39883718
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 45.74406, y: 48.555847, z: 900}
+  - sampleIndex: 114
+    previousSampleIndex: 113
+    nextSampleIndex: 115
+    position: {x: 45.74406, y: 48.555847, z: 900}
     tangent: {x: -0.053097136, y: 0, z: 0.99858934}
+    distanceDownstream: 1983.3274
     leftWidth: 32.01647
     rightWidth: 19.565722
     depth: 3
-    velocity: 1.9270132
+    slope: 0
+    velocity: 0.59127986
+    bendType: 1
+    signedBend: -0.29378378
+    bendStrength: 0.29378378
+    transportCapacity: 0.10178671
+    depositionPotential: 0.61059046
+    incomingGoldLoad: 0.057460837
+    depositedGold: 0.03160346
+    outgoingGoldLoad: 0.025857378
     gravelProbability: 0.3874423
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 44.515015, y: 49.920425, z: 916.6666}
+  - sampleIndex: 115
+    previousSampleIndex: 114
+    nextSampleIndex: 116
+    position: {x: 44.515015, y: 49.920425, z: 916.6666}
     tangent: {x: -0.09222742, y: 0, z: 0.9957379}
+    distanceDownstream: 2000.0948
     leftWidth: 31.287884
     rightWidth: 19.972752
     depth: 3
-    velocity: 1.9412225
+    slope: 0
+    velocity: 0.59210706
+    bendType: 1
+    signedBend: -0.2680828
+    bendStrength: 0.2680828
+    transportCapacity: 0.10190738
+    depositionPotential: 0.6036555
+    incomingGoldLoad: 0.05579392
+    depositedGold: 0.030686656
+    outgoingGoldLoad: 0.025107263
     gravelProbability: 0.37420678
     leftLandscape: 4
     rightLandscape: 2
-  - position: {x: 42.656662, y: 51.23121, z: 933.33325}
+  - sampleIndex: 116
+    previousSampleIndex: 115
+    nextSampleIndex: 117
+    position: {x: 42.656662, y: 51.23121, z: 933.33325}
     tangent: {x: -0.1273707, y: 0, z: 0.9918552}
+    distanceDownstream: 2016.9159
     leftWidth: 30.632658
     rightWidth: 20.600428
     depth: 3
-    velocity: 1.9525539
+    slope: 0
+    velocity: 0.5921779
+    bendType: 1
+    signedBend: -0.23833743
+    bendStrength: 0.23833743
+    transportCapacity: 0.10191772
+    depositionPotential: 0.59644973
+    incomingGoldLoad: 0.05385054
+    depositedGold: 0.029617798
+    outgoingGoldLoad: 0.024232741
     gravelProbability: 0.35929096
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 40.234447, y: 52.381584, z: 950.00006}
+  - sampleIndex: 117
+    previousSampleIndex: 116
+    nextSampleIndex: 118
+    position: {x: 40.234447, y: 52.381584, z: 950.00006}
     tangent: {x: -0.15800993, y: 0, z: 0.9874375}
+    distanceDownstream: 2033.797
     leftWidth: 30.005245
     rightWidth: 21.518948
     depth: 3
-    velocity: 1.9613539
+    slope: 0
+    velocity: 0.59142905
+    bendType: 1
+    signedBend: -0.20511469
+    bendStrength: 0.20511469
+    transportCapacity: 0.10180847
+    depositionPotential: 0.5890029
+    incomingGoldLoad: 0.051563375
+    depositedGold: 0.028359856
+    outgoingGoldLoad: 0.023203518
     gravelProbability: 0.34163293
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 37.32264, y: 53.2995, z: 966.6667}
+  - sampleIndex: 118
+    previousSampleIndex: 117
+    nextSampleIndex: 119
+    position: {x: 37.32264, y: 53.2995, z: 966.6667}
     tangent: {x: -0.1838071, y: 0, z: 0.9829623}
+    distanceDownstream: 2050.741
     leftWidth: 29.262909
     rightWidth: 22.854141
     depth: 3
-    velocity: 1.969698
+    slope: 0
+    velocity: 0.58990395
+    bendType: 1
+    signedBend: -0.16999836
+    bendStrength: 0.16999836
+    transportCapacity: 0.101585984
+    depositionPotential: 0.5812394
+    incomingGoldLoad: 0.04868684
+    depositedGold: 0.026777763
+    outgoingGoldLoad: 0.021909077
     gravelProbability: 0.31854153
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 34.00135, y: 53.98597, z: 983.3334}
+  - sampleIndex: 119
+    previousSampleIndex: 118
+    nextSampleIndex: 120
+    position: {x: 34.00135, y: 53.98597, z: 983.3334}
     tangent: {x: -0.2045642, y: 0, z: 0.97885317}
+    distanceDownstream: 2067.7493
     leftWidth: 28.246609
     rightWidth: 24.699986
     depth: 3
-    velocity: 1.9800298
+    slope: 0
+    velocity: 0.5877699
+    bendType: 1
+    signedBend: -0.13321179
+    bendStrength: 0.13321179
+    transportCapacity: 0.10127467
+    depositionPotential: 0.5727717
+    incomingGoldLoad: 0.044922575
+    depositedGold: 0.024427464
+    outgoingGoldLoad: 0.020495111
     gravelProbability: 0.2876687
     leftLandscape: 4
     rightLandscape: 4
-  - position: {x: 30.356525, y: 54.527634, z: 1000}
+  - sampleIndex: 120
+    previousSampleIndex: 119
+    nextSampleIndex: -1
+    position: {x: 30.356525, y: 54.527634, z: 1000}
     tangent: {x: -0.21364097, y: 0, z: 0.97691226}
+    distanceDownstream: 2084.8184
     leftWidth: 26.953098
     rightWidth: 26.953098
     depth: 3
-    velocity: 1.992508
+    slope: 0
+    velocity: 0.5853014
+    bendType: 0
+    signedBend: 0
+    bendStrength: 0
+    transportCapacity: 0.10091455
+    depositionPotential: 0.5464993
+    incomingGoldLoad: 0.040545665
+    depositedGold: 0.021040138
+    outgoingGoldLoad: 0.019505527
     gravelProbability: 0.25063196
     leftLandscape: 4
     rightLandscape: 4

@@ -16,8 +16,8 @@ MonoBehaviour:
   region: British Columbia
   historicalYear: 1858
   worldSeed: 5953A7E7DBC1
-  generationId: 0af653ffd7e8430186c1fda4c23ad7f0
-  generatedUtc: 2026-07-17T22:35:08.7287178Z
+  generationId: c823ab974004476ab3c564100dd77215
+  generatedUtc: 2026-07-18T02:30:33.7742156Z
   stage: 9
   generationSucceeded: 1
   validationSummary: 'PASS: Terrain generated.
@@ -25,7 +25,7 @@ MonoBehaviour:
     PASS: River has 121 samples.
 
     PASS:
-    Finite placer gold: 880.33 oz across 472 cells.
+    Finite placer gold: 884.39 oz across 505 cells.
 
     PASS: Quartz-vein hard
     rock: 62673.90 oz remaining from 63573.04 oz generated.
@@ -36,10 +36,10 @@ MonoBehaviour:
   riverData: {fileID: 11400000, guid: 575c629fc2d51634085c09a6c884a043, type: 2}
   geologyData: {fileID: 11400000, guid: 25945a3cf6ae69b48862aef7a227de55, type: 2}
   riverSampleCount: 121
-  placerDepositCellCount: 472
-  initialPlacerGoldOunces: 880.3295
-  remainingPlacerGoldOunces: 880.3295
-  generatedTreeCount: 510
+  placerDepositCellCount: 505
+  initialPlacerGoldOunces: 884.392
+  remainingPlacerGoldOunces: 884.392
+  generatedTreeCount: 1020
   watershedCount: 0
   mineralizedMountainCount: 1
   quartzVeinCount: 6
@@ -49,16 +49,16 @@ MonoBehaviour:
   - moduleName: Terrain, river, paint, forest and spawn
     completed: 1
     message: Generated the playable terrain and currently connected world modules.
-    durationMilliseconds: 25575.052600000003
+    durationMilliseconds: 26413.1558
   - moduleName: Geology and finite gold
     completed: 1
     message: Generated source geology and finite exhaustible placer inventory.
-    durationMilliseconds: 218.80280000000002
+    durationMilliseconds: 206.4076
   - moduleName: Scene wiring
     completed: 1
     message: Automatically connected RiverData, GeologyData, prospecting controllers
       and editor debug references.
-    durationMilliseconds: 1.0924
+    durationMilliseconds: 3.975
   - moduleName: Validation
     completed: 1
     message: 'PASS: Terrain generated.
@@ -66,11 +66,11 @@ MonoBehaviour:
       PASS: River has 121 samples.
 
       PASS:
-      Finite placer gold: 880.33 oz across 472 cells.
+      Finite placer gold: 884.39 oz across 505 cells.
 
       PASS: Quartz-vein hard
       rock: 62673.90 oz remaining from 63573.04 oz generated.
 
       PASS: Bill
       and Ted are present.'
-    durationMilliseconds: 0.40230000000000005
+    durationMilliseconds: 1.738
