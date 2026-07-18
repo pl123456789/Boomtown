@@ -6,6 +6,7 @@ namespace Boomtown.WorldGeneration.Editor
 {
     /// <summary>
     /// Generates a deterministic mixed forest for the Hope, British Columbia region.
+    /// Finished species prefabs are built before any forest instances are spawned.
     /// Each tree receives species, age, size, quality, and board-foot data.
     /// </summary>
     public static class BoomtownForestGenerator
@@ -65,11 +66,39 @@ namespace Boomtown.WorldGeneration.Editor
             terrain.terrainData.treePrototypes = Array.Empty<TreePrototype>();
 
             SpeciesProfile[] profiles = BuildSpeciesProfiles();
-            GameObject[] prefabs = new GameObject[profiles.Length];
 
+            // First create/update the materials and temporary prefab asset paths.
+            // No forest instances are created during this stage.
             for (int index = 0; index < profiles.Length; index++)
             {
-                prefabs[index] = RebuildSpeciesTree(profiles[index]);
+                CreateSpeciesMaterialsAndPlaceholder(profiles[index]);
+            }
+
+            // Replace every placeholder with its finished custom low-poly mesh now,
+            // before the forest generator loads or instantiates any prefab.
+            TreePrefabMeshOptimizer.OptimizeGeneratedTreePrefabs();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            GameObject[] prefabs = LoadFinishedSpeciesPrefabs(profiles);
+            for (int index = 0; index < prefabs.Length; index++)
+            {
+                if (prefabs[index] == null)
+                {
+                    Debug.LogError(
+                        $"[Boomtown Forest Generator] Finished prefab missing for " +
+                        $"{profiles[index].shortName}. Forest generation stopped.");
+                    return;
+                }
+
+                if (prefabs[index].transform.Find("Trunk") == null ||
+                    prefabs[index].transform.Find("Canopy") == null)
+                {
+                    Debug.LogError(
+                        $"[Boomtown Forest Generator] {profiles[index].shortName} " +
+                        "is not a finished two-part tree prefab.");
+                    return;
+                }
             }
 
             string forestName =
@@ -173,6 +202,14 @@ namespace Boomtown.WorldGeneration.Editor
                     (GameObject)PrefabUtility.InstantiatePrefab(
                         prefabs[speciesIndex]);
 
+                if (tree == null)
+                {
+                    Debug.LogError(
+                        $"[Boomtown Forest Generator] Could not instantiate " +
+                        $"{profile.shortName} prefab.");
+                    break;
+                }
+
                 tree.name =
                     $"Tree_{created:0000}_{profile.shortName}_Age_{measurements.ageYears}";
                 tree.transform.SetParent(forestRoot.transform);
@@ -199,7 +236,12 @@ namespace Boomtown.WorldGeneration.Editor
                     Mathf.Lerp(0f, 360f, (float)random.NextDouble()),
                     Mathf.Lerp(-1.5f, 1.5f, (float)random.NextDouble()));
 
-                TreeResource resource = tree.AddComponent<TreeResource>();
+                TreeResource resource = tree.GetComponent<TreeResource>();
+                if (resource == null)
+                {
+                    resource = tree.AddComponent<TreeResource>();
+                }
+
                 resource.species = profile.species;
                 resource.ageYears = measurements.ageYears;
                 resource.heightMetres = measurements.heightMetres;
@@ -232,10 +274,26 @@ namespace Boomtown.WorldGeneration.Editor
             }
 
             Debug.Log(
-                $"[Boomtown Forest Generator] Created {created} mixed regional " +
-                $"trees using seed {mapDefinition.worldSeed}. " +
+                $"[Boomtown Forest Generator] Created {created} finished regional " +
+                $"tree instances using seed {mapDefinition.worldSeed}. " +
                 $"Estimated standing lumber: {totalBoardFeet:N0} board feet. " +
                 speciesSummary + ".");
+        }
+
+        private static GameObject[] LoadFinishedSpeciesPrefabs(
+            SpeciesProfile[] profiles)
+        {
+            GameObject[] prefabs = new GameObject[profiles.Length];
+
+            for (int index = 0; index < profiles.Length; index++)
+            {
+                string prefabPath =
+                    $"{GeneratedFolder}/BT_{profiles[index].shortName}.prefab";
+                prefabs[index] =
+                    AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+            }
+
+            return prefabs;
         }
 
         private static SpeciesProfile[] BuildSpeciesProfiles()
@@ -329,10 +387,10 @@ namespace Boomtown.WorldGeneration.Editor
             for (int index = 0; index < profiles.Length; index++)
             {
                 SpeciesProfile profile = profiles[index];
-                float wetMatch = 1f - Mathf.Abs(
-                    wetness - profile.wetSitePreference);
-                float elevationMatch = 1f - Mathf.Abs(
-                    elevation - profile.highSitePreference);
+                float wetMatch =
+                    1f - Mathf.Abs(wetness - profile.wetSitePreference);
+                float elevationMatch =
+                    1f - Mathf.Abs(elevation - profile.highSitePreference);
 
                 float weight = Mathf.Max(
                     0.04f,
@@ -462,7 +520,7 @@ namespace Boomtown.WorldGeneration.Editor
             return Mathf.Max(0f, boardFeet * timberQuality);
         }
 
-        private static GameObject RebuildSpeciesTree(
+        private static void CreateSpeciesMaterialsAndPlaceholder(
             SpeciesProfile profile)
         {
             string prefabPath =
@@ -472,8 +530,6 @@ namespace Boomtown.WorldGeneration.Editor
             string trunkPath =
                 $"{GeneratedFolder}/BT_{profile.shortName}_Trunk.mat";
 
-            AssetDatabase.DeleteAsset(prefabPath);
-
             Material foliageMaterial = GetOrCreateMaterial(
                 foliagePath,
                 profile.foliageColour);
@@ -481,83 +537,17 @@ namespace Boomtown.WorldGeneration.Editor
                 trunkPath,
                 profile.trunkColour);
 
-            GameObject tree = new GameObject($"BT_{profile.shortName}");
+            GameObject root = new GameObject($"BT_{profile.shortName}");
+            GameObject trunk = new GameObject("Trunk");
+            trunk.transform.SetParent(root.transform, false);
+            trunk.AddComponent<MeshRenderer>().sharedMaterial = trunkMaterial;
 
-            float trunkRadius = profile.species == TreeSpecies.WesternRedCedar
-                ? 0.42f
-                : 0.32f;
+            GameObject canopy = new GameObject("Canopy");
+            canopy.transform.SetParent(root.transform, false);
+            canopy.AddComponent<MeshRenderer>().sharedMaterial = foliageMaterial;
 
-            GameObject trunk =
-                GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            trunk.name = "Trunk";
-            trunk.transform.SetParent(tree.transform, false);
-            trunk.transform.localPosition = new Vector3(0f, 2.75f, 0f);
-            trunk.transform.localScale = new Vector3(
-                trunkRadius,
-                2.75f,
-                trunkRadius);
-            trunk.GetComponent<MeshRenderer>().sharedMaterial = trunkMaterial;
-            UnityEngine.Object.DestroyImmediate(trunk.GetComponent<Collider>());
-
-            int layerCount = profile.species == TreeSpecies.WesternRedCedar
-                ? 6
-                : 5;
-
-            for (int layer = 0; layer < layerCount; layer++)
-            {
-                float t = layer / (float)Mathf.Max(1, layerCount - 1);
-                float y = Mathf.Lerp(2.8f, 7.15f, t);
-                float radius = Mathf.Lerp(2.35f, 0.48f, t);
-                float vertical = Mathf.Lerp(0.78f, 0.46f, t);
-
-                if (profile.species == TreeSpecies.LodgepolePine)
-                {
-                    radius *= 0.72f;
-                    y += 0.20f * layer;
-                }
-                else if (profile.species == TreeSpecies.WesternRedCedar)
-                {
-                    radius *= 1.10f;
-                    vertical *= 0.82f;
-                }
-                else if (profile.species == TreeSpecies.WesternHemlock)
-                {
-                    radius *= 0.88f;
-                }
-
-                CreateCanopyLayer(
-                    tree.transform,
-                    $"Canopy_{layer}",
-                    new Vector3(0f, y, 0f),
-                    new Vector3(radius, vertical, radius),
-                    foliageMaterial,
-                    layer * 17f);
-            }
-
-            GameObject savedPrefab = PrefabUtility.SaveAsPrefabAsset(
-                tree,
-                prefabPath);
-            UnityEngine.Object.DestroyImmediate(tree);
-            return savedPrefab;
-        }
-
-        private static void CreateCanopyLayer(
-            Transform parent,
-            string objectName,
-            Vector3 localPosition,
-            Vector3 localScale,
-            Material foliageMaterial,
-            float rotation)
-        {
-            GameObject layer =
-                GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            layer.name = objectName;
-            layer.transform.SetParent(parent, false);
-            layer.transform.localPosition = localPosition;
-            layer.transform.localScale = localScale;
-            layer.transform.localRotation = Quaternion.Euler(0f, rotation, 0f);
-            layer.GetComponent<MeshRenderer>().sharedMaterial = foliageMaterial;
-            UnityEngine.Object.DestroyImmediate(layer.GetComponent<Collider>());
+            PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
+            UnityEngine.Object.DestroyImmediate(root);
         }
 
         private static Material GetOrCreateMaterial(
@@ -582,6 +572,7 @@ namespace Boomtown.WorldGeneration.Editor
             }
 
             material.color = colour;
+            material.enableInstancing = true;
             material.SetFloat("_Smoothness", 0.08f);
             EditorUtility.SetDirty(material);
             return material;
