@@ -6,9 +6,7 @@ namespace Boomtown.WorldGeneration.Editor
 {
     /// <summary>
     /// Generates a deterministic lightweight forest as ordinary prefab instances.
-    ///
-    /// Normal prefab instances remain easy to inspect and can later be replaced
-    /// by a production vegetation system without changing forest placement.
+    /// Each generated tree receives age, size, timber quality, and board-foot data.
     /// </summary>
     public static class BoomtownForestGenerator
     {
@@ -25,6 +23,7 @@ namespace Boomtown.WorldGeneration.Editor
             GeneratedFolder + "/BT_TreeTrunk.mat";
 
         private const int MaximumTreeCount = 600;
+        private const float PrototypeHeightMetres = 8f;
 
         public static void Generate(
             Terrain terrain,
@@ -78,6 +77,7 @@ namespace Boomtown.WorldGeneration.Editor
             int created = 0;
             int attempts = 0;
             int maximumAttempts = requestedTreeCount * 20;
+            float totalBoardFeet = 0f;
 
             while (created < requestedTreeCount &&
                    attempts < maximumAttempts)
@@ -123,28 +123,35 @@ namespace Boomtown.WorldGeneration.Editor
                         new Vector3(worldX, 0f, worldZ)) +
                     terrainPosition.y;
 
+                TreeMeasurements measurements =
+                    GenerateTreeMeasurements(random, slope, patchNoise);
+
                 GameObject tree =
                     (GameObject)PrefabUtility.InstantiatePrefab(treePrefab);
 
+                tree.name = $"Tree_{created:000}_Age_{measurements.ageYears}";
                 tree.transform.SetParent(forestRoot.transform);
                 tree.transform.position =
                     new Vector3(worldX, worldY, worldZ);
 
-                float heightScale = Mathf.Lerp(
-                    0.72f,
-                    1.48f,
-                    (float)random.NextDouble());
+                float heightScale =
+                    measurements.heightMetres / PrototypeHeightMetres;
 
-                float widthScale = Mathf.Lerp(
-                    0.82f,
-                    1.18f,
-                    (float)random.NextDouble());
+                float diameterFactor = Mathf.InverseLerp(
+                    8f,
+                    85f,
+                    measurements.diameterCentimetres);
+
+                float crownWidthMultiplier = Mathf.Lerp(
+                    0.72f,
+                    1.28f,
+                    diameterFactor);
 
                 tree.transform.localScale =
                     new Vector3(
-                        heightScale * widthScale,
+                        heightScale * crownWidthMultiplier,
                         heightScale,
-                        heightScale * widthScale);
+                        heightScale * crownWidthMultiplier);
 
                 tree.transform.rotation = Quaternion.Euler(
                     0f,
@@ -154,6 +161,19 @@ namespace Boomtown.WorldGeneration.Editor
                         (float)random.NextDouble()),
                     0f);
 
+                TreeResource resource =
+                    tree.AddComponent<TreeResource>();
+
+                resource.ageYears = measurements.ageYears;
+                resource.heightMetres = measurements.heightMetres;
+                resource.diameterCentimetres =
+                    measurements.diameterCentimetres;
+                resource.merchantableLengthMetres =
+                    measurements.merchantableLengthMetres;
+                resource.boardFeet = measurements.boardFeet;
+                resource.timberQuality = measurements.timberQuality;
+
+                totalBoardFeet += measurements.boardFeet;
                 created++;
             }
 
@@ -163,8 +183,127 @@ namespace Boomtown.WorldGeneration.Editor
             AssetDatabase.SaveAssets();
 
             Debug.Log(
-                $"[Boomtown Forest Generator] Created {created} layered " +
-                $"conifer GameObjects using seed {mapDefinition.worldSeed}.");
+                $"[Boomtown Forest Generator] Created {created} age-varied " +
+                $"conifers using seed {mapDefinition.worldSeed}. " +
+                $"Estimated standing lumber: {totalBoardFeet:N0} board feet.");
+        }
+
+        private static TreeMeasurements GenerateTreeMeasurements(
+            System.Random random,
+            float slopeDegrees,
+            float patchNoise)
+        {
+            float ageRoll = (float)random.NextDouble();
+            float weightedAge = Mathf.Pow(ageRoll, 1.65f);
+            int ageYears = Mathf.RoundToInt(
+                Mathf.Lerp(12f, 165f, weightedAge));
+
+            float ageFactor = Mathf.InverseLerp(
+                12f,
+                165f,
+                ageYears);
+
+            float siteQuality = Mathf.Clamp01(
+                patchNoise * 0.72f +
+                (1f - Mathf.InverseLerp(0f, 38f, slopeDegrees)) * 0.28f);
+
+            float growthVariation = Mathf.Lerp(
+                0.88f,
+                1.12f,
+                (float)random.NextDouble());
+
+            float heightMetres = Mathf.Lerp(
+                3.5f,
+                28f,
+                Mathf.Pow(ageFactor, 0.72f));
+
+            heightMetres *= Mathf.Lerp(0.84f, 1.08f, siteQuality);
+            heightMetres *= growthVariation;
+
+            float diameterCentimetres = Mathf.Lerp(
+                8f,
+                85f,
+                Mathf.Pow(ageFactor, 0.86f));
+
+            diameterCentimetres *= Mathf.Lerp(0.82f, 1.12f, siteQuality);
+            diameterCentimetres *= Mathf.Lerp(
+                0.9f,
+                1.1f,
+                (float)random.NextDouble());
+
+            float timberQuality = Mathf.Lerp(
+                0.62f,
+                0.98f,
+                (float)random.NextDouble());
+
+            timberQuality *= Mathf.Lerp(
+                0.88f,
+                1f,
+                1f - Mathf.InverseLerp(20f, 38f, slopeDegrees));
+            timberQuality = Mathf.Clamp01(timberQuality);
+
+            float merchantableLengthMetres =
+                heightMetres * Mathf.Lerp(0.55f, 0.72f, timberQuality);
+
+            float boardFeet = EstimateBoardFeet(
+                diameterCentimetres,
+                merchantableLengthMetres,
+                timberQuality);
+
+            return new TreeMeasurements
+            {
+                ageYears = ageYears,
+                heightMetres = heightMetres,
+                diameterCentimetres = diameterCentimetres,
+                merchantableLengthMetres = merchantableLengthMetres,
+                timberQuality = timberQuality,
+                boardFeet = boardFeet
+            };
+        }
+
+        private static float EstimateBoardFeet(
+            float diameterCentimetres,
+            float merchantableLengthMetres,
+            float timberQuality)
+        {
+            const float centimetresToInches = 0.393701f;
+            const float metresToFeet = 3.28084f;
+            const float logLengthFeet = 16f;
+
+            float diameterInches =
+                diameterCentimetres * centimetresToInches;
+            float merchantableFeet =
+                merchantableLengthMetres * metresToFeet;
+
+            int fullLogs = Mathf.Max(
+                0,
+                Mathf.FloorToInt(merchantableFeet / logLengthFeet));
+
+            float boardFeet = 0f;
+
+            for (int logIndex = 0;
+                 logIndex < fullLogs;
+                 logIndex++)
+            {
+                float taperMultiplier = Mathf.Max(
+                    0.55f,
+                    1f - logIndex * 0.085f);
+
+                float logDiameter =
+                    diameterInches * taperMultiplier;
+
+                float usableDiameter = Mathf.Max(
+                    0f,
+                    logDiameter - 4f);
+
+                boardFeet +=
+                    usableDiameter * usableDiameter *
+                    logLengthFeet / 16f;
+            }
+
+            return Mathf.Max(
+                0f,
+                boardFeet * timberQuality);
         }
 
         private static GameObject RebuildPrototypeTree()
@@ -174,7 +313,6 @@ namespace Boomtown.WorldGeneration.Editor
             Material foliageMaterial = GetOrCreateMaterial(
                 FoliageMaterialPath,
                 new Color32(48, 82, 45, 255));
-
             Material trunkMaterial = GetOrCreateMaterial(
                 TrunkMaterialPath,
                 new Color32(92, 63, 40, 255));
@@ -320,6 +458,16 @@ namespace Boomtown.WorldGeneration.Editor
             {
                 AssetDatabase.CreateFolder(root, "Generated");
             }
+        }
+
+        private struct TreeMeasurements
+        {
+            public int ageYears;
+            public float heightMetres;
+            public float diameterCentimetres;
+            public float merchantableLengthMetres;
+            public float timberQuality;
+            public float boardFeet;
         }
     }
 }
