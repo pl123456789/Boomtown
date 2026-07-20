@@ -233,6 +233,34 @@ public sealed class ClaimManager : MonoBehaviour
         OnClaimStatusChanged?.Invoke(claim);
     }
 
+    /// <summary>
+    /// Finds a claim this identity staked but hasn't registered yet, for
+    /// the Gold Commissioner's Office to look up when the player walks in
+    /// wanting to pay for and finalize whatever they just staked.
+    /// </summary>
+    public ClaimData FindUnregisteredClaimOwnedBy(
+        MinerIdentity owner)
+    {
+        if (owner == null)
+        {
+            return null;
+        }
+
+        for (int i = 0; i < _claims.Count; i++)
+        {
+            ClaimData claim = _claims[i];
+
+            if (claim != null &&
+                claim.State == ClaimState.Unregistered &&
+                claim.Owner == owner)
+            {
+                return claim;
+            }
+        }
+
+        return null;
+    }
+
     public ClaimData FindClaimContaining(
         Vector3 worldPosition)
     {
