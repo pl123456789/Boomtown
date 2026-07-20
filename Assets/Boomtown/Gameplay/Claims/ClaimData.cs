@@ -34,6 +34,7 @@ public sealed class ClaimData : MonoBehaviour
 
     private float _dateStakedTime;
     private float _lastRepresentedTime;
+    private LineRenderer _boundaryLine;
 
     public Guid ClaimId => _claimId;
     public string ClaimName => _claimName;
@@ -65,6 +66,9 @@ public sealed class ClaimData : MonoBehaviour
         _dateStakedTime = Time.time;
         _lastRepresentedTime = Time.time;
         _state = ClaimState.Unregistered;
+
+        EnsureBoundaryLine();
+        RefreshBoundaryVisual();
     }
 
     public void MarkRegistered(
@@ -73,12 +77,14 @@ public sealed class ClaimData : MonoBehaviour
         _feePaid = feePaid;
         _state = ClaimState.Active;
         _lastRepresentedTime = Time.time;
+        RefreshBoundaryVisual();
     }
 
     public void SetState(
         ClaimState state)
     {
         _state = state;
+        RefreshBoundaryVisual();
     }
 
     public void SetOwner(
@@ -156,5 +162,60 @@ public sealed class ClaimData : MonoBehaviour
         }
 
         return inside;
+    }
+
+    private void EnsureBoundaryLine()
+    {
+        if (_boundaryLine != null)
+        {
+            return;
+        }
+
+        _boundaryLine = gameObject.AddComponent<LineRenderer>();
+        _boundaryLine.useWorldSpace = true;
+        _boundaryLine.loop = true;
+        _boundaryLine.widthMultiplier = 0.18f;
+        _boundaryLine.positionCount = _cornerPosts.Length;
+
+        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+        if (shader == null)
+        {
+            shader = Shader.Find("Sprites/Default");
+        }
+
+        _boundaryLine.material = new Material(shader);
+
+        for (int i = 0; i < _cornerPosts.Length; i++)
+        {
+            Vector3 point = _cornerPosts[i];
+            point.y += 0.15f;
+            _boundaryLine.SetPosition(i, point);
+        }
+    }
+
+    /// <summary>
+    /// Colour-codes the boundary line to the claim's current state so its
+    /// standing is readable at a glance while walking around, not just
+    /// from the (not-yet-built) claim widget.
+    /// </summary>
+    private void RefreshBoundaryVisual()
+    {
+        if (_boundaryLine == null)
+        {
+            return;
+        }
+
+        Color colour = _state switch
+        {
+            ClaimState.Unregistered => new Color(0.85f, 0.85f, 0.85f),
+            ClaimState.Active => new Color(0.3f, 0.85f, 0.3f),
+            ClaimState.RepresentationOverdue => new Color(0.95f, 0.8f, 0.15f),
+            ClaimState.AtRisk => new Color(0.95f, 0.45f, 0.1f),
+            ClaimState.Forfeited => new Color(0.6f, 0.15f, 0.15f),
+            _ => Color.white
+        };
+
+        _boundaryLine.startColor = colour;
+        _boundaryLine.endColor = colour;
     }
 }

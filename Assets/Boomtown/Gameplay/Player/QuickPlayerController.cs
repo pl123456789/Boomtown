@@ -17,6 +17,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerNeedsMenu))]
 [RequireComponent(typeof(MinerIdentity))]
 [RequireComponent(typeof(FreeMinerCertificate))]
+[RequireComponent(typeof(ClaimStakingController))]
 public sealed class QuickPlayerController : MonoBehaviour
 {
     [Header("Identity")]
