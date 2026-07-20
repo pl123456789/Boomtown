@@ -11,6 +11,14 @@ namespace Boomtown.WorldGeneration
         private const float MinimumHeightGain = 2.5f;
         private const float CompanionSpacing = 2.2f;
 
+        // A blind procedural search (TryFindSafePoint) has never had eyes
+        // on the result, so it earns a generous 24m margin. A position the
+        // scene already placed a character at -- like Hope's hand-authored
+        // town square -- has already been screenshot-verified as dry, flat
+        // ground, so it only needs to clear a smaller sanity-check margin,
+        // not be re-litigated against the same conservative bar.
+        private const float ExistingPlacementRiverClearance = 12f;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void PlaceStartingCharactersOnSafeGround()
         {
@@ -23,11 +31,25 @@ namespace Boomtown.WorldGeneration
                 return;
             }
 
+            List<Vector3> riverPoints = CollectRiverMeshPoints();
+
+            // Hand-authored maps (Hope, and later Yale) already place Bill
+            // and Ted at a deliberate spawn point -- the town square, not
+            // wherever a generic heuristic thinks is "safest." Only search
+            // for an alternate spot if the scene's own placement actually
+            // fails the same safety bar a procedurally generated map would
+            // need to pass. This keeps the bootstrap a safety net for
+            // future procedural maps instead of an override that fights
+            // curated ones.
+            if (IsPositionSafe(terrain, bill.transform.position, riverPoints))
+            {
+                return;
+            }
+
             Vector3 originalCentre = ted == null
                 ? bill.transform.position
                 : Vector3.Lerp(bill.transform.position, ted.transform.position, 0.5f);
 
-            List<Vector3> riverPoints = CollectRiverMeshPoints();
             Vector3 safePoint;
 
             if (!TryFindSafePoint(terrain, originalCentre, riverPoints, out safePoint))
@@ -50,6 +72,29 @@ namespace Boomtown.WorldGeneration
 
             Debug.Log(
                 $"[World Generation] Starting characters moved to safe ground at {safePoint}.");
+        }
+
+        /// <summary>
+        /// Same bar a candidate point has to clear in TryFindSafePoint
+        /// (in bounds, gentle enough slope, clear of the river), checked
+        /// against wherever a character already is instead of searching
+        /// outward from it.
+        /// </summary>
+        private static bool IsPositionSafe(
+            Terrain terrain,
+            Vector3 position,
+            IReadOnlyList<Vector3> riverPoints)
+        {
+            if (!IsInsideTerrain(terrain, position))
+            {
+                return false;
+            }
+
+            float slope = SampleSlope(terrain, position);
+            float riverDistance = DistanceToRiver(position, riverPoints);
+
+            return slope <= MaximumSlope &&
+                   riverDistance >= ExistingPlacementRiverClearance;
         }
 
         private static bool TryFindSafePoint(
