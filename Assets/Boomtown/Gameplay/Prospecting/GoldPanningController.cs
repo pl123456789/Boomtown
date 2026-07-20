@@ -17,6 +17,7 @@ namespace Boomtown.Gameplay.Prospecting
         {
             Hidden,
             Prompt,
+            Blocked,
             Progress,
             Result
         }
@@ -44,6 +45,8 @@ namespace Boomtown.Gameplay.Prospecting
         private NavMeshAgent agent;
         private ProspectingLocationSensor sensor;
         private GoldInventory inventory;
+        private MinerIdentity identity;
+        private ClaimManager claimManager;
         private readonly List<Behaviour> disabledMovementBehaviours = new();
 
         private bool isPanning;
@@ -52,6 +55,7 @@ namespace Boomtown.Gameplay.Prospecting
         private PanningUiState uiState;
         private float currentProgress;
         private string currentResult;
+        private string blockedReason;
 
         public bool IsPanning => isPanning;
         public bool IsPlayerUiActive => playerUiActive;
@@ -89,6 +93,8 @@ namespace Boomtown.Gameplay.Prospecting
             agent = GetComponent<NavMeshAgent>();
             sensor = GetComponent<ProspectingLocationSensor>();
             inventory = GetComponent<GoldInventory>();
+            identity = GetComponent<MinerIdentity>();
+            claimManager = FindObjectOfType<ClaimManager>();
             uiState = PanningUiState.Hidden;
         }
 
@@ -164,6 +170,11 @@ namespace Boomtown.Gameplay.Prospecting
                 return false;
             }
 
+            if (GetBlockedReason(EvaluateAccess()) != null)
+            {
+                return false;
+            }
+
             queuedCompletion = onCompleted;
             StartCoroutine(PanRoutine());
             return true;
@@ -224,6 +235,13 @@ namespace Boomtown.Gameplay.Prospecting
                 outcome.GoldOunces);
 
             inventory.AddGold(extraction.extractedOunces);
+
+            // Safe to call unconditionally -- ClaimManager no-ops if this
+            // spot isn't inside a claim this identity owns or works. This
+            // is what resets a claim's 72-hour "represent it or lose it"
+            // clock every time it's actually worked.
+            claimManager?.RecordRepresentation(sensor.SamplePoint, identity);
+
             currentResult = BuildResultText(
                 outcome,
                 inventory.TotalGoldOunces);
@@ -262,11 +280,58 @@ namespace Boomtown.Gameplay.Prospecting
             }
 
             sensor?.Refresh();
-            uiState = geologyData != null && sensor != null && sensor.CanPanHere
-                ? PanningUiState.Prompt
-                : PanningUiState.Hidden;
+
+            if (geologyData != null && sensor != null && sensor.CanPanHere)
+            {
+                blockedReason = GetBlockedReason(EvaluateAccess());
+                uiState = blockedReason != null
+                    ? PanningUiState.Blocked
+                    : PanningUiState.Prompt;
+            }
+            else
+            {
+                uiState = PanningUiState.Hidden;
+            }
 
             RefreshPlayerUI();
+        }
+
+        /// <summary>
+        /// The single claim-access gate every pan attempt (queued or
+        /// key-pressed) goes through. Fails open to Unclaimed if the claim
+        /// system isn't wired up on this character or in this scene, so
+        /// panning never silently breaks for characters without an
+        /// identity (e.g. future NPCs that aren't part of the claim
+        /// economy).
+        /// </summary>
+        private AccessResult EvaluateAccess()
+        {
+            if (claimManager == null || identity == null || sensor == null)
+            {
+                return AccessResult.Unclaimed;
+            }
+
+            return claimManager.CheckAccess(sensor.SamplePoint, identity);
+        }
+
+        /// <summary>
+        /// Null means the access result allows panning. Unclaimed, Owner,
+        /// AuthorizedWorker, and Forfeited are all treated as pannable --
+        /// Forfeited ground reverts to free-for-all the same as it never
+        /// having been claimed.
+        /// </summary>
+        private static string GetBlockedReason(AccessResult access)
+        {
+            switch (access)
+            {
+                case AccessResult.OthersClaim:
+                    return "This ground is already claimed by someone else.";
+                case AccessResult.CertificateExpired:
+                    return "Your Free Miner's Certificate has expired -- " +
+                           "visit the Gold Commissioner's Office.";
+                default:
+                    return null;
+            }
         }
 
         private void RefreshPlayerUI()
@@ -280,6 +345,9 @@ namespace Boomtown.Gameplay.Prospecting
             {
                 case PanningUiState.Prompt:
                     ui.ShowPrompt($"Press {panKey} to Pan for Gold");
+                    break;
+                case PanningUiState.Blocked:
+                    ui.ShowPrompt(blockedReason);
                     break;
                 case PanningUiState.Progress:
                     ui.BeginProgress(currentProgress);
