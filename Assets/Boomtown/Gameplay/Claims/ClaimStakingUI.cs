@@ -74,6 +74,16 @@ public sealed class ClaimStakingUI : MonoBehaviour
         _promptVisible = true;
     }
 
+    /// <summary>
+    /// Hides just the ambient prompt without touching a transient message
+    /// that might be mid-fade -- used when another interaction (a trade
+    /// panel, panning) currently has the player's attention instead.
+    /// </summary>
+    public void HidePrompt()
+    {
+        _promptVisible = false;
+    }
+
     public void ShowMessage(
         string message)
     {

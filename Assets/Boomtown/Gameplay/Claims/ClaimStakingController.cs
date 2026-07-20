@@ -40,6 +40,8 @@ public sealed class ClaimStakingController : MonoBehaviour
 
     private MinerIdentity _identity;
     private ClaimManager _claimManager;
+    private PlayerInteractionFocus _focus;
+    private Boomtown.Gameplay.Prospecting.GoldPanningController _panningController;
 
     private bool _isStaking;
     private Vector3? _firstPost;
@@ -48,11 +50,26 @@ public sealed class ClaimStakingController : MonoBehaviour
     private void Awake()
     {
         _identity = GetComponent<MinerIdentity>();
+        _focus = GetComponent<PlayerInteractionFocus>();
+        _panningController = GetComponent<Boomtown.Gameplay.Prospecting.GoldPanningController>();
 
         if (_ui == null)
         {
             _ui = FindObjectOfType<ClaimStakingUI>();
         }
+    }
+
+    /// <summary>
+    /// True while the player is engaged with something else that already
+    /// owns the ambient world-prompt slot -- a trade panel, or actively
+    /// panning (including the result-display window right after). The
+    /// staking prompt has no location gating of its own, so without this
+    /// it renders on top of whatever the player's actually looking at.
+    /// </summary>
+    private bool IsSuppressedByOtherInteraction()
+    {
+        return (_focus != null && _focus.IsEngaged) ||
+               (_panningController != null && _panningController.IsPanning);
     }
 
     private void Update()
@@ -81,6 +98,11 @@ public sealed class ClaimStakingController : MonoBehaviour
     {
         if (!_isStaking)
         {
+            if (IsSuppressedByOtherInteraction())
+            {
+                return;
+            }
+
             BeginStaking();
             return;
         }
@@ -282,6 +304,12 @@ public sealed class ClaimStakingController : MonoBehaviour
 
         if (!_isStaking)
         {
+            if (IsSuppressedByOtherInteraction())
+            {
+                _ui.HidePrompt();
+                return;
+            }
+
             _ui.ShowPrompt($"[{_stakeKey}] Stake a Claim");
             return;
         }

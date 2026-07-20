@@ -41,6 +41,7 @@ public sealed class GoldCommissionerOfficeController : MonoBehaviour
     private GoldInventory _customerGold;
     private MinerIdentity _customerIdentity;
     private FreeMinerCertificate _customerCertificate;
+    private PlayerInteractionFocus _customerFocus;
     private string _customerName;
     private bool _panelOpen;
 
@@ -73,6 +74,8 @@ public sealed class GoldCommissionerOfficeController : MonoBehaviour
         _customerGold = gold;
         _customerIdentity = identity;
         _customerCertificate = certificate;
+        _customerFocus = other.GetComponentInParent<PlayerInteractionFocus>();
+        _customerFocus?.BeginEngagement();
         _customerName = other.transform.root.name;
         _panelOpen = false;
         RefreshUi();
@@ -91,6 +94,10 @@ public sealed class GoldCommissionerOfficeController : MonoBehaviour
         _customerGold = null;
         _customerIdentity = null;
         _customerCertificate = null;
+
+        _customerFocus?.EndEngagement();
+        _customerFocus = null;
+
         _panelOpen = false;
 
         if (_ui != null)

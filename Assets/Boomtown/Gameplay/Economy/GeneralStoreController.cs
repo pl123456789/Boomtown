@@ -37,6 +37,7 @@ public sealed class GeneralStoreController : MonoBehaviour
 
     private GoldInventory _customerGold;
     private GrubInventory _customerGrub;
+    private PlayerInteractionFocus _customerFocus;
     private string _customerName;
     private bool _panelOpen;
 
@@ -64,6 +65,8 @@ public sealed class GeneralStoreController : MonoBehaviour
 
         _customerGold = gold;
         _customerGrub = grub;
+        _customerFocus = other.GetComponentInParent<PlayerInteractionFocus>();
+        _customerFocus?.BeginEngagement();
         _customerName = other.transform.root.name;
         _panelOpen = false;
         RefreshUi();
@@ -82,6 +85,9 @@ public sealed class GeneralStoreController : MonoBehaviour
         _customerGold = null;
         _customerGrub = null;
         _panelOpen = false;
+
+        _customerFocus?.EndEngagement();
+        _customerFocus = null;
 
         if (_ui != null)
         {

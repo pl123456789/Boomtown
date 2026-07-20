@@ -12,6 +12,7 @@ using UnityEngine;
 [RequireComponent(typeof(GrubInventory))]
 [RequireComponent(typeof(MinerIdentity))]
 [RequireComponent(typeof(FreeMinerCertificate))]
+[RequireComponent(typeof(PlayerInteractionFocus))]
 public sealed class Employee : MonoBehaviour
 {
     [Header("Identity")]
