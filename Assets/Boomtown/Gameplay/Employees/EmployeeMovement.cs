@@ -21,14 +21,21 @@ public sealed class EmployeeMovement : MonoBehaviour
     private WaypointPath _waypointPath;
     private GoldPanningController _goldPanningController;
     private NavMeshAgent _navMeshAgent;
+    private WaypointActivityRunner _activityRunner;
     private float _currentSpeed;
-    private bool _waitingForActivity;
 
     private void Awake()
     {
         _waypointPath = GetComponent<WaypointPath>();
         _goldPanningController = GetComponent<GoldPanningController>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
+
+        _activityRunner = new WaypointActivityRunner(
+            _waypointPath,
+            _goldPanningController,
+            name,
+            _stoppingDistance,
+            _activityStoppingDistance);
 
         if (_navMeshAgent != null)
         {
@@ -46,42 +53,35 @@ public sealed class EmployeeMovement : MonoBehaviour
 
     private void Update()
     {
-        if (_waitingForActivity)
+        if (_activityRunner.IsWaitingForActivity)
         {
             StopAndFollowTerrain();
             SyncNavMeshAgent();
             return;
         }
 
-        if (!_waypointPath.TryGetCurrentCommand(out WaypointCommand command))
+        bool isMoving = _activityRunner.TryGetMoveDirection(
+            transform.position,
+            out Vector3 direction,
+            out float distance,
+            out bool hasQueuedCommand);
+
+        if (!hasQueuedCommand)
         {
             StopAndFollowTerrain();
             SyncNavMeshAgent();
             return;
         }
 
-        Vector3 offset = command.Position - transform.position;
-        offset.y = 0f;
-
-        float distance = offset.magnitude;
-        float stoppingDistance = command.IsActivity
-            ? _activityStoppingDistance
-            : _stoppingDistance;
-
-        if (distance <= stoppingDistance)
+        if (!isMoving)
         {
-            if (command.IsActivity)
-                StartCurrentActivity(command);
-            else
-                _waypointPath.CompleteCurrent();
-
             _currentSpeed = 0f;
             FollowTerrain();
             SyncNavMeshAgent();
             return;
         }
 
-        MoveToward(offset / distance, distance);
+        MoveToward(direction, distance);
         SyncNavMeshAgent();
     }
 
@@ -93,55 +93,14 @@ public sealed class EmployeeMovement : MonoBehaviour
             _waypointPath.AddWaypoint(grounded);
         else
         {
-            _waitingForActivity = false;
+            _activityRunner.CancelWaiting();
             _waypointPath.SetWaypoint(grounded);
         }
     }
 
     public bool MarkLastWaypointAsPanning()
     {
-        if (!_waypointPath.TryGetLastCommand(out WaypointCommand lastCommand))
-        {
-            Debug.Log($"[Boomtown] Queue a waypoint for {name} before pressing Shift + Space.", this);
-            return false;
-        }
-
-        if (_goldPanningController == null ||
-            !_goldPanningController.CanPanAt(lastCommand.Position))
-        {
-            Debug.Log($"[Boomtown] {name}'s final waypoint is not a valid gold-panning location.", this);
-            return false;
-        }
-
-        return _waypointPath.MarkLastCommandAsActivity(WaypointCommandType.PanForGold);
-    }
-
-    private void StartCurrentActivity(WaypointCommand command)
-    {
-        if (_waitingForActivity)
-            return;
-
-        _waitingForActivity = true;
-        _currentSpeed = 0f;
-        bool started = false;
-
-        if (command.CommandType == WaypointCommandType.PanForGold &&
-            _goldPanningController != null)
-        {
-            started = _goldPanningController.TryStartPanning(CompleteCurrentActivity);
-        }
-
-        if (!started)
-        {
-            Debug.LogWarning($"{name} could not perform queued activity {command.CommandType}.", this);
-            CompleteCurrentActivity();
-        }
-    }
-
-    private void CompleteCurrentActivity()
-    {
-        _waypointPath.CompleteCurrent();
-        _waitingForActivity = false;
+        return _activityRunner.TryMarkLastWaypointAsPanning();
     }
 
     private void MoveToward(Vector3 direction, float distance)

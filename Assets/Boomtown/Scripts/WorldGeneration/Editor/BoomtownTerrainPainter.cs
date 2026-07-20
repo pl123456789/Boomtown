@@ -62,23 +62,30 @@ namespace Boomtown.WorldGeneration.Editor
 
             EnsureGeneratedFolderExists();
 
+            // Alpha on these generated textures doubles as the terrain
+            // shader's smoothness source, so it has to stay low or the
+            // whole terrain reads as wet/plastic. Values are roughly
+            // smoothness*255 (grass ~0.06, dirt ~0.10, rock ~0.16).
             TerrainLayer grassLayer = GetOrCreateLayer(
                 GrassLayerPath,
                 GrassTexturePath,
-                new Color32(126, 143, 91, 255),
-                new Vector2(8f, 8f));
+                new Color32(126, 143, 91, 15),
+                new Vector2(8f, 8f),
+                0.06f);
 
             TerrainLayer dirtLayer = GetOrCreateLayer(
                 DirtLayerPath,
                 DirtTexturePath,
-                new Color32(118, 89, 58, 255),
-                new Vector2(6f, 6f));
+                new Color32(118, 89, 58, 26),
+                new Vector2(6f, 6f),
+                0.10f);
 
             TerrainLayer rockLayer = GetOrCreateLayer(
                 RockLayerPath,
                 RockTexturePath,
-                new Color32(104, 103, 96, 255),
-                new Vector2(10f, 10f));
+                new Color32(104, 103, 96, 41),
+                new Vector2(10f, 10f),
+                0.16f);
 
             TerrainData terrainData = terrain.terrainData;
 
@@ -323,7 +330,8 @@ namespace Boomtown.WorldGeneration.Editor
             string layerPath,
             string texturePath,
             Color32 colour,
-            Vector2 tileSize)
+            Vector2 tileSize,
+            float smoothness)
         {
             TerrainLayer layer =
                 AssetDatabase.LoadAssetAtPath<TerrainLayer>(
@@ -342,35 +350,55 @@ namespace Boomtown.WorldGeneration.Editor
                 AssetDatabase.LoadAssetAtPath<Texture2D>(
                     texturePath);
 
-            if (texture == null)
+            bool isNewTexture =
+                texture == null;
+
+            if (isNewTexture)
             {
                 texture =
-                    CreateSolidTexture(colour);
+                    new Texture2D(
+                        4,
+                        4,
+                        TextureFormat.RGBA32,
+                        false)
+                    {
+                        wrapMode = TextureWrapMode.Repeat,
+                        filterMode = FilterMode.Bilinear,
+                        name = "GeneratedTerrainColour"
+                    };
+            }
 
+            // Always re-fill the pixels (not just on first creation) so
+            // tuning the colour/alpha here takes effect on projects that
+            // already generated these assets under the old values.
+            FillSolidTexture(texture, colour);
+
+            if (isNewTexture)
+            {
                 AssetDatabase.CreateAsset(
                     texture,
                     texturePath);
+            }
+            else
+            {
+                EditorUtility.SetDirty(texture);
             }
 
             layer.diffuseTexture = texture;
             layer.tileSize = tileSize;
             layer.tileOffset = Vector2.zero;
+            layer.smoothness = smoothness;
+            layer.metallic = 0f;
 
             EditorUtility.SetDirty(layer);
 
             return layer;
         }
 
-        private static Texture2D CreateSolidTexture(
+        private static void FillSolidTexture(
+            Texture2D texture,
             Color32 colour)
         {
-            Texture2D texture =
-                new Texture2D(
-                    4,
-                    4,
-                    TextureFormat.RGBA32,
-                    false);
-
             Color32[] pixels =
                 new Color32[16];
 
@@ -383,17 +411,6 @@ namespace Boomtown.WorldGeneration.Editor
 
             texture.SetPixels32(pixels);
             texture.Apply();
-
-            texture.wrapMode =
-                TextureWrapMode.Repeat;
-
-            texture.filterMode =
-                FilterMode.Bilinear;
-
-            texture.name =
-                "GeneratedTerrainColour";
-
-            return texture;
         }
 
         private static void EnsureGeneratedFolderExists()

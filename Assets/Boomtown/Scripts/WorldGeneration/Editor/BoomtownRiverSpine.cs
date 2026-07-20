@@ -18,29 +18,33 @@ namespace Boomtown.WorldGeneration.Editor
             float phaseB = Mathf.Abs((seed / 17) % 10000) * 0.00111f;
             float noiseOffset = Mathf.Abs((seed / 37) % 10000) * 0.0137f;
 
+            // Amplitudes widened so the valley genuinely wanders across the
+            // map instead of just wobbling near dead-centre -- the old
+            // coefficients summed to well under the safety clamp below, so
+            // the clamp was never actually being reached in practice.
             float broadBend =
                 Mathf.Sin(
                     normalizedZ * Mathf.PI * 2.1f +
                     phaseA) *
-                0.042f;
+                0.095f;
 
             float secondaryBend =
                 Mathf.Sin(
                     normalizedZ * Mathf.PI * 5.3f +
                     phaseB) *
-                0.016f;
+                0.032f;
 
             float naturalDrift =
                 (Mathf.PerlinNoise(
                     noiseOffset,
                     normalizedZ * 2.2f + noiseOffset * 0.17f) - 0.5f) *
-                0.036f;
+                0.06f;
 
             float longDrift =
                 Mathf.Sin(
                     normalizedZ * Mathf.PI * 0.85f +
                     phaseB * 0.37f) *
-                0.018f;
+                0.05f;
 
             return Mathf.Clamp(
                 0.5f +
@@ -48,8 +52,8 @@ namespace Boomtown.WorldGeneration.Editor
                 secondaryBend +
                 naturalDrift +
                 longDrift,
-                0.36f,
-                0.64f);
+                0.20f,
+                0.80f);
         }
 
         public static float GetWorldCentreX(

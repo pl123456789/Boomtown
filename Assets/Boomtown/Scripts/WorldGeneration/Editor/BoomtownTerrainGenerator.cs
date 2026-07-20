@@ -258,8 +258,29 @@ namespace Boomtown.WorldGeneration.Editor
                             1f,
                             broadNoise);
 
+                    // Second, much lower-frequency octave so the foothill
+                    // country outside the immediate canyon corridor rolls
+                    // instead of reading as a flat plain between the valley
+                    // walls and the edge mountains.
+                    float rollingHills =
+                        Mathf.PerlinNoise(
+                            context.offsetX +
+                            480f +
+                            normalizedX * 0.55f,
+
+                            context.offsetY +
+                            480f +
+                            normalizedY * 0.55f);
+
+                    rollingHills =
+                        Mathf.SmoothStep(
+                            0f,
+                            1f,
+                            rollingHills);
+
                     heights[y, x] +=
-                        broadNoise * 0.09f;
+                        broadNoise * 0.09f +
+                        rollingHills * 0.11f;
                 }
             }
         }
@@ -736,20 +757,17 @@ namespace Boomtown.WorldGeneration.Editor
             float radiusX,
             float radiusZ)
         {
-            float valleyCentre =
+            float nominalCentreX =
                 GetValleyCentre(
                     centreZ,
-                    context);
-
-            float centreX =
-                valleyCentre +
+                    context) +
                 sideSign *
                 centreOffset;
 
             int centrePixelX =
                 Mathf.Clamp(
                     Mathf.RoundToInt(
-                        centreX *
+                        nominalCentreX *
                         (HeightmapResolution - 1)),
                     0,
                     HeightmapResolution - 1);
@@ -762,10 +780,15 @@ namespace Boomtown.WorldGeneration.Editor
                     0,
                     HeightmapResolution - 1);
 
+            // Average a small neighbourhood instead of trusting one sampled
+            // pixel, so a single rough/outlier texel can't become the whole
+            // shelf's target height.
             float targetHeight =
-                heights[
+                SampleNeighbourhoodAverage(
+                    heights,
+                    centrePixelX,
                     centrePixelY,
-                    centrePixelX];
+                    2);
 
             for (int y = 0;
                  y < HeightmapResolution;
@@ -784,6 +807,20 @@ namespace Boomtown.WorldGeneration.Editor
                     continue;
                 }
 
+                // Track the wall's own bend at this row instead of reusing
+                // one fixed X for the whole shelf -- with a meandering
+                // valley, a fixed-position ellipse can drift off the wall
+                // and hang partly over the river floor, forcibly flattening
+                // a big height mismatch into a crater. Following the wall
+                // per row keeps the shelf glued to the slope it was meant
+                // to sit on.
+                float rowCentreX =
+                    GetValleyCentre(
+                        normalizedY,
+                        context) +
+                    sideSign *
+                    centreOffset;
+
                 for (int x = 0;
                      x < HeightmapResolution;
                      x++)
@@ -793,7 +830,7 @@ namespace Boomtown.WorldGeneration.Editor
 
                     float dx =
                         (normalizedX -
-                         centreX) /
+                         rowCentreX) /
                         radiusX;
 
                     float distanceSquared =
@@ -822,6 +859,59 @@ namespace Boomtown.WorldGeneration.Editor
                             mask * 0.38f);
                 }
             }
+        }
+
+        private static float SampleNeighbourhoodAverage(
+            float[,] heights,
+            int centrePixelX,
+            int centrePixelY,
+            int radius)
+        {
+            float total = 0f;
+            int count = 0;
+
+            for (int offsetY = -radius;
+                 offsetY <= radius;
+                 offsetY++)
+            {
+                int sampleY =
+                    centrePixelY +
+                    offsetY;
+
+                if (sampleY < 0 ||
+                    sampleY >= HeightmapResolution)
+                {
+                    continue;
+                }
+
+                for (int offsetX = -radius;
+                     offsetX <= radius;
+                     offsetX++)
+                {
+                    int sampleX =
+                        centrePixelX +
+                        offsetX;
+
+                    if (sampleX < 0 ||
+                        sampleX >= HeightmapResolution)
+                    {
+                        continue;
+                    }
+
+                    total +=
+                        heights[
+                            sampleY,
+                            sampleX];
+
+                    count++;
+                }
+            }
+
+            return count > 0
+                ? total / count
+                : heights[
+                    centrePixelY,
+                    centrePixelX];
         }
 
 

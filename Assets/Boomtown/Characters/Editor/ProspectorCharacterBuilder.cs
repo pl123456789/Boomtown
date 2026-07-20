@@ -17,9 +17,9 @@ namespace Boomtown.Characters.Editor
 
         private void OnGUI()
         {
-            EditorGUILayout.LabelField("Character Generator 3.4", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Character Generator 3.6", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "Stable rewrite: fixed material filenames only. No colour hashes, no repair loop, and no unbounded asset creation.",
+                "Stickman pass: simplified to one capsule per limb, no stacked segments, no vest/gear shells. Adds optional suspenders/bandana/satchel and a pickaxe or gold pan in hand. Fixed material filenames only.",
                 MessageType.Info);
 
             appearanceSeed = EditorGUILayout.IntField("Appearance Seed", appearanceSeed);
@@ -81,7 +81,7 @@ namespace Boomtown.Characters.Editor
         {
             Undo.IncrementCurrentGroup();
             int undoGroup = Undo.GetCurrentGroup();
-            Undo.SetCurrentGroupName("Build Prospector Character 3.4");
+            Undo.SetCurrentGroupName("Build Prospector Character 3.6");
 
             Transform previousVisual = characterRoot.transform.Find(VisualRootName);
             if (previousVisual != null)
@@ -109,102 +109,85 @@ namespace Boomtown.Characters.Editor
             AssetDatabase.SaveAssets();
             Undo.CollapseUndoOperations(undoGroup);
 
-            Debug.Log($"[Boomtown] Built {characterRoot.name} with Character Generator 3.4.");
+            Debug.Log($"[Boomtown] Built {characterRoot.name} with Character Generator 3.6.");
         }
 
+        // Deliberately minimal peg-doll "stickman": one capsule per limb, no
+        // stacked segments, no separate clothing shells. Reads clean and
+        // charming at RTS-camera distance instead of a blocky primitive pile.
         private static void BuildBody(Transform root, Palette p, Appearance a)
         {
             Transform body = Group("Body", root);
 
-            Part("Pelvis", PrimitiveType.Cube, body, new Vector3(0f, 0.84f, 0f), new Vector3(0.44f, 0.24f, 0.29f), p.Trousers);
-            Part("Waist", PrimitiveType.Cube, body, new Vector3(0f, 1.05f, 0f), new Vector3(0.42f, 0.24f, 0.28f), p.Shirt);
-            Part("Ribcage", PrimitiveType.Capsule, body, new Vector3(0f, 1.35f, 0f), new Vector3(0.33f, 0.46f, 0.27f), p.Shirt);
-            Part("ShoulderBridge", PrimitiveType.Capsule, body, new Vector3(0f, 1.52f, 0f), new Vector3(0.25f, 0.58f, 0.22f), p.Shirt, new Vector3(0f, 0f, 90f));
-
-            Part("Neck", PrimitiveType.Cylinder, body, new Vector3(0f, 1.68f, 0f), new Vector3(0.12f, 0.11f, 0.12f), p.Skin);
-            Part("Head", PrimitiveType.Sphere, body, new Vector3(0f, 1.86f, 0f), new Vector3(0.26f, 0.32f, 0.25f), p.Skin);
-            Part("Nose", PrimitiveType.Sphere, body, new Vector3(0f, 1.86f, 0.14f), new Vector3(0.05f, 0.07f, 0.05f), p.Skin);
+            Part("Torso", PrimitiveType.Capsule, body, new Vector3(0f, 1.15f, 0f), new Vector3(0.20f, 0.38f, 0.16f), p.Shirt);
+            Part("Belt", PrimitiveType.Cylinder, body, new Vector3(0f, 0.80f, 0f), new Vector3(0.205f, 0.03f, 0.165f), p.Leather);
+            Part("Head", PrimitiveType.Sphere, body, new Vector3(0f, 1.54f, 0f), new Vector3(0.20f, 0.21f, 0.20f), p.Skin);
 
             BuildArm(body, "Left", -1f, p);
             BuildArm(body, "Right", 1f, p);
-            BuildLeg(body, "Left", -0.17f, p);
-            BuildLeg(body, "Right", 0.17f, p);
-            BuildClothing(body, p, a);
+            BuildLeg(body, "Left", -0.11f, p);
+            BuildLeg(body, "Right", 0.11f, p);
             BuildFace(body, p, a);
             BuildHat(body, p);
-            BuildGear(body, p, a);
+            BuildAccessories(body, p, a);
+            BuildToolInHand(body, p, a);
         }
 
+        // Each limb is a two-segment chain of pivot groups positioned at its
+        // real joints (shoulder->elbow, hip->knee) instead of one rigid
+        // capsule pivoting around its own centre. StickFigureWalkAnimator
+        // swings the outer pivot (shoulder/hip) and folds the inner one
+        // (elbow/knee) during the swing phase, same as a simple game rig.
         private static void BuildArm(Transform root, string sideName, float side, Palette p)
         {
-            Part(sideName + "Sleeve", PrimitiveType.Capsule, root,
-                new Vector3(0.34f * side, 1.40f, 0f), new Vector3(0.17f, 0.32f, 0.17f), p.Shirt,
-                new Vector3(0f, 0f, -7f * side));
-            Part(sideName + "RolledCuff", PrimitiveType.Cylinder, root,
-                new Vector3(0.39f * side, 1.18f, 0.01f), new Vector3(0.15f, 0.06f, 0.15f), p.Shirt);
-            Part(sideName + "Forearm", PrimitiveType.Capsule, root,
-                new Vector3(0.41f * side, 1.01f, 0.015f), new Vector3(0.135f, 0.28f, 0.135f), p.Skin,
-                new Vector3(0f, 0f, -3f * side));
-            Part(sideName + "Hand", PrimitiveType.Sphere, root,
-                new Vector3(0.425f * side, 0.80f, 0.03f), new Vector3(0.14f, 0.18f, 0.12f), p.Skin);
+            Transform shoulder = Group(sideName + "Arm", root);
+            shoulder.localPosition = new Vector3(0.13f * side, 1.46f, 0f);
+
+            Part(sideName + "UpperArmCapsule", PrimitiveType.Capsule, shoulder,
+                new Vector3(0f, -0.16f, 0f), new Vector3(0.075f, 0.165f, 0.075f), p.Shirt);
+
+            Transform elbow = Group(sideName + "Elbow", shoulder);
+            elbow.localPosition = new Vector3(0f, -0.29f, 0f);
+
+            Part(sideName + "ForearmCapsule", PrimitiveType.Capsule, elbow,
+                new Vector3(0f, -0.14f, 0f), new Vector3(0.065f, 0.15f, 0.065f), p.Shirt);
+            Part(sideName + "Hand", PrimitiveType.Sphere, elbow,
+                new Vector3(0f, -0.27f, 0f), new Vector3(0.075f, 0.075f, 0.075f), p.Skin);
         }
 
         private static void BuildLeg(Transform root, string sideName, float x, Palette p)
         {
-            Part(sideName + "Thigh", PrimitiveType.Capsule, root,
-                new Vector3(x, 0.64f, 0f), new Vector3(0.19f, 0.39f, 0.20f), p.Trousers);
-            Part(sideName + "Shin", PrimitiveType.Capsule, root,
-                new Vector3(x, 0.32f, 0.01f), new Vector3(0.16f, 0.34f, 0.17f), p.Trousers);
-            Part(sideName + "BootShaft", PrimitiveType.Cylinder, root,
-                new Vector3(x, 0.13f, 0.02f), new Vector3(0.17f, 0.15f, 0.18f), p.Boots);
-            Part(sideName + "Boot", PrimitiveType.Cube, root,
-                new Vector3(x, 0.065f, 0.10f), new Vector3(0.23f, 0.14f, 0.35f), p.Boots,
-                new Vector3(3f, 0f, 0f));
-        }
+            Transform hip = Group(sideName + "Leg", root);
+            hip.localPosition = new Vector3(x, 0.82f, 0f);
 
-        private static void BuildClothing(Transform root, Palette p, Appearance a)
-        {
-            Part("Belt", PrimitiveType.Cube, root, new Vector3(0f, 0.98f, 0.015f), new Vector3(0.48f, 0.08f, 0.32f), p.Leather);
-            Part("Buckle", PrimitiveType.Cube, root, new Vector3(0f, 0.98f, 0.19f), new Vector3(0.10f, 0.07f, 0.03f), p.Metal);
-            Part("VestLeft", PrimitiveType.Cube, root, new Vector3(-0.145f, 1.33f, 0.17f), new Vector3(0.23f, 0.50f, 0.05f), p.Vest, new Vector3(0f, -2f, 0f));
-            Part("VestRight", PrimitiveType.Cube, root, new Vector3(0.145f, 1.33f, 0.17f), new Vector3(0.23f, 0.50f, 0.05f), p.Vest, new Vector3(0f, 2f, 0f));
-            Part("VestBack", PrimitiveType.Cube, root, new Vector3(0f, 1.33f, -0.165f), new Vector3(0.48f, 0.50f, 0.05f), p.Vest);
+            Part(sideName + "ThighCapsule", PrimitiveType.Capsule, hip,
+                new Vector3(0f, -0.20f, 0f), new Vector3(0.095f, 0.21f, 0.095f), p.Trousers);
 
-            if (a.HasNeckerchief)
-            {
-                Part("Neckerchief", PrimitiveType.Cube, root, new Vector3(0f, 1.65f, 0.155f), new Vector3(0.23f, 0.08f, 0.035f), p.Accent);
-                Part("NeckerchiefTail", PrimitiveType.Cube, root, new Vector3(0f, 1.56f, 0.175f), new Vector3(0.09f, 0.17f, 0.03f), p.Accent, new Vector3(0f, 0f, 5f));
-            }
+            Transform knee = Group(sideName + "Knee", hip);
+            knee.localPosition = new Vector3(0f, -0.38f, 0f);
+
+            Part(sideName + "ShinCapsule", PrimitiveType.Capsule, knee,
+                new Vector3(0f, -0.19f, 0f), new Vector3(0.085f, 0.20f, 0.085f), p.Trousers);
+            // Boot hangs from the knee pivot too -- it's rigidly attached to
+            // the shin's end (the "ankle"), not independently animated yet.
+            Part(sideName + "Boot", PrimitiveType.Cube, knee,
+                new Vector3(0f, -0.37f, 0.045f), new Vector3(0.13f, 0.08f, 0.20f), p.Boots);
         }
 
         private static void BuildFace(Transform root, Palette p, Appearance a)
         {
-            Part("LeftEye", PrimitiveType.Sphere, root, new Vector3(-0.06f, 1.91f, 0.138f), new Vector3(0.024f, 0.024f, 0.016f), p.Dark);
-            Part("RightEye", PrimitiveType.Sphere, root, new Vector3(0.06f, 1.91f, 0.138f), new Vector3(0.024f, 0.024f, 0.016f), p.Dark);
-            Part("MoustacheLeft", PrimitiveType.Capsule, root, new Vector3(-0.04f, 1.81f, 0.15f), new Vector3(0.04f, 0.09f, 0.03f), p.Hair, new Vector3(0f, 0f, 70f));
-            Part("MoustacheRight", PrimitiveType.Capsule, root, new Vector3(0.04f, 1.81f, 0.15f), new Vector3(0.04f, 0.09f, 0.03f), p.Hair, new Vector3(0f, 0f, -70f));
-            Part("BeardJaw", PrimitiveType.Sphere, root, new Vector3(0f, 1.74f, 0.055f), new Vector3(0.23f, 0.22f, 0.19f), p.Hair);
-            Part("BeardChin", PrimitiveType.Capsule, root, new Vector3(0f, 1.61f, 0.065f), new Vector3(0.13f, 0.20f + a.BeardLength * 0.07f, 0.13f), p.Hair);
+            Part("LeftEye", PrimitiveType.Sphere, root, new Vector3(-0.055f, 1.56f, 0.095f), new Vector3(0.02f, 0.02f, 0.014f), p.Dark);
+            Part("RightEye", PrimitiveType.Sphere, root, new Vector3(0.055f, 1.56f, 0.095f), new Vector3(0.02f, 0.02f, 0.014f), p.Dark);
+            Part("Moustache", PrimitiveType.Capsule, root, new Vector3(0f, 1.495f, 0.12f), new Vector3(0.03f, 0.038f + a.BeardLength * 0.010f, 0.03f), p.Hair, new Vector3(0f, 0f, 90f));
         }
 
         private static void BuildHat(Transform root, Palette p)
         {
-            Part("HatBrim", PrimitiveType.Cylinder, root, new Vector3(0f, 2.04f, 0f), new Vector3(0.44f, 0.025f, 0.35f), p.Hat);
-            Part("HatCrown", PrimitiveType.Cylinder, root, new Vector3(0f, 2.13f, 0f), new Vector3(0.26f, 0.11f, 0.25f), p.Hat);
-            Part("HatBand", PrimitiveType.Cylinder, root, new Vector3(0f, 2.075f, 0f), new Vector3(0.265f, 0.018f, 0.255f), p.Leather);
-        }
-
-        private static void BuildGear(Transform root, Palette p, Appearance a)
-        {
-            float side = a.PouchOnRight ? 1f : -1f;
-            Part("BeltPouch", PrimitiveType.Cube, root, new Vector3(0.30f * side, 0.94f, 0.08f), new Vector3(0.16f, 0.20f, 0.10f), p.Leather, new Vector3(0f, 0f, -6f * side));
-            Part("Holster", PrimitiveType.Cube, root, new Vector3(-0.31f * side, 0.89f, 0.06f), new Vector3(0.09f, 0.28f, 0.08f), p.Leather, new Vector3(0f, 0f, 5f * side));
-
-            if (a.HasBackpack)
-            {
-                Part("Backpack", PrimitiveType.Cube, root, new Vector3(0f, 1.31f, -0.25f), new Vector3(0.40f, 0.46f, 0.17f), p.Canvas);
-                Part("Bedroll", PrimitiveType.Cylinder, root, new Vector3(0f, 1.59f, -0.28f), new Vector3(0.14f, 0.22f, 0.14f), p.Accent, new Vector3(0f, 0f, 90f));
-            }
+            // Brim pushed down to sit into the head by a healthy margin
+            // instead of just grazing its calculated top edge.
+            Part("HatBrim", PrimitiveType.Cylinder, root, new Vector3(0f, 1.60f, 0f), new Vector3(0.30f, 0.02f, 0.24f), p.Hat);
+            Part("HatCrown", PrimitiveType.Cylinder, root, new Vector3(0f, 1.68f, 0f), new Vector3(0.17f, 0.08f, 0.16f), p.Hat);
+            Part("HatBand", PrimitiveType.Cylinder, root, new Vector3(0f, 1.625f, 0f), new Vector3(0.175f, 0.013f, 0.165f), p.Leather);
         }
 
         private static Transform Group(string name, Transform parent)
@@ -212,6 +195,67 @@ namespace Boomtown.Characters.Editor
             GameObject group = new GameObject(name);
             group.transform.SetParent(parent, false);
             return group.transform;
+        }
+
+        // Builds a cylinder stretched and rotated to span two local points --
+        // used for straps/suspenders instead of hand-guessing a euler angle
+        // and half-length for every strap position.
+        private static GameObject PartBetween(string name, PrimitiveType primitive, Transform parent, Vector3 a, Vector3 b, float thickness, Material material)
+        {
+            GameObject part = GameObject.CreatePrimitive(primitive);
+            part.name = name;
+            part.transform.SetParent(parent, false);
+            part.transform.localPosition = (a + b) * 0.5f;
+            part.transform.localRotation = Quaternion.FromToRotation(Vector3.up, (b - a).normalized);
+            part.transform.localScale = new Vector3(thickness, Vector3.Distance(a, b) * 0.5f, thickness);
+            Collider betweenCollider = part.GetComponent<Collider>();
+            if (betweenCollider != null) DestroyImmediate(betweenCollider);
+            Renderer betweenRenderer = part.GetComponent<Renderer>();
+            if (betweenRenderer != null) betweenRenderer.sharedMaterial = material;
+            return part;
+        }
+
+        // Optional gold-rush flavour: suspenders always on, bandana/satchel
+        // randomized per seed so generated crews don't look identical.
+        private static void BuildAccessories(Transform body, Palette p, Appearance a)
+        {
+            PartBetween("LeftSuspender", PrimitiveType.Cylinder, body, new Vector3(-0.10f, 1.44f, 0.06f), new Vector3(-0.09f, 0.80f, 0.10f), 0.016f, p.Leather);
+            PartBetween("RightSuspender", PrimitiveType.Cylinder, body, new Vector3(0.10f, 1.44f, 0.06f), new Vector3(0.09f, 0.80f, 0.10f), 0.016f, p.Leather);
+            if (a.HasBandana)
+                Part("Bandana", PrimitiveType.Cylinder, body, new Vector3(0f, 1.435f, 0.02f), new Vector3(0.115f, 0.026f, 0.115f), p.Bandana);
+            if (a.HasSatchel)
+            {
+                Part("SatchelBag", PrimitiveType.Cube, body, new Vector3(0.15f, 0.86f, -0.14f), new Vector3(0.13f, 0.15f, 0.06f), p.Canvas, new Vector3(0f, 25f, 0f));
+                PartBetween("SatchelStrap", PrimitiveType.Cylinder, body, new Vector3(-0.11f, 1.44f, 0.04f), new Vector3(0.13f, 0.90f, -0.12f), 0.02f, p.Canvas);
+            }
+        }
+
+        // Randomly gives the right hand a pickaxe or a gold pan (or nothing)
+        // -- parented under the elbow/hand pivot chain so it swings with the
+        // arm during the walk animation for free.
+        private static void BuildToolInHand(Transform body, Palette p, Appearance a)
+        {
+            Transform hand = body.Find("RightArm/RightElbow/RightHand");
+            if (hand == null) return;
+            switch (a.Accessory)
+            {
+                case AccessoryType.Pickaxe:
+                    Transform pick = Group("Pickaxe", hand);
+                    pick.localPosition = new Vector3(0.02f, -0.05f, 0.02f);
+                    pick.localEulerAngles = new Vector3(0f, 0f, 18f);
+                    Part("PickaxeHandle", PrimitiveType.Cylinder, pick, new Vector3(0f, 0.20f, 0f), new Vector3(0.022f, 0.30f, 0.022f), p.Leather);
+                    Part("PickaxeHead", PrimitiveType.Cube, pick, new Vector3(0f, 0.50f, 0f), new Vector3(0.26f, 0.035f, 0.05f), p.Metal);
+                    break;
+                case AccessoryType.GoldPan:
+                    Transform pan = Group("GoldPan", hand);
+                    pan.localPosition = new Vector3(0.03f, -0.06f, 0.05f);
+                    pan.localEulerAngles = new Vector3(70f, 0f, 0f);
+                    Part("GoldPanBody", PrimitiveType.Cylinder, pan, Vector3.zero, new Vector3(0.14f, 0.012f, 0.14f), p.Metal);
+                    break;
+                case AccessoryType.None:
+                default:
+                    break;
+            }
         }
 
         private static GameObject Part(string name, PrimitiveType primitive, Transform parent, Vector3 position, Vector3 scale, Material material, Vector3? euler = null)
@@ -290,30 +334,30 @@ namespace Boomtown.Characters.Editor
                 AssetDatabase.CreateFolder("Assets/Boomtown/Characters/Materials", "Generated");
         }
 
+        private enum AccessoryType { None, Pickaxe, GoldPan }
+
         private sealed class Appearance
         {
-            public bool HasNeckerchief;
-            public bool HasBackpack;
-            public bool PouchOnRight;
             public float BeardLength;
+            public bool HasBandana;
+            public bool HasSatchel;
+            public AccessoryType Accessory;
 
             public static Appearance Create(System.Random random, string characterName)
             {
-                string lower = characterName.ToLowerInvariant();
-                bool isBill = lower.Contains("bill") || lower.Contains("william");
                 return new Appearance
                 {
-                    HasNeckerchief = isBill || random.NextDouble() > 0.35,
-                    HasBackpack = random.NextDouble() > 0.55,
-                    PouchOnRight = random.NextDouble() > 0.50,
-                    BeardLength = (float)random.NextDouble()
+                    BeardLength = (float)random.NextDouble(),
+                    HasBandana = random.NextDouble() < 0.5,
+                    HasSatchel = random.NextDouble() < 0.4,
+                    Accessory = (AccessoryType)random.Next(0, 3)
                 };
             }
         }
 
         private sealed class Palette
         {
-            public Material Skin, Shirt, Trousers, Vest, Leather, Boots, Hat, Hair, Canvas, Accent, Metal, Dark;
+            public Material Skin, Shirt, Trousers, Leather, Boots, Hat, Hair, Dark, Metal, Canvas, Bandana;
 
             public static Palette Create(System.Random random, string materialSet)
             {
@@ -328,14 +372,15 @@ namespace Boomtown.Characters.Editor
                 {
                     new Color(0.20f, 0.19f, 0.17f), new Color(0.24f, 0.27f, 0.28f), new Color(0.31f, 0.27f, 0.22f)
                 };
-                Color[] accents =
-                {
-                    new Color(0.42f, 0.12f, 0.08f), new Color(0.56f, 0.35f, 0.10f), new Color(0.18f, 0.30f, 0.40f)
-                };
                 Color[] hair =
                 {
                     new Color(0.10f, 0.055f, 0.03f), new Color(0.25f, 0.13f, 0.06f),
                     new Color(0.34f, 0.25f, 0.18f), new Color(0.15f, 0.14f, 0.13f)
+                };
+
+                Color[] bandanas =
+                {
+                    new Color(0.55f, 0.12f, 0.10f), new Color(0.20f, 0.28f, 0.42f), new Color(0.42f, 0.36f, 0.10f)
                 };
 
                 return new Palette
@@ -343,15 +388,14 @@ namespace Boomtown.Characters.Editor
                     Skin = FixedMaterial(materialSet, "Skin", new Color(0.72f, 0.50f, 0.34f)),
                     Shirt = FixedMaterial(materialSet, "Shirt", Pick(shirts, random)),
                     Trousers = FixedMaterial(materialSet, "Trousers", Pick(trousers, random)),
-                    Vest = FixedMaterial(materialSet, "Vest", new Color(0.24f, 0.14f, 0.07f)),
                     Leather = FixedMaterial(materialSet, "Leather", new Color(0.16f, 0.075f, 0.035f)),
                     Boots = FixedMaterial(materialSet, "Boots", new Color(0.075f, 0.055f, 0.035f)),
                     Hat = FixedMaterial(materialSet, "Hat", new Color(0.30f, 0.20f, 0.11f)),
                     Hair = FixedMaterial(materialSet, "Hair", Pick(hair, random)),
-                    Canvas = FixedMaterial(materialSet, "Canvas", new Color(0.29f, 0.27f, 0.19f)),
-                    Accent = FixedMaterial(materialSet, "Accent", Pick(accents, random)),
-                    Metal = FixedMaterial(materialSet, "Metal", new Color(0.55f, 0.44f, 0.22f)),
-                    Dark = FixedMaterial(materialSet, "Dark", new Color(0.02f, 0.018f, 0.015f))
+                    Dark = FixedMaterial(materialSet, "Dark", new Color(0.02f, 0.018f, 0.015f)),
+                    Metal = FixedMaterial(materialSet, "Metal", new Color(0.55f, 0.56f, 0.58f)),
+                    Canvas = FixedMaterial(materialSet, "Canvas", new Color(0.55f, 0.47f, 0.32f)),
+                    Bandana = FixedMaterial(materialSet, "Bandana", Pick(bandanas, random))
                 };
             }
 
@@ -377,7 +421,7 @@ namespace Boomtown.Characters.Editor
                 if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
                 if (material.HasProperty("_Color")) material.SetColor("_Color", color);
                 material.color = color;
-                if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.06f);
+                if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", role == "Metal" ? 0.45f : 0.16f);
                 if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", role == "Metal" ? 0.65f : 0f);
                 EditorUtility.SetDirty(material);
                 return material;

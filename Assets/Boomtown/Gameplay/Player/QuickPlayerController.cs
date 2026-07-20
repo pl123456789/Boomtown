@@ -11,6 +11,8 @@ using UnityEngine.InputSystem;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(WaypointPath))]
+[RequireComponent(typeof(EmployeeNeeds))]
+[RequireComponent(typeof(StickFigureWalkAnimator))]
 public sealed class QuickPlayerController : MonoBehaviour
 {
     [Header("Identity")]
@@ -58,13 +60,17 @@ public sealed class QuickPlayerController : MonoBehaviour
     private CharacterController _characterController;
     private WaypointPath _waypointPath;
     private GoldPanningController _goldPanningController;
+    private EmployeeNeeds _needs;
+    private WaypointActivityRunner _activityRunner;
 
     private Vector3 _horizontalVelocity;
     private float _verticalVelocity;
-    private bool _waitingForActivity;
 
     public string CharacterName =>
         _characterName;
+
+    public EmployeeNeeds Needs =>
+        _needs;
 
     private void Awake()
     {
@@ -76,6 +82,17 @@ public sealed class QuickPlayerController : MonoBehaviour
 
         _goldPanningController =
             GetComponent<GoldPanningController>();
+
+        _needs =
+            GetComponent<EmployeeNeeds>();
+
+        _activityRunner =
+            new WaypointActivityRunner(
+                _waypointPath,
+                _goldPanningController,
+                _characterName,
+                _waypointStoppingDistance,
+                _activityStoppingDistance);
 
         if (_cameraYawTransform == null)
         {
@@ -120,22 +137,31 @@ public sealed class QuickPlayerController : MonoBehaviour
 
         if (directInput.sqrMagnitude > 0f)
         {
-            _waitingForActivity = false;
+            _activityRunner.CancelWaiting();
             _waypointPath.Clear();
 
             movementDirection =
                 CalculateCameraRelativeDirection(
                     directInput);
         }
-        else if (_waitingForActivity)
+        else if (_activityRunner.IsWaitingForActivity)
         {
             movementDirection =
                 Vector3.zero;
         }
+        else if (_activityRunner.TryGetMoveDirection(
+                     transform.position,
+                     out Vector3 commandDirection,
+                     out _,
+                     out _))
+        {
+            movementDirection =
+                commandDirection;
+        }
         else
         {
             movementDirection =
-                CalculateCommandDirection();
+                Vector3.zero;
         }
 
         float speed =
@@ -182,7 +208,7 @@ public sealed class QuickPlayerController : MonoBehaviour
         }
         else
         {
-            _waitingForActivity = false;
+            _activityRunner.CancelWaiting();
 
             _waypointPath.SetWaypoint(
                 groundedDestination);
@@ -202,110 +228,12 @@ public sealed class QuickPlayerController : MonoBehaviour
             return;
         }
 
-        if (!_waypointPath.TryGetLastCommand(
-                out WaypointCommand lastCommand))
-        {
-            Debug.Log(
-                "[Boomtown] Queue at least one waypoint before pressing " +
-                "Shift + Space.",
-                this);
-
-            return;
-        }
-
-        if (_goldPanningController == null ||
-            !_goldPanningController.CanPanAt(
-                lastCommand.Position))
-        {
-            Debug.Log(
-                "[Boomtown] That waypoint is not a valid gold-panning spot. " +
-                "Move it closer to a valid river bank.",
-                this);
-
-            return;
-        }
-
-        _waypointPath.MarkLastCommandAsActivity(
-            WaypointCommandType.PanForGold);
+        _activityRunner.TryMarkLastWaypointAsPanning();
     }
 
-    private Vector3 CalculateCommandDirection()
+    public bool MarkLastWaypointAsPanning()
     {
-        if (!_waypointPath.TryGetCurrentCommand(
-                out WaypointCommand command))
-        {
-            return Vector3.zero;
-        }
-
-        Vector3 offset =
-            command.Position -
-            transform.position;
-
-        offset.y = 0f;
-
-        float distance =
-            offset.magnitude;
-
-        float stoppingDistance =
-            command.IsActivity
-                ? _activityStoppingDistance
-                : _waypointStoppingDistance;
-
-        if (distance > stoppingDistance)
-        {
-            return offset.normalized;
-        }
-
-        if (!command.IsActivity)
-        {
-            _waypointPath.CompleteCurrent();
-            return Vector3.zero;
-        }
-
-        StartCurrentActivity(
-            command);
-
-        return Vector3.zero;
-    }
-
-    private void StartCurrentActivity(
-        WaypointCommand command)
-    {
-        if (_waitingForActivity)
-        {
-            return;
-        }
-
-        _waitingForActivity = true;
-        _horizontalVelocity = Vector3.zero;
-
-        bool started = false;
-
-        if (command.CommandType ==
-            WaypointCommandType.PanForGold &&
-            _goldPanningController != null)
-        {
-            started =
-                _goldPanningController
-                    .TryStartPanning(
-                        CompleteCurrentActivity);
-        }
-
-        if (!started)
-        {
-            Debug.LogWarning(
-                $"Bill could not perform queued activity " +
-                $"{command.CommandType} at this location.",
-                this);
-
-            CompleteCurrentActivity();
-        }
-    }
-
-    private void CompleteCurrentActivity()
-    {
-        _waypointPath.CompleteCurrent();
-        _waitingForActivity = false;
+        return _activityRunner.TryMarkLastWaypointAsPanning();
     }
 
     private Vector3 CalculateCameraRelativeDirection(

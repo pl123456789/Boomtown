@@ -7,6 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(EmployeeMovement))]
 [RequireComponent(typeof(EmployeeSelectionRing))]
+[RequireComponent(typeof(EmployeeNeeds))]
+[RequireComponent(typeof(StickFigureWalkAnimator))]
 public sealed class Employee : MonoBehaviour
 {
     [Header("Identity")]
@@ -26,11 +28,13 @@ public sealed class Employee : MonoBehaviour
 
     private EmployeeMovement _movement;
     private EmployeeSelectionRing _selectionRing;
+    private EmployeeNeeds _needs;
 
     public string EmployeeName => _employeeName;
     public EmployeeProfession Profession => _profession;
     public int ProfessionExperience => _professionExperience;
     public bool IsSelected { get; private set; }
+    public EmployeeNeeds Needs => _needs;
 
     private void Awake()
     {
@@ -39,6 +43,9 @@ public sealed class Employee : MonoBehaviour
 
         _selectionRing =
             GetComponent<EmployeeSelectionRing>();
+
+        _needs =
+            GetComponent<EmployeeNeeds>();
 
         SetSelected(false);
     }
