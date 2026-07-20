@@ -261,6 +261,44 @@ public sealed class ClaimManager : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Seconds left in the claim's current standing before it degrades to
+    /// the next forfeiture stage (Active -> Overdue -> At Risk ->
+    /// Forfeited). Exposed so UI can show a countdown without duplicating
+    /// the tuning constants above. Returns 0 once already Forfeited.
+    /// </summary>
+    public float GetSecondsUntilNextDegradation(
+        ClaimData claim)
+    {
+        if (claim == null || claim.State == ClaimState.Forfeited)
+        {
+            return 0f;
+        }
+
+        float unworkedFor = Time.time - claim.LastRepresentedTime;
+
+        float activeEnd = _activeWindowSeconds;
+        float overdueEnd = activeEnd + _overdueWindowSeconds;
+        float atRiskEnd = overdueEnd + _atRiskWindowSeconds;
+
+        if (unworkedFor < activeEnd)
+        {
+            return activeEnd - unworkedFor;
+        }
+
+        if (unworkedFor < overdueEnd)
+        {
+            return overdueEnd - unworkedFor;
+        }
+
+        if (unworkedFor < atRiskEnd)
+        {
+            return atRiskEnd - unworkedFor;
+        }
+
+        return 0f;
+    }
+
     public ClaimData FindClaimContaining(
         Vector3 worldPosition)
     {

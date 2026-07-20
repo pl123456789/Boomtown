@@ -47,6 +47,17 @@ public sealed class ClaimData : MonoBehaviour
     public float LastRepresentedTime => _lastRepresentedTime;
 
     /// <summary>
+    /// Centre of the four corner posts. The claim's own transform stays at
+    /// the world origin (it's just a container GameObject), so anything
+    /// that wants "where is this claim" -- like the status widget's
+    /// click-to-recentre -- should use this instead of transform.position.
+    /// </summary>
+    public Vector3 Midpoint =>
+        _cornerPosts != null && _cornerPosts.Length == 4
+            ? (_cornerPosts[0] + _cornerPosts[1] + _cornerPosts[2] + _cornerPosts[3]) / 4f
+            : transform.position;
+
+    /// <summary>
     /// Called once by ClaimManager right after the GameObject is created.
     /// Not meant to be called again -- use the manager's own methods
     /// (RegisterClaim, AuthorizeWorker, RecordRepresentation, SetState) to
