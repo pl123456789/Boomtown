@@ -204,7 +204,7 @@ namespace Boomtown.WorldGeneration.Editor
             GenerateTerrainDetail(heights, context);
             GenerateRiverTerraces(heights, context);
             ApplyEdgeMountains(heights);
-            SmoothHeightmap(heights, 1);
+            SmoothHeightmap(heights, 5);
             NormalizeHeightmap(heights);
 
             return heights;
@@ -372,13 +372,52 @@ namespace Boomtown.WorldGeneration.Editor
                             0.42f,
                             distanceFromValley);
 
+                    // A single raw Perlin octave pushed through abs()/pow()
+                    // to sharpen it into "ridge noise" is a well-known trap:
+                    // Unity's Perlin implementation has an inherent
+                    // diagonal grain, and ridge-sharpening makes that grain
+                    // read as visible parallel streaks once lit, instead of
+                    // looking like irregular fractured rock. Domain-warp the
+                    // sample coordinates with an independent, much
+                    // lower-frequency noise field first (so the warp itself
+                    // doesn't reintroduce a regular pattern), then blend in
+                    // a second, finer ridge octave -- both standard fixes
+                    // for streaky single-octave ridge noise.
+                    float warpNoiseX =
+                        Mathf.PerlinNoise(
+                            context.ridgeOffsetX +
+                            5000f +
+                            normalizedX * 1.6f,
+
+                            context.ridgeOffsetY +
+                            5000f +
+                            normalizedY * 1.6f);
+
+                    float warpNoiseY =
+                        Mathf.PerlinNoise(
+                            context.ridgeOffsetX +
+                            6200f +
+                            normalizedX * 1.6f,
+
+                            context.ridgeOffsetY +
+                            6200f +
+                            normalizedY * 1.6f);
+
+                    float warpedX =
+                        normalizedX +
+                        (warpNoiseX - 0.5f) * 0.20f;
+
+                    float warpedY =
+                        normalizedY +
+                        (warpNoiseY - 0.5f) * 0.20f;
+
                     float ridgeNoise =
                         Mathf.PerlinNoise(
                             context.ridgeOffsetX +
-                            normalizedX * 4.2f,
+                            warpedX * 4.2f,
 
                             context.ridgeOffsetY +
-                            normalizedY * 4.2f);
+                            warpedY * 4.2f);
 
                     ridgeNoise =
                         Mathf.Abs(
@@ -393,8 +432,35 @@ namespace Boomtown.WorldGeneration.Editor
                             ridgeNoise,
                             2.2f);
 
+                    float fineRidgeNoise =
+                        Mathf.PerlinNoise(
+                            context.ridgeOffsetX +
+                            900f +
+                            warpedX * 9.7f,
+
+                            context.ridgeOffsetY +
+                            900f +
+                            warpedY * 9.7f);
+
+                    fineRidgeNoise =
+                        Mathf.Abs(
+                            fineRidgeNoise * 2f -
+                            1f);
+
+                    fineRidgeNoise =
+                        1f - fineRidgeNoise;
+
+                    fineRidgeNoise =
+                        Mathf.Pow(
+                            fineRidgeNoise,
+                            2.2f);
+
+                    float combinedRidge =
+                        ridgeNoise * 0.72f +
+                        fineRidgeNoise * 0.28f;
+
                     heights[y, x] +=
-                        ridgeNoise *
+                        combinedRidge *
                         mountainMask *
                         0.145f;
                 }
@@ -451,11 +517,46 @@ namespace Boomtown.WorldGeneration.Editor
                             1200f +
                             normalizedY * 7.5f);
 
+                    // The raw sine grating below reads as a perfectly
+                    // regular, mechanical diagonal corduroy pattern once
+                    // lit -- real fractured rock doesn't run in dead-straight
+                    // parallel lines. Warp the sample coordinates with a
+                    // separate low-frequency noise field first so the ridge
+                    // lines bend, split, and vary in spacing like an actual
+                    // fracture pattern instead of a repeating stripe.
+                    float warpNoiseX =
+                        Mathf.PerlinNoise(
+                            context.ridgeOffsetX +
+                            3000f +
+                            normalizedX * 3.2f,
+
+                            context.ridgeOffsetY +
+                            3000f +
+                            normalizedY * 3.2f);
+
+                    float warpNoiseY =
+                        Mathf.PerlinNoise(
+                            context.ridgeOffsetX +
+                            4200f +
+                            normalizedX * 3.2f,
+
+                            context.ridgeOffsetY +
+                            4200f +
+                            normalizedY * 3.2f);
+
+                    float warpedX =
+                        normalizedX +
+                        (warpNoiseX - 0.5f) * 0.16f;
+
+                    float warpedY =
+                        normalizedY +
+                        (warpNoiseY - 0.5f) * 0.16f;
+
                     float ridgeBands =
                         Mathf.Abs(
                             Mathf.Sin(
-                                normalizedX * 22f +
-                                normalizedY * 11f +
+                                warpedX * 22f +
+                                warpedY * 11f +
                                 fractureNoise * 4f));
 
                     float brokenRidge =
@@ -526,13 +627,20 @@ namespace Boomtown.WorldGeneration.Editor
                             sideIndex * 50 +
                             gullyIndex * 3);
 
+                    // Wider jitter within each slot (was 0.30-0.70, i.e.
+                    // only 40% of the slot) so mouths land at genuinely
+                    // irregular spacing instead of an almost evenly-combed
+                    // row. Combined with the shorter reach below, this stops
+                    // neighbouring gullies' influence zones from stacking
+                    // into a continuous, mechanically regular set of
+                    // parallel diagonal grooves across the whole hillside.
                     float mouthZ =
                         Mathf.Lerp(
                             0.08f,
                             0.92f,
                             (gullyIndex +
-                             0.30f +
-                             randomA * 0.40f) /
+                             0.10f +
+                             randomA * 0.80f) /
                             gullyCountPerSide);
 
                     float outerX =
@@ -552,10 +660,13 @@ namespace Boomtown.WorldGeneration.Editor
                             0.024f,
                             randomC);
 
+                    // Softened further (was 0.035-0.075, up to 39m deep;
+                    // then 0.020-0.045) so gullies read as terrain texture
+                    // rather than dominating the hillside's silhouette.
                     float depth =
                         Mathf.Lerp(
-                            0.035f,
-                            0.075f,
+                            0.012f,
+                            0.028f,
                             randomA);
 
                     CarveSingleGully(
@@ -584,12 +695,22 @@ namespace Boomtown.WorldGeneration.Editor
                 float normalizedY =
                     GetNormalizedCoordinate(y);
 
+                // Reach shortened from 0.18 (360m) to 0.10 (200m) -- with
+                // 7 gullies per side spaced roughly every 0.143 (286m) of
+                // map length, the old 360m reach meant neighbouring
+                // gullies' influence zones overlapped almost their entire
+                // length, stacking several near-parallel diagonal carves
+                // on top of each other into what read as one continuous,
+                // mechanically regular corduroy pattern. A reach shorter
+                // than the spacing keeps each gully visually distinct.
+                const float gullyReach = 0.075f;
+
                 float alongDistance =
                     Mathf.Abs(
                         normalizedY -
                         mouthZ);
 
-                if (alongDistance > 0.18f)
+                if (alongDistance > gullyReach)
                 {
                     continue;
                 }
@@ -597,8 +718,8 @@ namespace Boomtown.WorldGeneration.Editor
                 float alongMask =
                     1f -
                     Mathf.InverseLerp(
-                        0.02f,
-                        0.18f,
+                        0.015f,
+                        gullyReach,
                         alongDistance);
 
                 alongMask =
@@ -616,7 +737,7 @@ namespace Boomtown.WorldGeneration.Editor
                     1f -
                     Mathf.Clamp01(
                         alongDistance /
-                        0.18f);
+                        gullyReach);
 
                 float centreX =
                     Mathf.Lerp(
@@ -928,6 +1049,18 @@ namespace Boomtown.WorldGeneration.Editor
                     resolution,
                     resolution];
 
+            // Reused scratch buffers for the downhill-neighbour weighting
+            // below -- declared once and overwritten per pixel instead of
+            // allocated fresh each iteration.
+            float[] neighbourDrops =
+                new float[8];
+
+            int[] neighbourX =
+                new int[8];
+
+            int[] neighbourY =
+                new int[8];
+
             for (int pass = 0;
                  pass < passes;
                  pass++)
@@ -985,9 +1118,23 @@ namespace Boomtown.WorldGeneration.Editor
                         float current =
                             heights[y, x];
 
-                        int lowestX = x;
-                        int lowestY = y;
+                        // Steepest-of-8 alone was used only to gate/scale
+                        // erosion strength (via "drop" below); material was
+                        // also dumped entirely into that one neighbour. On a
+                        // smooth low-frequency slope, many neighbouring
+                        // pixels all pick the same one of the 8 compass
+                        // directions as "steepest", and doing that
+                        // deterministically for 5 passes builds up visible
+                        // coherent diagonal flow-line banding across whole
+                        // hillsides. Fix: still gate/scale off the steepest
+                        // drop, but *distribute* the moved material across
+                        // every downhill neighbour weighted by how much
+                        // lower each one is (a simple D-infinity-style
+                        // multi-flow scheme), so flow doesn't snap to the
+                        // grid's 8 discrete directions.
                         float lowest = current;
+                        int downhillCount = 0;
+                        float totalDownhillWeight = 0f;
 
                         for (int offsetY = -1;
                              offsetY <= 1;
@@ -1011,8 +1158,27 @@ namespace Boomtown.WorldGeneration.Editor
                                 if (neighbour < lowest)
                                 {
                                     lowest = neighbour;
-                                    lowestX = x + offsetX;
-                                    lowestY = y + offsetY;
+                                }
+
+                                float neighbourDrop =
+                                    current -
+                                    neighbour;
+
+                                if (neighbourDrop > 0f)
+                                {
+                                    neighbourDrops[downhillCount] =
+                                        neighbourDrop;
+
+                                    neighbourX[downhillCount] =
+                                        x + offsetX;
+
+                                    neighbourY[downhillCount] =
+                                        y + offsetY;
+
+                                    totalDownhillWeight +=
+                                        neighbourDrop;
+
+                                    downhillCount++;
                                 }
                             }
                         }
@@ -1025,7 +1191,8 @@ namespace Boomtown.WorldGeneration.Editor
                         float talusThreshold =
                             0.0045f;
 
-                        if (drop <= talusThreshold)
+                        if (drop <= talusThreshold ||
+                            downhillCount == 0)
                         {
                             continue;
                         }
@@ -1058,13 +1225,27 @@ namespace Boomtown.WorldGeneration.Editor
                         working[y, x] -=
                             movable;
 
-                        // Deposit part of the moved material downslope. The
+                        // Deposit part of the moved material downslope,
+                        // spread across all downhill neighbours in
+                        // proportion to their share of the total drop. The
                         // missing remainder represents material carried away
                         // into the Fraser River.
-                        working[
-                            lowestY,
-                            lowestX] +=
+                        float depositTotal =
                             movable * 0.62f;
+
+                        for (int n = 0;
+                             n < downhillCount;
+                             n++)
+                        {
+                            float share =
+                                neighbourDrops[n] /
+                                totalDownhillWeight;
+
+                            working[
+                                neighbourY[n],
+                                neighbourX[n]] +=
+                                depositTotal * share;
+                        }
                     }
                 }
 

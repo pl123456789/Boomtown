@@ -15,10 +15,10 @@ MonoBehaviour:
   mapName: Hope
   region: British Columbia
   year: 1858
-  worldSeed: CF38F569B64D
+  worldSeed: CAEEE0306091
   demFile: 
   heightmapFile: 
-  forestDensity: 0.85
+  forestDensity: 0.95
   rockDensity: 0.35
   bushDensity: 0.6
   grassDensity: 0.95

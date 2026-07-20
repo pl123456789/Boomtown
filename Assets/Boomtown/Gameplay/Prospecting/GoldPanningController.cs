@@ -207,25 +207,35 @@ namespace Boomtown.Gameplay.Prospecting
                 yield return new WaitForSeconds(completionHoldDuration);
             }
 
-            GoldExtractionResult extraction = BoomtownGoldExtractionService.Pan(
+            // Roll the qualitative outcome first (this is what the player
+            // sees and reacts to), then extract exactly that amount from
+            // the finite deposit -- clamped to whatever is actually left.
+            // Previously these were two disconnected numbers: the flavour
+            // text ("Picker nugget!") came from resultEvaluator, but the
+            // ounces actually credited came from a separate deterministic
+            // formula that ignored it entirely, so a "nugget" and a "trace"
+            // could pay out the exact same amount.
+            float grade = geologyData.GetGrade(sensor.SamplePoint);
+            PanOutcome outcome = resultEvaluator.Evaluate(grade);
+
+            GoldExtractionResult extraction = BoomtownGoldExtractionService.Mine(
                 geologyData,
                 sensor.SamplePoint,
-                materialProcessed: 1f,
-                recoveryEfficiency: 0.65f);
+                outcome.GoldOunces);
 
-            PanOutcome outcome = resultEvaluator.Evaluate(extraction.grade);
             inventory.AddGold(extraction.extractedOunces);
             currentResult = BuildResultText(
                 outcome,
-                extraction.extractedOunces,
                 inventory.TotalGoldOunces);
 
             uiState = PanningUiState.Result;
             RefreshPlayerUI();
 
             Debug.Log(
-                $"[Gold Panning] {currentResult} | " +
-                $"Geology grade: {extraction.grade:0.000} | " +
+                $"[Gold Panning] {outcome.Description} | " +
+                $"Rolled: {outcome.GoldOunces:0.####} oz | " +
+                $"Credited: {extraction.extractedOunces:0.####} oz | " +
+                $"Geology grade: {grade:0.000} | " +
                 $"Deposit remaining: {extraction.remainingOunces:0.####} oz",
                 this);
 
@@ -352,16 +362,17 @@ namespace Boomtown.Gameplay.Prospecting
             }
         }
 
+        // A real prospector reads a pan by eye -- "a trace," "good colour,"
+        // "a nugget" -- not by weighing out ten-thousandths of an ounce.
+        // The outcome description already carries that qualitative scale,
+        // so the per-find line reports only that. The running total stays
+        // numeric since that's a ledger the player would reasonably track
+        // precisely, the same way a real miner kept count of their poke.
         private static string BuildResultText(
             PanOutcome outcome,
-            float extractedOunces,
             float totalGoldOunces)
         {
-            string reward = extractedOunces > 0f
-                ? $"+{FormatGold(extractedOunces)}"
-                : "No gold";
-
-            return $"{outcome.Description}  {reward}\n" +
+            return $"{outcome.Description}\n" +
                    $"Total Gold: {FormatGold(totalGoldOunces)}";
         }
 

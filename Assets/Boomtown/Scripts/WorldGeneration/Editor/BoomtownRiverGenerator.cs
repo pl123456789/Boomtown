@@ -32,7 +32,12 @@ namespace Boomtown.WorldGeneration.Editor
         private const string RiverShaderName =
             "Boomtown/Fraser River Water";
 
-        private const int SegmentCount = 120;
+        // Raised from 120: at the old spacing (~16.5m/segment over the
+        // 2000m map) the now-wider valley meander (see BoomtownRiverSpine)
+        // bends sharply enough per segment that the banks visibly facet /
+        // zig-zag on tight turns. Doubling resolution (~8.3m/segment)
+        // smooths that out.
+        private const int SegmentCount = 240;
 
         private const float MinimumRiverWidth = 30f;
         private const float MaximumRiverWidth = 118f;

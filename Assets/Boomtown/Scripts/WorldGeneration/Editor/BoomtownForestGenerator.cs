@@ -14,8 +14,15 @@ namespace Boomtown.WorldGeneration.Editor
         private const string GeneratedFolder =
             "Assets/Boomtown/Scripts/WorldGeneration/Generated";
 
-        private const int MaximumTreeCount = 1200;
+        private const int MaximumTreeCount = 2000;
         private const float PrototypeHeightMetres = 8f;
+
+        // Half-width, in normalized terrain coordinates, of the no-spawn
+        // band either side of the actual river centreline. Covers the
+        // river's widest possible channel (BoomtownRiverGenerator's
+        // MaximumRiverWidth = 118m) plus a bank/beach margin, on the
+        // 2000m-wide terrain: (118/2 + ~22m margin) / 2000 =~ 0.041.
+        private const float RiverExclusionHalfWidth = 0.041f;
 
         private struct SpeciesProfile
         {
@@ -139,7 +146,19 @@ namespace Boomtown.WorldGeneration.Editor
                 float normalizedX = (float)random.NextDouble();
                 float normalizedZ = (float)random.NextDouble();
 
-                if (Mathf.Abs(normalizedX - 0.5f) < 0.065f)
+                // Exclude a band either side of the *actual* river
+                // centreline for this row, not a fixed strip down the
+                // middle of the map -- the valley meanders (see
+                // BoomtownRiverSpine), so a fixed x=0.5 band missed the
+                // river whenever it wandered away from centre, letting
+                // trees spawn in the water there while also needlessly
+                // excluding dry ground near the map's midline.
+                float riverCentreX = BoomtownRiverSpine.GetNormalizedCentreX(
+                    normalizedZ,
+                    mapDefinition.worldSeed);
+
+                if (Mathf.Abs(normalizedX - riverCentreX) <
+                    RiverExclusionHalfWidth)
                 {
                     continue;
                 }

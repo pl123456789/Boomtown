@@ -13,6 +13,10 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(WaypointPath))]
 [RequireComponent(typeof(EmployeeNeeds))]
 [RequireComponent(typeof(StickFigureWalkAnimator))]
+[RequireComponent(typeof(GrubInventory))]
+[RequireComponent(typeof(PlayerNeedsMenu))]
+[RequireComponent(typeof(MinerIdentity))]
+[RequireComponent(typeof(FreeMinerCertificate))]
 public sealed class QuickPlayerController : MonoBehaviour
 {
     [Header("Identity")]
@@ -57,10 +61,18 @@ public sealed class QuickPlayerController : MonoBehaviour
     [SerializeField, Min(0f)]
     private float _groundedDownwardSpeed = 2f;
 
+    [Header("Grub")]
+
+    [SerializeField, Min(0f)]
+    private float _hungerRestoredPerGrub = 40f;
+
     private CharacterController _characterController;
     private WaypointPath _waypointPath;
     private GoldPanningController _goldPanningController;
     private EmployeeNeeds _needs;
+    private GrubInventory _grub;
+    private MinerIdentity _identity;
+    private FreeMinerCertificate _certificate;
     private WaypointActivityRunner _activityRunner;
 
     private Vector3 _horizontalVelocity;
@@ -71,6 +83,15 @@ public sealed class QuickPlayerController : MonoBehaviour
 
     public EmployeeNeeds Needs =>
         _needs;
+
+    public GrubInventory Grub =>
+        _grub;
+
+    public MinerIdentity Identity =>
+        _identity;
+
+    public FreeMinerCertificate Certificate =>
+        _certificate;
 
     private void Awake()
     {
@@ -85,6 +106,17 @@ public sealed class QuickPlayerController : MonoBehaviour
 
         _needs =
             GetComponent<EmployeeNeeds>();
+
+        _grub =
+            GetComponent<GrubInventory>();
+
+        _identity =
+            GetComponent<MinerIdentity>();
+
+        _identity.SetDisplayName(_characterName);
+
+        _certificate =
+            GetComponent<FreeMinerCertificate>();
 
         _activityRunner =
             new WaypointActivityRunner(
@@ -234,6 +266,21 @@ public sealed class QuickPlayerController : MonoBehaviour
     public bool MarkLastWaypointAsPanning()
     {
         return _activityRunner.TryMarkLastWaypointAsPanning();
+    }
+
+    /// <summary>
+    /// Eats one unit of carried grub to restore hunger. Returns false if
+    /// there's no grub on hand.
+    /// </summary>
+    public bool TryEatGrub()
+    {
+        if (!_grub.TryRemoveGrub(1))
+        {
+            return false;
+        }
+
+        _needs.EatGrub(_hungerRestoredPerGrub);
+        return true;
     }
 
     private Vector3 CalculateCameraRelativeDirection(

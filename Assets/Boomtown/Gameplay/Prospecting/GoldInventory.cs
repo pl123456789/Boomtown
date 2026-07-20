@@ -23,6 +23,22 @@ namespace Boomtown.Gameplay.Prospecting
             GoldChanged?.Invoke(totalGoldOunces);
         }
 
+        /// <summary>
+        /// Spends gold, e.g. buying grub at the General Store. Fails and
+        /// leaves the balance untouched if there isn't enough on hand.
+        /// </summary>
+        public bool TrySpendGold(float ounces)
+        {
+            if (ounces <= 0f || totalGoldOunces < ounces)
+            {
+                return false;
+            }
+
+            totalGoldOunces -= ounces;
+            GoldChanged?.Invoke(totalGoldOunces);
+            return true;
+        }
+
         [ContextMenu("Clear Gold")]
         public void ClearGold()
         {
