@@ -26,6 +26,7 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
     private readonly List<Employee> _employees = new();
     private Employee _selectedEmployee;
     private int _cycleIndex;
+    private GoldPanningController _subscribedPanningController;
 
     private void Awake()
     {
@@ -44,6 +45,14 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         }
 
         SelectBill(false);
+    }
+
+    private void OnDestroy()
+    {
+        if (_subscribedPanningController != null)
+        {
+            _subscribedPanningController.OnPanningStarted -= HandlePanningStarted;
+        }
     }
 
     private void Update()
@@ -245,6 +254,7 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         GoldPanningController panning =
             _selectedEmployee.GetComponent<GoldPanningController>();
         panning?.SetPlayerUIActive(true);
+        SubscribeToPanningStarted(panning);
 
         if (followImmediately)
         {
@@ -265,6 +275,7 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         GoldPanningController panning =
             _billController.GetComponent<GoldPanningController>();
         panning?.SetPlayerUIActive(true);
+        SubscribeToPanningStarted(panning);
 
         if (followImmediately)
         {
@@ -274,6 +285,40 @@ public sealed class EmployeeSelectionManager : MonoBehaviour
         {
             _cameraFollow.FocusTarget(_billController.transform);
         }
+    }
+
+    /// <summary>
+    /// Keeps exactly one GoldPanningController's OnPanningStarted wired to
+    /// a camera recentre, matching whichever character is currently
+    /// selected. Needed because panning can kick off automatically on
+    /// arrival after a queued move (Shift + Space at a distant waypoint),
+    /// well after the one-time FocusTarget/FocusAndFollow call above --
+    /// without this, the camera is left looking at wherever the character
+    /// used to be once they've walked out of frame to reach the spot.
+    /// </summary>
+    private void SubscribeToPanningStarted(GoldPanningController panning)
+    {
+        if (_subscribedPanningController == panning)
+        {
+            return;
+        }
+
+        if (_subscribedPanningController != null)
+        {
+            _subscribedPanningController.OnPanningStarted -= HandlePanningStarted;
+        }
+
+        _subscribedPanningController = panning;
+
+        if (_subscribedPanningController != null)
+        {
+            _subscribedPanningController.OnPanningStarted += HandlePanningStarted;
+        }
+    }
+
+    private void HandlePanningStarted()
+    {
+        _cameraFollow.CenterOnTarget();
     }
 
     private void ClearEmployeeSelection()

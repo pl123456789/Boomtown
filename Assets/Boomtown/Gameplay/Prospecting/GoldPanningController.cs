@@ -60,6 +60,17 @@ namespace Boomtown.Gameplay.Prospecting
         public bool IsPanning => isPanning;
         public bool IsPlayerUiActive => playerUiActive;
 
+        /// <summary>
+        /// Fires the moment a pan actually begins -- including when it's
+        /// kicked off automatically on arrival after a queued move (Shift +
+        /// Space at a distant waypoint). The camera doesn't continuously
+        /// follow unless Follow is toggled on, so without this, walking to
+        /// a far-off river spot and panning there leaves the camera looking
+        /// at wherever the character used to be -- reads to the player as
+        /// the character vanishing the instant panning starts.
+        /// </summary>
+        public event Action OnPanningStarted;
+
         public void AssignGeologyData(BoomtownGeologyData generatedGeology)
         {
             geologyData = generatedGeology;
@@ -188,6 +199,7 @@ namespace Boomtown.Gameplay.Prospecting
             uiState = PanningUiState.Progress;
             StopAndLockMovement();
             RefreshPlayerUI();
+            OnPanningStarted?.Invoke();
 
             yield return null;
 
